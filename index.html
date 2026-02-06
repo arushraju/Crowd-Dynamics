@@ -1,0 +1,977 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Arush's Crowd</title>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@4/tex-mml-chtml.js"></script>
+    <!--<link href="./style/style.css" rel="stylesheet"/>-->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400..800;1,400..800&display=swap" rel="stylesheet">
+    <link rel="icon" href="./crowd_icon.png" sizes="32x32" type="image/png"/>
+    <style>
+        .logo-cards{
+            padding: 1%;
+            margin: 1%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            width: fit-content;
+        }
+        .github-logo{
+            width: fit-content;
+            transform: scale(0.5);
+        }
+    </style>
+</head>
+
+<style>
+    summary{
+        font-weight: 700;
+        border: 1px solid black;
+        cursor: pointer;
+        user-select: none;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 50px;
+    }
+    summary:hover{
+        background-color: black;
+        color: white;
+    }
+    /* .meeting-1{ background-color:rgb(255, 141, 141);}
+    .meeting-2{ background-color: rgb(109, 186, 249);}
+    .meeting-3{ background-color:rgb(127, 255, 148);}
+    .meeting-4{ background-color:rgb(255, 231, 110);}
+    .meeting-5{ background-color:rgb(255, 141, 141);}
+    .meeting-6{ background-color:rgb(109, 186, 249);}
+    .meeting-7{ background-color:rgb(127, 255, 148);}
+    .meeting-8{ background-color: rgb(255, 231, 110);;}
+    .meeting-9{ background-color: rgb(255, 141, 141);;}
+    .meeting-10{ background-color: rgb(109, 186, 249);}
+    .meeting-11{ background-color: rgb(127, 255, 148);;} */
+</style>
+
+<body class="eb-garamond-text">
+    <div class="intro_card preamble">
+        <i>
+        <p>
+            In my final year I had to be enrolled in a course called knowns as UGP-1, and this webpage summarizes my
+            work about this project.
+        </p>
+        <p>
+            Here is the final paper for submition for UGP : <a class="button" href="./Hughe’s Pedestrian Flows.pdf" target="_blank" style="font-size: 25px;">Final UGP Report</a>
+        </p>
+        </i>
+    </div>
+    <hr>
+    <div class="content">
+        <h1 class="heading text-head">Crowd Dynamics</h1>
+        <!--Introduction and context-->
+        <section class="intro_card">
+            <h2>Why?</h2>
+            <p>
+                So in my third semester one of my Fluid Mechanics professor <a class="button" href="https://www.iitk.ac.in/che/old/nt.htm" target="_blank">Prof. Naveen Tiwari</a> taught us ESO204, which is an introductory course on fluid mechanics. And after studying that course, I also watched the lectures of <a class="button" href="https://home.iitk.ac.in/~smittal/" target="_blank">Prof. Sanjay Mittal</a>, who supervised me in this project in crowd dynamics. I watched his <a class="button" href="https://youtube.com/playlist?list=PLseC-R59hYukT6h6fFi6wctLPSow_zUIz&si=vxwynOoAJivvBMdd" target="_blank">lectures</a> on YouTube, and I loved those lectures. In the course, however, Professor Naveen Tiwari also mentioned that "Fluid could also be used to model crowds," and that sentence kind of stuck with me. Because when studying fluid, if someone tells you what you are studying is also how crowds behave, you may be left thinking about this idea. It was very intriguing for me to think about people as particles of fluid. And I kind of thought it is not at all a bad way to compare. I mean, when in a dense crowd, I could imagine that I really don't have any control over myself (just like fluid). By which I mean, one loses his individuality and just goes where the crowd takes it. Just like the fluid flowing. 
+            </p>
+            <p>
+                About a year later, I happened to go to a Jyotirlinga temple in <a class="button" href="https://shriomkareshwar.org/" target="_blank">Omkareshwar</a>, in Madhya Pradesh, where I truly experienced the crowd in its true sense. I mean, as far as I could remember, this might be the most brutal crowd I had ever experienced. That was the first trigger point which led me to crowd dynamics. Later in the summer of 2025, I thought of working in this field, and got to know that there are different softwares made to simulate the flow of crowd in microscopic point of view, (meaning to model each pedestrian individually). But I found the papers back then to be a bit difficult. So I thought maybe this is not the time for me to work on this.  
+            </p>
+            <p>
+                Then during the add-drop period (which is the period where students could add or drop a course during the registration in a semester), I found that we had a UGP (Undergraduate Project) in our template in the 7th semester. And this gave me another hope to start my work in crowd dynamics. And then I met Prof. Sanjay Mittal and discussed with him these ideas. I knew that he had worked in the feild of traffic flows, which is similar to crowd dynamics, but for vehicles and traffic.  
+
+            </p>
+            
+        </section>
+
+        <hr>
+        <!--Meeting 1-->
+        <details>
+            <summary class="meeting-1">Meeting 1</summary>
+            <section class="intro_card">
+                <div class="card">
+                    <h2>Meeting 1</h2>
+                    <p>
+                        The first meeting was about formulating the problem. <b>Back then I found that formulating the problem itself is the most difficult part of the project</b>. I came up with some very bizarre ideas like simulating the crowd on the path of temples and seeing how the people moved in the twisty paths of temples, etc. After the discussion, I was very clear that <b>"Just because I want to do something doesn't mean that I should straight away start doing it"</b>. Now if I think about all that, I ask myself what I really wanted to do? I mean, I could simulate the crowd, but then what? So I found that I lacked a clear objective.  
+                    </p>
+                    <p>
+                        I was given the following paper and told to come up with a clear objective.
+                        <br>Here are the papers : <a class="button" href="./Meeting_1/Traffic_flow_paper.pdf" target="_blank">Traffic Flows</a>, <a class="button" href="./Meeting_1/hughes_pedestrian-2002.pdf"
+                            target="_blank">Hughe's Flow</a><br>
+                        These were the paper suggested.
+                    </p>
+                </div>
+            </section>
+        </details>
+        
+        <hr>
+        <!--Meeting 2-->
+        <details>
+            <summary class="meeting-2">Meeting 2</summary>
+            <section class="intro_card">
+                <div class="card">
+                    <h2>Meeting 2</h2>
+                    <p>
+                        In this section I finally made the big move, and here is my <a class="button" href="./Meeting_1/Reprot_1.pdf" target="_blank">First Report</a> that I made. This was made after we had a discussion on the traffic flows, and how we could relate the traffic flow with crowd dynamics. Now this still needed somewhat discussion. Reading through the report, I feel I was still a naive thinker. My objectives were still not satisfactory. But one thing that I need to specify is that I still feel that the second objective has some potential. I mean, this idea (which was also suggested by Professor) came from the understanding that the flow moving through a CD nozzle will choke at some point. And therefore sir said that <b>"If there is one pedestrian moving into the entrance there is no problem, and everyone entering will have absolutely no problem in moving through the paths. But if there are all the people jammed inside the path, we see no motion of people. So there must be a value of inflow rate of people where something like choking must be happening."</b> Even till now when Meeting 7 has been done, I still think that this is a good subject.  
+
+                    </p>
+                    <p>Here is one more paper that porfessor recommnended, <a class="button" href="./Meeting_1/Revisiting Hughes’ dynamic continuum model for pedestrian flow and the development of an efficient solution algorithm.pdf" target="_blank">Here</a></p>
+                    <p>This was said to me as a paper that has implements the hughe;s flow numerically.</p>
+                </div>
+            </section>
+        </details>
+       
+        <hr>
+        <!--Meeting 3-->
+        <details>
+            <summary class="meeting-3">Meeting 3</summary>
+            <section class="intro_card">
+            <div class="card">
+                <h2>Meeting 3</h2>
+                <p>
+                    So in the next week I made the <a class="button" href="./Meeting_2/Report_2.pdf" target="_blank">This</a> report. And this was the first turning point in my project. I implemented my first code for the hughe's flow. Although it wasn't that good but was considerable amount of progress.
+                    <br>Here are the results:
+                    <br>
+                    <div class="vid">
+                        <video width="600px" controls>
+                            <source src="./Meeting_2/Density Animation t=20.mp4" type="video/mp4">
+                            Video Problem
+                        </video>
+                    </div>
+                    <div class="vid_cap">Density</div>
+                    
+                    <br>
+                    <div class="vid">
+                        <video width="600px" controls>
+                            <source src="./Meeting_2/Potential Animation t=20.mp4" type="video/mp4">
+                            Video Problem
+                        </video>
+                    </div>
+                    <div class="vid_cap">Potential</div>
+                    
+                    <br>
+                    <div class="vid">
+                        <video width="600px" controls>
+                            <source src="./Meeting_2/Velocity Animation t=20.mp4" type="video/mp4">
+                            Video Problem
+                        </video>
+                    </div>
+                    <div class="vid_cap">Velocity</div>
+                    
+                </p>
+                
+                <p>
+                    The results to me looked very senseless, but nevertheless at least I had something. Since my results made no sense, I now had to do the following. I had to validate the methods that I have used in this project, and this includes the <b>Fast Sweep Method</b> and the method used for advection. So for the advection, I have used the simple upwinding, and to validate the fast sweep I decided to replicate and spend some time understanding the eikonal equation. I have used <a class="button" href="./Meeting_2/Fast Sweep Method paper_1.pdf" target="_blank">this</a> paper for that. So now the objective for my next lab was to work on the FAST SWEEP METHOD. Also, in the fast sweep, they have tried using the distance function, so for that, I read about this paper about the distance equation. <a href="./Meeting_2/Distance_function.pdf" target="_blank" class="button">Here</a>  
+                </p>
+            </div>
+        </section>
+        </details>
+        
+        <hr>
+        <!--Meeting 4-->
+        <details>
+            <summary class="meeting-4">Meeting 4</summary>
+            <section class="intro_card">
+            <div class="card">
+                <h2><u>Meeting 4</u></h2>
+                <p>
+                    Here is the <a class="button" href="./Meeting_3/Hyghes_flow_Second_attempt.pdf" target="_blank">Report_1 (Hughe's Flow)</a> and <a class="button" href="./Meeting_3/Understanding_Eikonal_Equation.pdf" target="_blank">Report_2 (Eikonal Equation)</a> for this meeting that I made. And here my task was to use some synthetic function and use it to test how good the algorithm is to solve the Eikonal equation. And so I did the same as mentioned in the paper. But one problem was that I checked the validity of this algorithm on a problem that contained Dirichlet condition on the boundary, which was not the case with my project. So this gave me the objective for my next lab that is to apply the well posed Neumann boundary condition on the problem and then use the algorithm in the main Hughe's flow solver. He tried to explain that using an algorithm that we don't fully understand should not be used until it is fully validated. So now my next task was to again validate the fast sweep method but this time for Neumann condition.
+                    <br>In addition to that I was also asked to make a toy problem and see if the advection equation is really working. So what he tried explaining me was that <b>"If I am unable to solve the problem all at once, try breaking it into fragments (which is advection and fast sweep) and see if they work fine individually."</b>
+
+                </p>
+                <p>
+                    Shown below are some results:<br>
+                    <div class="vid">
+                        <video width="600px" controls>
+                            <source src="./Meeting_3/Density variations.mp4" type="video/mp4">
+                            Problem
+                        </video>
+                    </div>
+                    <div>Density Evolution</div>
+                    <div class="vid">
+                        <video width="600px" controls>
+                            <source src="./Meeting_3/Potential Variations.mp4" type="video/mp4">
+                            Problem
+                        </video>
+                    </div>
+                    <div>Potential Evolution</div>
+                    <div class="vid">
+                        <video width="600px" controls>
+                            <source src="./Meeting_3/Velocity Variations.mp4" type="video/mp4">
+                            Problem
+                        </video>
+                    </div>
+                    <div>Velocity Evolution</div>
+                </p>
+            </div>
+        </section>
+        </details>
+        
+        <hr>
+        <!--Meeting 5-->
+        <details>
+            <summary class="meeting-5">Meeting 5</summary>
+            <section class="intro_card">
+            <div class="card">
+                <h2><u>Meeting 5</u></h2>
+                <p>
+                    Here is the <a class="button" href="./Meeting 5/Report (Meeting 3) Hughe's flow.pdf" target="_blank">Report 1 (Hughe's Flow)</a> and <a class="button" href="./Meeting 5/Report (Meeting 3) Understanding_Eikonal_Equation.pdf" target="_blank">Report 2 (Fast Sweep Method)</a> of this meeting. Here I realised that the paper doesn't really discuss about implementing the FAST SWEEP METHOD on the problems containing Neumann boundary condition. And thus this needs to be fixed. As mentioned in the paper, I used the Ghost point approach and somehow tried coming up with the solution, and then used that understanding of fast sweep into Hughe's flow solver.
+                </p>
+                <p>
+                    So now I was implementing Lax Wendroff scheme for advection because what I saw was that first order upwinding scheme had lots of numeric diffusion, and the Lax Wendroff was better in all the sense except that it had many numerical oscillations that were explained to be Gibbs oscillation occurring due to sharp discontinuity at the tip of discontinuity (Fourier transformation). And the results were also not very appreciable. They still looked like something really wrong is going on with them. And then the suggestion was <b>"Why not start with a simple one dimensional problem and then see if it's working. It will be easier to study one dimensional flow compared to two dimensional."</b> And so the next task was to simulate the Hughe's flow in one dimension.
+                </p>     
+            </div>
+        </section>
+        </details>
+        
+        <hr>
+        <!--Meetign 6-->
+        <details>
+            <summary class="meeting-6">Meeting 6</summary>
+            <section class="intro_card">
+            <div class="card">
+                <h2>Meeting 6</h2>
+                <p>
+                    Here is the <a class="button" href="./1d_Hughe's flow problem (Meeting 4)/Report_4.pdf" target="_blank">Here</a> of my progress.
+                </p>
+                <p>
+                    Now at the first instant I thought I still messed up the problem. I used the ghost point approach to implement Neumann condition on \(\phi\) while solving Eikonal equation using Fast Sweep Method. And while doing so I also implemented Lax Wendroff scheme for advection in the density. The results were not very good, and I still was not at all satisfied.
+                </p>
+                <p>Here are the results for your understanding</p>
+                <div>
+                    <img class="button" src="./1d_Hughe's flow problem (Meeting 4)/Initial_Density_Distribution.png" width="600px"/><br>
+                    <div class="vid">  
+                        <video width="600px" controls>
+                            <source src="./1d_Hughe's flow problem (Meeting 4)/Hughe_Flow_Density.mp4" type="video/mp4">
+                        </video>
+                    </div> 
+                    <div class="vid"> 
+                        <video width="600px" controls>
+                            <source src="./1d_Hughe's flow problem (Meeting 4)/Density_Animation.mp4" type="video/mp4">
+                        </video>
+                    </div>
+                    <div>Density Variation</div>
+                    <div class="vid">
+                        <video width="600px" controls>
+                            <source src="./1d_Hughe's flow problem (Meeting 4)/Hughe_Flow_Potential.mp4" type="video/mp4">
+                        </video>
+                    </div>
+                    <div>Potential Variation</div>
+                    <div class="vid">
+                        <video width="600px" controls>
+                            <source src="./1d_Hughe's flow problem (Meeting 4)/Hughe_Flow_Velocity.mp4" type="video/mp4">
+                        </video>
+                    </div>
+                    <div>Velocity Variation</div>
+                </div>
+                    <p>All of these didn't go well, and there were some problem that professor said me about :
+                        <ol>
+                            <li><b>The initial condition taken was not at all good. Since I have been for all this time taking the initial condition containing sharp discontinuities in the density. And since my problem contained shocks due to non linear advection equation with velocity proportional to negative of density, sir said it would be better to pick the boundary condition which was too close to the minimum or maximum value of density.</b></li>
+                            <li><b>Also I was trimming the density if it ever exceeded the maximum value, this seemed to cause problem since in that case I would be solving a very different problem all together.</b></li>
+                        </ol>
+                        It was important to note that in this attempt the Eikonal equation turned out just fine, and somewhat accuracy acquired in implementing the eikonal equation. But now the problem was the density since it was one non linear advection equation.
+                    </p>
+                    <p>After making the changes in the initial condition all of a sudden the result started to make sense. A boundary condition of \(\rho = 0\) at the boundary for no inflow and the formation of shock due to crowd behind the peak having higher velocity, all of it was working just fine. Given below are the results<br></p>
+                <div>
+                    <div class="vid">
+                        <video width="600px" controls>
+                            <source src="./1d_Hughe's flow problem (Meeting 4)/Animations/Density_Animation_Updated.mp4" type="video/mp4">
+                        </video>
+                    </div>
+                    <div>Density Variation</div>
+                    <div class="vid">
+                        <video width="600px" controls>
+                            <source src="./1d_Hughe's flow problem (Meeting 4)/Animations/Potential_Animation_Updated.mp4" type="video/mp4">
+                        </video>
+                    </div>
+                    <div>Potential Variation</div>
+                    <div class="vid">
+                        <video width="600px" controls>
+                            <source src="./1d_Hughe's flow problem (Meeting 4)/Animations/Velocity_Animation_Updated.mp4" type="video/mp4">
+                        </video>
+                    </div>
+                    <div>Velocity Variation</div>
+                </div>
+                <p>This made it clear that the problem was in the type of intial condition I was implementing really, and not in anything else. So now it was about extending to two dimension, from where I came.</p>
+            </div>
+        </section>
+        </details>
+        
+        <hr>
+        <!--Meeting 7-->
+        <details>
+            <summary class="meeting-7">Meeting 7</summary>
+            <section class="intro_card">
+            <div class="card">
+                <h2>Meeting 7</h2>
+                <p>Now it was about making the two dimensional flows. And here is the <a class="button" href="./2D_Hughes_Flow_Problem (meeting 5)/Report.pdf" target="_blank">Report</a></p>
+                <p>Here I went in all the direction and tried many different problems. given below are all the problems : 
+                </p>
+                <table border="1">
+                    <thead>
+                        <tr>
+                            <th>Problem</th>
+                            <th>Initial Condition</th>
+                            <th>Density</th>
+                            <th>Potential</th>
+                            <th>Velocity</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <!--Problem 1-->
+                        <tr>
+                            <td>Standard Exmaple</td>
+                            <td>
+                                <img src="./2D_Hughes_Flow_Problem (meeting 5)/Standard_Example/IMG_20251017_001838.jpg" width="300px"/>
+                            </td>
+                            <td>
+                                <video width="500px" controls>
+                                    <source src="./2D_Hughes_Flow_Problem (meeting 5)/Standard_Example/Density_Animation.mp4" type="video/mp4">
+                                </video>
+                            </td>
+                            <td>
+                                <video width="500px" controls>
+                                    <source src="./2D_Hughes_Flow_Problem (meeting 5)/Standard_Example/Potential_Animation.mp4" type="video/mp4">
+                                </video>
+                            </td>
+                            <td>
+                                <video width="500px" controls>
+                                    <source src="./2D_Hughes_Flow_Problem (meeting 5)/Standard_Example/Velocity_Animation.mp4" type="video/mp4">
+                                </video>
+                            </td>
+                        </tr>
+                        <!--Problem 2-->
+                        <tr>
+                            <td>Two Blob</td>
+                            <td>
+                                <img src="./2D_Hughes_Flow_Problem (meeting 5)/Two_Blob/" width="300px"/>
+                            </td>
+                            <td>
+                                <video width="500px" controls>
+                                    <source src="./2D_Hughes_Flow_Problem (meeting 5)/Two_Blob/Density_Animation.mp4" type="video/mp4">
+                                </video>
+                            </td>
+                            <td>
+                                <video width="500px" controls>
+                                    <source src="./2D_Hughes_Flow_Problem (meeting 5)/Two_Blob/Potential_Animation.mp4" type="video/mp4">
+                                </video>
+                            </td>
+                            <td>
+                                <video width="500px" controls>
+                                    <source src="./2D_Hughes_Flow_Problem (meeting 5)/Two_Blob/Velocity_Animation.mp4" type="video/mp4">
+                                </video>
+                            </td>
+                        </tr>
+                        <!--Problem 3-->
+                        <tr>
+                            <td>Unsymmetrical Exit</td>
+                            <td>
+                                <img src="./2D_Hughes_Flow_Problem (meeting 5)/Unsymmetric Exit/" width="300px"/>
+                            </td>
+                            <td>
+                                <video width="500px" controls>
+                                    <source src="./2D_Hughes_Flow_Problem (meeting 5)/Unsymmetric Exit/Density_Animation.mp4" type="video/mp4">
+                                </video>
+                            </td>
+                            <td>
+                                <video width="500px" controls>
+                                    <source src="./2D_Hughes_Flow_Problem (meeting 5)/Unsymmetric Exit/Potential_Animation.mp4" type="video/mp4">
+                                </video>
+                            </td>
+                            <td>
+                                <video width="500px" controls>
+                                    <source src="./2D_Hughes_Flow_Problem (meeting 5)/Unsymmetric Exit/Velocity_Animation.mp4" type="video/mp4">
+                                </video>
+                            </td>
+                        </tr>
+                        <!--Problem 4-->
+                        <tr>
+                            <td>Multi-Exit Problem - 1</td>
+                            <td>
+                                <img src="./2D_Hughes_Flow_Problem (meeting 5)/Multi_Exit_Problem_1/IMG_20251017_002514.jpg" width="300px"/>
+                            </td>
+                            <td>
+                                <video width="500px" controls>
+                                    <source src="./2D_Hughes_Flow_Problem (meeting 5)/Multi_Exit_Problem_1/Density_Animation.mp4" type="video/mp4">
+                                </video>
+                            </td>
+                            <td>
+                                <video width="500px" controls>
+                                    <source src="./2D_Hughes_Flow_Problem (meeting 5)/Multi_Exit_Problem_1/Potential_Animation.mp4" type="video/mp4">
+                                </video>
+                            </td>
+                            <td>
+                                <video width="500px" controls>
+                                    <source src="./2D_Hughes_Flow_Problem (meeting 5)/Multi_Exit_Problem_1/Velocity_Animation.mp4" type="video/mp4">
+                                </video>
+                            </td>
+                        </tr>
+                        <!--Problem 5-->
+                        <tr>
+                            <td>Multi-Exit problem</td>
+                            <td>
+                                <img src="./2D_Hughes_Flow_Problem (meeting 5)/Multi_Exit_Problem_2/IMG_20251017_003527.jpg" width="300px"/>
+                            </td>
+                            <td>
+                                <video width="500px" controls>
+                                    <source src="./2D_Hughes_Flow_Problem (meeting 5)/Multi_Exit_Problem_2/Density_Animation.mp4" type="video/mp4">
+                                </video>
+                            </td>
+                            <td>
+                                <video width="500px" controls>
+                                    <source src="./2D_Hughes_Flow_Problem (meeting 5)/Multi_Exit_Problem_2/Potential_Animation.mp4" type="video/mp4">
+                                </video>
+                            </td>
+                            <td>
+                                <video width="500px" controls>
+                                    <source src="./2D_Hughes_Flow_Problem (meeting 5)/Multi_Exit_Problem_2/Velocity_Animation.mp4" type="video/mp4">
+                                </video>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <p>
+                After the meeting there were two things that came into notice. That the boundary condition on density was not being respected, and also professor said me to compare the solution with some paper that actually solves a problem of Hughe's flow, because this might be helpful to validate the methods I am using to solve the problem. And so my next task was to replicate the result of <a href="" target="_blank">This</a> paper.
+            </p>
+
+
+        </section>
+        </details>
+        
+        <hr>
+        <!--Meeting 8-->
+        <details>
+            <summary class="meeting-8">Meeting 8</summary>
+            <section class="intro_card">
+            <div class="card">
+                <h2>Meeting 8</h2>
+                <p>
+                    Now this paper was using something called <b>WENO</b> algortihm. THird order to solve the eikonal equation using WENO fast sweep, and fifith order for density using WENO advection. Andthese were some really complicated method. Also the problem mentioned here had an obstacle, which was not easy to model. How excalty I modelled the obstacle is mentioned in the <a href="./Result_Validation (Meeting 6)/Report_6.pdf" target="_blank">Report</a>. And <a href="./Result_Validation (Meeting 6)/Revisiting Hughes’ dynamic continuum model for pedestrian flow and the development of an efficient solution algorithm.pdf" target="_blank">here</a> is again the link to the paper.
+                </p>
+                <p>
+                    Using the method for modelling the obstacle I tried some of my own problems out of curiosity an dthye are shown below.
+                </p>
+
+                <table border="1">
+                    <thead>
+                        <th>Problem</th>
+                        <th>Density</th>
+                        <th>Potential</th>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Obstacle 1</td>
+                            <td>
+                                <video width="500px" controls>
+                                    <source src="./2D_Hughes_Flow_Problem (meeting 5)/Obstacle/Density_Animation.mp4" type="video/mp4">
+                                </video>
+                            </td>
+                            <td>
+                                <video width="500px" controls>
+                                    <source src="./2D_Hughes_Flow_Problem (meeting 5)/Obstacle/Potential_Animation.mp4" type="video/mp4">
+                                </video>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>Obstacle 2</td>
+                            <td>
+                                <video width="500px" controls>
+                                    <source src="./2D_Hughes_Flow_Problem (meeting 5)/Obstacle_2/Density_Animation.mp4" type="video/mp4">
+                                </video>
+                            </td>
+                            <td>
+                                <video width="500px" controls>
+                                    <source src="./2D_Hughes_Flow_Problem (meeting 5)/Obstacle_2/Potential_Animation.mp4" type="video/mp4">
+                                </video>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>Intelligent Crowd</td>
+                            <td>
+                                <video width="500px" controls>
+                                    <source src="./2D_Hughes_Flow_Problem (meeting 5)/Intelligent_Crowd/Density_Animation.mp4" type="video/mp4">
+                                </video>
+                            </td>
+                            <td>
+                                <video width="500px" controls>
+                                    <source src="./2D_Hughes_Flow_Problem (meeting 5)/Intelligent_Crowd/Potential_Animation.mp4" type="video/mp4">
+                                </video>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+                <p>
+                    And looking at the results I am not at all disappointed. At least all the result made sense. Just the boundary condition has to be taken care of later.<br>
+                    So with that understanding I tried implementing the exact same problem which was done in the paper, and the result of which are shown below. When comparing them with that of the paper, they were not at all similar. The results in paper was very different. And following were the problem that we thought.<br>
+                </p>
+                <p>
+                    And looking at the results I am not at all disappointed. At least all the results made sense. Just the boundary condition has to be taken care of later.<br>
+                    So with that understanding I tried implementing the exact same problem which was done in the paper, and the results of which are shown below. When comparing them with that of the paper, they were not at all similar. The results in the paper were very different. And the following were the problems that we thought of.<br></p>
+                    <p>
+                        <ol>
+                            <li>The paper used 5th order method which had much higher accuracy and resolution compared to my first order method. This was also suggested by the professor.</li>
+                            <li>Secondly I knew that I am not respecting the boundary condition when solving the problem, especially at the obstacle, and this was also a source of problem.</li>
+                            <li>And lastly, the problem took into account the <b>Discomfort Factor \(g(\rho(x,y,t),x,y,t)\)</b>, but I kept it to be one. This was mentioned in the Hughes' paper that it could be taken as unity.</li>
+                        </ol>
+                        This formed the basis for my next objective in the project.
+                    </p>
+
+                    
+                    <p>
+                    Here are the results:<br>
+                    <center>
+                    <div>
+                        <video width="500px" controls>
+                            <source src="./Result_Validation (Meeting 6)/Density_Contour.mp4" type="video/mp4">
+                        </video>
+                        <div>Density Contour</div>
+                        <video width="500px" controls>
+                            <source src="./Result_Validation (Meeting 6)/Density_Surface.mp4" type="video/mp4">
+                        </video>
+                        <div>Density Surface</div>
+                        <video width="500px" controls>
+                            <source src="./Result_Validation (Meeting 6)/Potential_Contour.mp4" type="video/mp4">
+                        </video>
+                        <div>Potential Contour</div>
+                        <video width="500px" controls>
+                            <source src="./Result_Validation (Meeting 6)/Velocity_Field.mp4" type="video/mp4">
+                        </video>
+                        <div>Velocity Contour</div>
+                        <video width="500px" controls>
+                            <source src="./Result_Validation (Meeting 6)/Velocity_Surface.mp4" type="video/mp4">
+                        </video>
+                        <div>velocity Surface</div>
+                    </div>
+                </center>
+                </p>
+                <p>Now the task was to really use the exact same scheme used in the paper and use it replicate the result of the paper.</p>
+            </div>
+        </section>
+        </details>
+        
+        <hr>
+        <!--Meeting 9-->
+        <details>
+            <summary class="meeting-9">Meeting 9</summary>
+            <section class="intro_card">
+            <div class="card">
+                <h2>Meeting 9</h2>
+                <p>
+                    This I consider to be the final meeting with the professor, and I believe I will have to really perform well this time.
+                    So <a
+                        href="./Result_Validation (Meeting 6)/Revisiting Hughes’ dynamic continuum model for pedestrian flow and the development of an efficient solution algorithm.pdf"
+                        target="_blank">here</a> is the research paper that I will be using.
+                </p>
+                <p>
+                    The task in today's attempt is to use the same method as used in the research paper, and kind of replicate the results. So that includes learning about the <b>fifth-order weighted essentially non-oscillatory (WENO) scheme</b> for solving the advection equation in governing, <b>the fast sweeping method based on the third-order WENO scheme</b> for solving eikonal equation, and <b>the third order total-variation-diminishing (TVD) Runge–Kutta time discretization</b> for solving the coupled system of equation.
+                </p>
+                <p>
+                    <a href="./Meeting 7/Code.pdf" target="_blank">Here</a> is the code for implemnting the above algorithm.
+                </p>
+                <p>
+                    Now I am writing this after a very long time. Almost a month later. A lot has happened this month, and now I am, about to start replicating the result of this paper.
+                </p>
+                <p>
+                    I am first going to understand about direction cosine. So the angle made by the line connecting the point P with the origin with the cordinate axis is called direction angle. And the these angle gives a unique direction to any lines. This is similar to slope in 1D geometry. And the cosine of these liones is called directional cosine.
+                </p>
+            </div>
+        </section>
+        </details>
+        
+        <hr>
+        <!--Meeting 10-->
+        <details>
+            <summary class="meeting-10">Meeting 10</summary>
+            <section class="intro_card">
+            <div class="card">
+                <h2>Meeting 10</h2>
+                <p>
+                    Day before yesterday, I had my tenth meeting with the professor, during which he made several suggestions. In my previous attempt, I tried to implement the entire algorithm at once, but that approach was unsuccessful. In the next attempt, I divided the problem and solved the Eikonal equation separately; however, this approach also did not work. Today, following his advice, I will combine both ideas: I will split the problem into its Eikonal and advection components, and I will also reduce the dimensionality of the problem by one. 
+                </p>
+                <p>
+                    This week, I plan to carry out the following tasks:
+                    <ol>
+                        <li>
+                            Solve the one-dimensional Eikonal equation using a fifth-order WENO fast sweeping method on a hypothetical test problem.
+                        </li>
+                        <li>
+                            Solve the one-dimensional advection equation using a fifth-order WENO Lax–Friedrichs scheme on a hypothetical test problem.
+                        </li>
+                        <li>
+                            Combine the Eikonal and advection equations to solve the complete one-dimensional Hughes’ pedestrian flow model.
+                        </li>
+                        <li>
+                            Finally, extend the insights gained from the one-dimensional study to the two-dimensional case. This step is exploratory and does not need to be completed this week.
+                        </li>
+                    </ol>
+                    Moving on…
+                </p>
+                <p>
+                    While attempting to replicate the results presented in the paper, I encountered several failures. Initially, I tried to solve the one-dimensional Eikonal equation using a fifth-order WENO scheme, and the report for that implementation is available; however, the resulting solution was highly unsatisfactory. I then returned to the two-dimensional formulation, since the Railway Station paper primarily focuses on the two-dimensional case. At this stage, I decided to carefully re-examine the paper and reformulate the function that I had originally implemented.
+                </p>
+
+                <p>
+                    One crucial detail that I initially overlooked is that the paper initializes the value of phi using the solution obtained from an algorithm I had designed in the previous semester: the <b>first-order Godunov fast sweeping method</b>. This turned out to be a significant observation. Another important detail stated in the paper is that <i>"for grid points whose distance to the boundary is less than or equal to 2h, the solution values are fixed as the initial guess during the iterations."</i> This insight was particularly revealing, given the amount of time I spent trying to make the algorithm work. The choice of <i>2h</i> also explains why the overall scheme achieves fifth-order accuracy.
+                </p>
+
+                <p>
+                    The good news is that I have successfully implemented both the fifth-order WENO fast sweeping method and the fifth-order WENO advection scheme. However, I am still facing an issue. The approach I followed is described below.
+                </p>
+                <p>
+                    <h4>1D Eikonal using 5th order WENO Fast Sweep</h4>
+                    <p>
+                        During a discussion with my professor, I was advised to begin by solving the problem in one dimension, which seemed reasonable. However, I faced a key difficulty: I was able to solve the one-dimensional fast sweeping problem for the crowd model because it was explicitly specified in the paper. In contrast, although the original Hughes paper first addresses the one-dimensional case before extending the analysis to two dimensions, I could not find a reference that described a one-dimensional fifth-order WENO fast sweeping method. As a result, I was uncertain whether this approach would work in practice.Nevertheless, I attempted to implement it, and the following report and code document my results.<br>
+                        <center><a href="./meeting_10/One_Dimensional_Eikonal_Equation.pdf" target="_blank">Report (1D Eikonal using 5th order WENO Fast Sweep)</a></center>
+                        <center><a href="./meeting_10/One_Dimensional_Eikonal_Equation.mlx" target="_blank">Download Code (1D Eikonal using 5th order WENO Fast Sweep)</a></center>
+                    </p>
+                    <p>
+                        As expected, this approach did not produce the desired results. This outcome is understandable, since designing an algorithm under the assumption that good performance in two dimensions will automatically translate to one dimension is flawed.
+                    </p>
+
+                    <h4>Two Dimensional Eikonal Equation</h4>
+                    <p>
+                        I therefore decided to retain the original objective of solving the two-dimensional Eikonal equation, which turned out to be a good decision, as it eliminated the need to work with a staggered grid; moreover, the WENO formulation of the Eikonal equation does not involve half-indexed terms such as i+1/2, making the algorithm straightforward to implement, and during this implementation I encountered two very important assumptions discussed in the paper.<br>
+
+                       <ol>
+                            <li>
+                                For higher-order nonlinear schemes (nonlinear due to the adaptive weights), the initial condition must be taken from the solution of the same problem computed using a lower-order scheme. This implies that the problem must first be solved using the lower-order method, which I had already implemented in the previous semester, and the resulting solution can then be used as the initial guess for the higher-order scheme.
+                            </li>
+                            <li>
+                                Another important observation was that the equality stated in the paper is incorrect. This error was the source of the complex-valued solutions I was obtaining. I had suspected this issue earlier—after comparing the formulation with the original fast sweeping paper—but initially assumed that the problem lay in my implementation. After multiple iterations, corrections, and verification, the program began to work correctly once the sign was changed, confirming that this was indeed an error in the published paper.
+                            </li>
+                        </ol>
+                        <p>
+                            These were the observations, and the corresponding results are presented below. The following link provides the report for the two-dimensional Eikonal equation solved using the fifth-order WENO fast sweeping algorithm.<br>
+                            <center>
+                                <a href="./meeting_10/Two_Dimensional_Eikonal_Equation.pdf" target="_blank">
+                                    Report (Two-Dimensional Eikonal Equation using Fifth-Order WENO Fast Sweeping Algorithm)
+                                </a>
+                            </center>
+                        </p>
+
+                        <p>
+                            <center>
+                                <figure>
+                                    <img src="./meeting_10/Eikonal_Solver_Lower_Scheme_Result.png" width="500px" alt="">
+                                    <figcaption>First-Order Godunov Fast Sweeping Algorithm (Earlier Implementation)</figcaption>
+                                </figure>
+
+                                <figure>
+                                    <img src="./meeting_10/Eikonal_Solver_Higher_Scheme_Result.png" width="500px" alt="">
+                                    <figcaption>Fifth-Order WENO Fast Sweeping Algorithm</figcaption>
+                                </figure>
+                            </center>
+                            From these results, it can be observed that when the error tolerance reaches \(10^{-9}\), the solution obtained using the higher-order scheme closely matches that of the lower-order scheme. A closer inspection of the scalar field values shows that they are comparable, which confirms that the implementation of the higher-order algorithm is correct. The MATLAB source code used for this implementation is provided below.<br>
+                            <center>
+                                <a href="./meeting_10/Two_Dimensional_Eikonal_Equation.mlx" target="_blank">
+                                    Download Source Code (Two-Dimensional Eikonal Equation using Fifth-Order WENO Fast Sweeping Algorithm)
+                                </a>
+                            </center>
+                        </p>
+
+                    </p>
+
+                    <h4>Two Dimensional Advection Equation</h4>
+                    <p>
+                        After successfully implementing the Eikonal equation, I proceeded to develop the code for the two-dimensional advection equation. This task proved to be more challenging than the Eikonal case, as it involved not only the WENO advection scheme but also the TVD Runge–Kutta time integration method. The WENO advection scheme is used to construct the semi-discretized form of the advection equation by discretizing the spatial derivatives.
+                    </p>
+                    <p>
+                        This formulation requires the use of a staggered grid; however, to avoid unnecessary complexity, I did not explicitly define the staggered grid. Instead, it was handled internally within the relevant functions, rather than being defined and maintained globally. This design choice significantly simplified the implementation. In addition, I did not explicitly handle ghost points. The computational domain remains \(400 \times 200\), and the algorithm computes the solution only for indices \(4{:}N_x-2\), as required by the fifth-order upwinded scheme. As a result, the effective solution domain is \((N_x-5) \times (N_y-5)\); however, this compromise was acceptable given the substantial simplification it provided during implementation.
+                    </p>
+                    <p>
+                        Provided below are the code and report for solving the two-dimensional advection equation using a fifth-order WENO scheme.<br>
+                        <center>
+                            <a href="./meeting_10/Two_Dimensional_Advection_Scheme.mlx" target="_blank">
+                                Download Code (Two-Dimensional Advection Equation using Fifth-Order WENO)
+                            </a>
+                        </center><br>
+                        <center>
+                            <a href="./meeting_10/Two_Dimensional_Advection_Scheme.pdf" target="_blank">
+                                Report (Two-Dimensional Advection Equation using Fifth-Order WENO)
+                            </a>
+                        </center>
+                    </p>
+                    <p>
+                        As shown in the results, two types of initial conditions and three types of test problems were considered. The first initial condition introduces a discontinuity in the density field (a square-shaped profile), while the second consists of a smooth Gaussian blob. The test cases include constant velocity in the x-direction (with no y-component), velocity components in both x and y directions, and a nonlinear velocity field. The nonlinear case, however, did not produce satisfactory results. The corresponding results are presented below.
+                    </p>
+                    <p>
+                        <table border="1px">
+                            <thead>
+                                <tr>
+                                    <th>Problem</th>
+                                    <th>Initial Condition</th>
+                                    <th>Result</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>Problem 1</td>
+                                    <td>
+                                        <img src="./meeting_10/Advection_Results/problem1.jpg" width="500px" alt="">
+                                    </td>
+                                    <td>
+                                        <video width="500px" controls>
+                                            <source src="./meeting_10/Advection_Results/Problem1_Adection_Result.mp4" type="video/mp4">
+                                        </video>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>Problem 2</td>
+                                    <td>
+                                        <img src="./meeting_10/Advection_Results/problem2.jpg" width="500px" alt="">
+                                    </td>
+                                    <td>
+                                        <video width="500px" controls>
+                                            <source src="./meeting_10/Advection_Results/Problem2_Advection_Result.mp4" type="video/mp4">
+                                        </video>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>Problem 1</td>
+                                    <td>
+                                        <img src="./meeting_10/Advection_Results/problem3.jpg" width="500px" alt="">
+                                    </td>
+                                    <td>
+                                        <video width="500px" controls>
+                                            <source src="./meeting_10/Advection_Results/Problem3_Advection_Result.mp4" type="video/mp4">
+                                        </video>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>Problem 1</td>
+                                    <td>
+                                        <img src="./meeting_10/Advection_Results/Problem4.jpg" width="500px" alt="">
+                                    </td>
+                                    <td>
+                                        <video width="500px" controls>
+                                            <source src="./meeting_10/Advection_Results/Problem4_Advection_Result.mp4" type="video/mp4">
+                                        </video>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>Problem 1</td>
+                                    <td>
+                                        <img src="./meeting_10/Advection_Results/problem5.jpg" width="500px" alt="">
+                                    </td>
+                                    <td>
+                                        <video width="500px" controls>
+                                            <source src="./meeting_10/Advection_Results/Problem5_Advection_Result.mp4" type="video/mp4">
+                                        </video>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </p>
+                    <p>
+                        I observe that the code becomes unstable when the velocity field is nonlinear, which is an issue I had mentioned earlier. This is precisely where I am currently stuck, since Hughes’ flow model involves a velocity field that varies spatially, making the advection equation nonlinear. Nevertheless, I attempted to use the same code framework to implement the Hughes’ flow model.
+                    </p>
+                    <h4>Two Dimensional Hughe's Flow</h4>
+                    <p>
+                        Using the successfully implemented Eikonal equation solver together with the problematic advection equation solver, I developed a solver for the Hughes’ flow model. As expected, the combined solver did not produce satisfactory results. The corresponding code, report, and results are provided below.<br>
+                        <center>
+                            <a href="./meeting_10/Hughes_Flow_Final_Report.pdf" target="_blank">
+                                Report (Two-Dimensional Hughes’ Flow using WENO Advection and Eikonal Equation)
+                            </a>
+                        </center><br>
+                        <center>
+                            <a href="./meeting_10/Hughes_Flow.mlx" target="_blank">
+                                Download Code (Two-Dimensional Hughes’ Flow using WENO Advection and Eikonal Equation)
+                            </a>
+                        </center>
+                    </p>
+                    <p>
+                        Presented below are the results for a synthetic test problem solved using the developed solver. As expected, the solution exhibits instability.<br>
+                        <center>
+                            <img src="./meeting_10/Advection_Results/hughe.jpg" width="500px" alt=""><br>
+                            <video width="500px" controls>
+                                <source src="./meeting_10/Advection_Results/Hugh_Flow_Result.mp4" type="video/mp4">
+                            </video>
+                        </center>
+                    </p>
+                </p>
+            </div>
+        </section>
+        </details>
+
+        <hr>
+        <!--Meeting 11-->
+        <details>
+            <summary class="meeting-11">Meeting 11</summary>
+            <section class="intro-card">
+            <div class="card">
+                <h2>Meeting 11</h2>
+                <p>
+                    So after looking at the results of meeting 10, I was suggested to do the following.<br>
+                    <ol>
+                        <li>
+                            First is that I solved the advection equation with the velocity field that obeys the Greenshields' relation. Density vs X is plotted for Centerline constant Y values.
+                        </li>
+                        <li>
+                            Then I solved the problem of Hughes again with controlled delta_t (CFL) and with some modification in the boundary condition of the flux while solving the advection equation.
+                        </li>
+                        <li>
+                            Now, since the Hughes flow was facing a problem because of the new advection (higher order Advection), I have also tried solving the Hughes flow with my old advection solver, which used the first-order Lax–Wendroff equation, and also the newly formed Eikonal solver, which used a higher-order WENO fast sweep algorithm.
+                        </li>
+                    </ol>
+                    Results and the explanation about each of them are given below.
+                </p>
+
+                <div class="">
+                    <h4><u>Non-linear Advection Problem with GreenSheild Relation</u></h4>
+                    <p>
+                        The last time I tried using the higher order Advection scheme (Fifth order WENO), I got the following result, which was for constant velocity.
+                    </p>
+                    <b><u>For Constant Velocity Condition : </u></b>
+                    <center>
+                        <figure>
+                            <img src="" alt="">
+                            <figcaption>Description of the Problem</figcaption>
+                        </figure>
+                    </center>
+                    And here the same result when the <b><u>velocity is constant</u></b>.
+                    <center>
+                        <video width="500px" controls>
+                            <source src="./Meeting_11/Density_Constant_Velocity_One_Dimension.mp4" type="video/mp4">
+                        </video>
+                        <video width="500px" controls>
+                            <source src="./Meeting_11/Density_Constant_Velocity.mp4" type="video/mp4">
+                        </video>
+                    </center>
+
+                    <b><u>For GreenSheild's Velocity Condition : </u></b>
+                    <center>
+                        <figure>
+                            <img src="" alt="">
+                            <figcaption>Description of the Problem</figcaption>
+                        </figure>
+                    </center>
+                    And here the same result when the velocity is obeying the GreenSheild's Relation.
+                    <center>
+                        <video width="500px" controls>
+                            <source src="./Meeting_11/Density_at_center_line.mp4" type="video/mp4">
+                        </video>
+                        <video width="500px" controls>
+                            <source src="./Meeting_11/Density_non_linear.mp4" type="video/mp4">
+                        </video>
+                    </center><br>
+                    The report for this code is given here : <a href="./Meeting_11/Two_Dimensional_Advection_Scheme.pdf">Report</a><br>
+                </div>
+                <div class="">
+                    <h4>Hughes's Flow with the above Advection Equation</h4>
+                    <details>
+                        <summary>Blunder</summary>
+                            <p>
+                            Using the above Advection equation I againn tried solving the hughe's Flow problem, nad given below are the reuslts<br>
+                            <center>
+                                <figure>
+                                    <img src="" alt="">
+                                    <figcaption>Description of the problem</figcaption>
+                                </figure>
+                            </center>
+                            <center> 
+                                <video width="500px" controls>
+                                    <source src="./Meeting_11/Hughe_Flow/Density_Centerline.mp4" type="video/mp4">
+                                </video>
+                                <video width="500px" controls>
+                                    <source src="./Meeting_11/Hughe_Flow/Density.mp4" type="video/mp4">
+                                </video>
+                            </center>
+                        </p>
+                    </details><br>
+                    After correcting a blunder this is the result for the problem with Higher order Eikonal and higher order Advection.<br>
+                    <center>
+                        <video width="500px" controls>
+                            <source src="./Meeting_11/Density_Center_line_updated.mp4" type="video/mp4"/>
+                        </video>
+                        <video width="500px" controls>
+                            <source src="./Meeting_11/Density_Updated.mp4" type="video/mp4"/>
+                        </video>
+                        <<video width="500px" controls>
+                            <source src="./Meeting_11/Potential_Updated.mp4" type="video/mp4"/>
+                        </video>
+                    </center>
+                </div>
+                <div class="">
+                    <h4>New Eikonal Equation solver and Old Advection Solver</h4>
+                    <details>
+                        <summary>Blunder</summary>
+                        <p>
+                        Here due to the advection equation being unstable for non linear advection equation, I have finally tried solving the problme with the old advection and new Eikonal Equation and here is the result<br>
+                        <center>
+                            <figure>
+                                <img src="" alt="">
+                                <figcaption>Description of the problem</figcaption>
+                            </figure>
+                        </center>
+                        <center>
+                            <video width="500px" controls>
+                                <source src="./Meeting_11/Hughe_Flow/Old_Advection_New_Eikonal/Density_Centerline.mp4" type="video/mp4">
+                            </video>
+                            <p>Density Distribution at Centerline</p>
+                            <video width="500px" controls>
+                                <source src="./Meeting_11/Hughe_Flow/Old_Advection_New_Eikonal/Density.mp4" type="video/mp4">
+                            </video>
+                            <p>Density Distribution</p>
+                            <video width="500px" controls>
+                                <source src="./Meeting_11/Hughe_Flow/Old_Advection_New_Eikonal/Potential.mp4" type="video/mp4">
+                            </video>
+                            <p>Potential Distribution</p>
+                        </center>
+                        </p>
+                        <p>
+                            Surprizingly what i noticed was that the results were still no good. And for this reason, I am re-attempting the problem with the old adection and old eikonal equation which I hav done in my last UGP. Here is the <a href="./Meeting_11/Hughe_Flow/Old_Advection_New_Eikonal/Old_Advection_New_Eikonal.pdf">Report</a>
+                        </p>
+                    </details>
+                    <p>
+                        Here is the corrected code. I have been making two blunders, and that is setting the inifnity value before the sweep to 10^2 which is very low. The paper recommeneded 10^12. And the second thing is I forgot the negative sign in the relation between the velocity and phi. Due to which i was getting some undesirable result shown in the above pop up.
+                    </p>
+                    <p>
+                        But after correcting the above blunder, I have finally generated a satisfoactory result using the new Eikonal and Old Advection equation, The Result for density is shown below. THis simulation of 50 sec took me almost an hour to process, hence the I havent increased the domain time. However it is obviousl that the simulation is not complete (Since not all the crowd have made it to exit in 50 sec).
+                        <br>
+                        <center>
+                            <video width="500px" controls>
+                                <source src="./Meeting_11/Hughe_Flow/Old_Advection_New_Eikonal/Density_Updated.mp4" type="video/mp4"/>
+                            </video>
+                        </center>
+                    </p>
+                    
+                        
+                    
+                </div>
+                <div class="">
+                    <p>
+                        <h4>Old Eikonal and old Advection</h4>
+                        <p>
+                            So now I will be using the old eikonla and old advection solver to solve the same problem. And I am expecting to see no problmes making this code.
+                        </p>
+                        <p>
+                            THis result of density could be used as soemthing to be looked forward to.<br>
+                            <center>
+                                <video width="500px" controls>
+                                    <source src="./Meeting_11/Hughe_Flow/Old_Advection_Old_Eikonal/Density.mp4" type="video/mp4"/>
+                                </video>
+                            </center>
+                        </p>
+                    </p>
+                </div>
+            </div>
+        </section>
+        </details>
+        
+    </div>
+    <hr>
+    <div class="footer">
+            <div class="logo-cards">
+                <div class="github-logo">
+                    <a href="https://github.com/arushraju/Quantum_Tic_Tac_Toe" target="_blank">
+                        <img src="./github-mark.svg">
+                    </a>
+                </div>
+            </div>
+        </div>
+</body>
+
+</html>

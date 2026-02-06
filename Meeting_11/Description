@@ -1,0 +1,29 @@
+|----------------------------------------------------|
+|  In the file : Two_Dimensional_Advection_Scheme    |
+|----------------------------------------------------|
+
+-> Here, the following is tested. The advection is tested for a problem with gaussian density initial condition with careful limits. The density maximum density goes to 0.45 and the minimum density goes till 0.5. This density was set to discourgae the algorithm, making the density less than 0 and more than 1 at any point on the domain. Then the data of density in the complete contour and the density at the y = 100 (which is the mid line of the domain) was plotted to see whether the density goes below zero or not. And it is found that the denisty does goes below zero. The results are stored in the file named : 
+
+1. "Density_at_center_line" : Stores the density at center line which is y = 100;
+2. "Density_non_linear"     : Here the density is plotted against the x and y domain.
+
+I am seeing that the algorithm kind of explodes for the velocity that is non linear. And thus I would now in a way make the velocity constant and then see what happens.
+
+Before using the old adection, I am going to plot the density at different constant y location, and for this purpose, i will use : 
+y = 0 (Ny = 1)
+y = 5 (Ny = 20)
+y = 10 (Ny = 40)
+y = 15 (Ny = 60)
+y = 20 (Ny = 80)
+y = 25 (Ny = 100)
+I am just going to analyze the bottom half of the domain and not the complete domian since the problem is symmetric about the x axis.
+Also there are many chnages done in the code. Firstly, the time interval is made adaptive, respecting the CFL condition. The results are still un-satisfactory.
+Here are description of the files
+
+1. "Density_Centerline" : This is hwere i have plotted the density at the centerline. And the problem statement is that the 
+2. "Density" : Here there is one observation made and that is that, there does exist negative density which is creating problem. This by the way is the plot of the density as a contour contour.
+3. 
+
+Once that is done, I will try plotting solving the same problem but with my old Advection Solver, and once that is checked, I will solve the problem of hughe's with my new eikonla equation and old advection and finally solve some problems that should hopefully make sense.
+
+Anbd once that is done i will try playing with the delta t and see whcih ones works for my non linear problem 

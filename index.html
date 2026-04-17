@@ -1929,7 +1929,7 @@
             <div class="footer-flex">  
                 <div class="logo-cards">
                     <div class="software-logo">
-                        <a href="./thinking_fluids.html">
+                        <a href="./thinking_fluids.html" target="_blank">
                             <img src="./style/Thinking_Fluid_Icon.png">
                         </a>
                     </div>
@@ -1943,7 +1943,7 @@
                 </div>
                 <div class="logo-cards">
                     <div class="code-logo">
-                        <a href="./code.html">
+                        <a href="./code.html" target="_blank">
                             <img src="./style/Code_Icon.png">
                         </a>
                     </div>
@@ -1967,14 +1967,14 @@
         //This function is to laod the images
         function update_percentage(){
             i ++;
-            let percentage = (i / (total_video + total_images - 10)) * 100;
+            let percentage = (i / (total_video + total_images - 11)) * 100;
             document.querySelector('.loader').style.width = `${percentage}%`;
 
             console.log(`percentage : ${percentage}`);
             console.log(`total_video : ${total_video}`);
             console.log(`total_images : ${total_images}`);
 
-            if(percentage > 99){
+            if(percentage > 99.9){
                 //Change the loading text
                 // document.querySelector('.loading-text').innerHTML = 'Just a sec ... '
 

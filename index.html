@@ -170,7 +170,7 @@
             opacity: 1;
             transition: opacity 2s;
 
-            display: none;
+            display: flex;
             justify-content: center;
             align-items: center;
         }
@@ -231,12 +231,12 @@
 <body>
     <div class="eb-garamond-text">
 
-        <!--Loading Page
-        <div class="loading-page-container">
+        <!--Loading Page-->
+        <!-- <div class="loading-page-container">
             <div class="loader-container">
                 <div class="loader"></div>
             </div>
-        </div>-->
+        </div> -->
 
         <div class="intro-card preamble">
             <i>
@@ -1766,6 +1766,7 @@
                 </section>
             </details>
 
+            <!--Meeting 15-->
             <details>
                 <summary>Meeting 15</summary>
                 <section class="intro-card">
@@ -1854,6 +1855,7 @@
                 </section>
             </details>
 
+            <!--Meeting 16-->
             <details>
                 <summary>Meeting 16</summary>
                 <section class="intro-card">
@@ -1900,8 +1902,8 @@
                                 <img src="./Meeting_16/Screenshot at 2026-04-14 16-56-46.png" width="30%" alt="">
                                 <img src="./Meeting_16/Density_At_36.png" width="30%" alt="">
                             </center>
-                            And here is the CSV File for the above plots that is created : <a href="./Series_1.csv">File 1</a> , <a href="./Series_2.csv">File 2</a>
-                            And the CSV file for the result that I ahve obtained is : <a href="./Meeting_16/rho_at_33.csv">My File 1</a> , <a href="./Meeting_16/rho_at_36.csv">My File 2</a>
+                            And here is the CSV File for the above plots from the paper : <a href="./Series_1.csv">File 1 (Download)</a> , <a href="./Series_2.csv">File 2 (Download)</a>
+                            And the CSV file from the result that I have obtained : <a href="./Meeting_16/rho_at_33.csv">My File 1 (Download)</a> , <a href="./Meeting_16/rho_at_36.csv">My File 2 (Download)</a>
                         </p>
                         <p>
                             Now, the third thing that we talked about was the kind of problem that we will be solving for the paper. He explained that our novelty, or the element of contribution in the work, is not in the numerics, since till now whatever I have done is just replicating the work of others. And thus, he said that our contribution will be in the kind of problems that we might solve, and this is where our creativity lies. So now, given below is the summary of the problems that could be chosen to be solved, and I have also listed the papers from where I have taken this inspiration.
@@ -1922,7 +1924,7 @@
                             After going through the paper, I became interested in implementing two more features into the solver: <b>Panic Effect</b> and <b>Heterogeneity</b> in the crowd. While reading <a href="./Papers/A continuum theory for the flow of pedestrians.pdf">Hughes' Original Paper</a>, I noticed that it also discusses heterogeneity in the crowd. Being able to simulate different types of crowds will surely give the solver much more functionality.
                         </p>
                         <details>
-                            <summary>Multi-type Crowds</summary>
+                            <summary>Multi-type Crowds (Click)</summary>
                             <p>
                                 So this is my attempt to solve the extended Hughes' model for a multi-type crowd problem using the same numerical algorithm. Reading through the paper, I see that there is just one more hypothesis than the previous ones. Just to recall, the first hypothesis was about the relation between speed and density (Greenshields' Relation), the second hypothesis is about the definition of potential (Eikonal Equation), the third hypothesis is about how pedestrians try to minimize this potential (giving the velocity unit vector), and finally the conservation of pedestrians.
                             </p>
@@ -1972,7 +1974,65 @@
                 </section>
             </details>
 
+            <!--Meeting 17-->
+            <details>
+                <summary>Meeting 17</summary>
+                <section class="intro-card">
+                    <div class="card">
+                        <p>
+                            There are specifically two tasks that I have completed this week. The first was to replicate the results and verify that they are in line with those presented in the paper. The second was to explore and formulate a potential problem statement. I will first discuss the result validation and then move on to the problem exploration.
+                        </p>
+                        <p>
+                            <h2>Solver validation</h2>
+                        </p>
+                        <p>
+                            <h2>Problem Exploration : </h2>
+                            <p>
+                                There are many possible ways to move forward. In the last discussion that I had with the professor, I explained that I have categorized the problems into three types: <b>external-flow-like problems</b>, <b>internal-flow-like problems</b>, and finally <b>evacuation problems</b>. All of them share a common objective of optimization. Some aim to optimize the evacuation time, while others focus on reducing dangerous density spikes.
+                            </p>
+                            <p>
+                                The problem that particularly interested me is related to <b>Indian Railways</b>, specifically the <b>Mumbai local trains</b>. The issue that caught my attention is the <b>bottleneck formed at the train doors</b>. When a train arrives at a station, the same doors are used both by passengers exiting the train and by those attempting to enter it. This creates a severe crowding problem and can lead to dangerous density spikes. One possible solution could be to separate the incoming and outgoing flows. Another approach could involve modifying the door geometry or rearranging the door configuration to study whether such changes improve the crowd movement. I have elaborated further on these idea below.
+                            </p>
+                            <p>
+                                The first task is to model the problem, and for that I have implemented the following setup. I have considered two different types of crowd: <span style="color:red;">Crowd 2 (the passengers who want to exit the train)</span> and <span style="color:blue;">Crowd 1 (the passengers who want to enter the train)</span>. Both of these crowds are required to enter or exit through the same set of gates.
+                            </p>
+                            <p>
+                                In addition, the simulation will also include obstacles that mimic the train walls and doors. One important assumption in this study is that the crowd entering the train will not exit through the boundaries. Instead, they will move further inside and gather at the left of the obstacle. Accordingly, the crowd that is already inside the train is assumed to have the right boundary as its outflow boundary, as illustrated in the image.
+                            </p>
+                            <p>
+                                This problem could be discussed before making an attempt to solve it.
+                            </p>
+                        
+                            <center>
+                                <img src="./Meeting_17/Problem-Description.jpeg" width="60%" alt="">
+                            </center>
+                            <center>
+                                <img src="./Meeting_17/Sub_Urban_Car_Dimension.png" width="70%" alt="">
+                            </center>
+                            <details>
+                                <summary>Speration of Flow</summary>
+                                <p>
+                                    I think one solution could be to, seperate the flow as exit and entry.
+                                </p>
+                            </details>
+
+                            <details>
+                                <summary>Door Geometry</summary>
+                            
+                                <p>
+                                    The geometry of the door could also be investigated to determine its influence on the crowd movement and bottleneck formation. Modifying the size, shape, or arrangement of the doors may help improve the flow efficiency.
+                                </p>
+                                <p>
+                                    But so will be the case if the number of doors is increased without changing the geometry of the door. Now both these cases could be compared.
+                                </p>
+                            </details>
+                        </p>
+                    </div>
+                </section>
+            </details>
+
             <hr>
+            <!--Reference-->
             <div style="border: 1px solid black; width: 100%;">
                 <h2>References</h2>
                 <ol>
@@ -1996,7 +2056,7 @@
             <div class="footer-flex">  
                 <div class="logo-cards">
                     <div class="software-logo">
-                        <a href="./thinking_fluids.html">
+                        <a target="_blank" href="./thinking_fluids.html">
                             <img src="./style/Thinking_Fluid_Icon.png">
                         </a>
                     </div>
@@ -2010,7 +2070,7 @@
                 </div>
                 <div class="logo-cards">
                     <div class="code-logo">
-                        <a href="./code.html">
+                        <a target="_blank" href="./code.html">
                             <img src="./style/Code_Icon.png">
                         </a>
                     </div>
@@ -2023,7 +2083,7 @@
     
     
     <!--This is  for the Script for the loading page-->
-   <!-- <script>
+    <!-- <script>
         
         //This function is to laod the images
         let loadingDone = false;

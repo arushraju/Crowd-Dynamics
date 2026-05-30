@@ -2174,7 +2174,88 @@
                     </div>
                     
             </details>
+            
 
+            <!--Meeting 19-->
+            <details>
+                <summary>Meeting 19</summary>
+                <section class="intro-card">
+                    <div class="card">
+                        <p>
+                            So there are two tasks as suggested to me after this meeting. And they are: to study the effect of the discomfort function further, and then to work on the same problem as above but for the corrected and symmetric geometry so as to find the reason behind the crowd moving towards the bottom door of the train.
+                        </p>
+                        <p>
+                            <h3>New Problem (Studing the Obstacle on the platform)</h3>
+                            <p>
+                                So this new problem that could be thought of, as described by the professor, could be as follows.
+                                <ol>
+                                    <li>There is a rectangular platform and this is not Platform Number 1. So this means that the trains can take a halt on both sides of the platform. But in my problem the train takes a halt at only one side.</li>
+                                    <li>And then thereis one pillars on the platform and also a staircase. There is a vendor as well near the pillar which will be added and removed to study it's effect on the crowd dynamics.</li>
+                                </ol>
+                                A pictorial representation of the problem is given below: <br>
+                                <center>
+                                    <figure>
+                                        <img src="./Meeting_19/Without_Vender_Problem_Description.jpg" width="45%">
+                                        <figcaption>Problem Description without Vendor</figcaption>
+                                    </figure>
+                                    <figure>
+                                        <img src="./Meeting_19/Vender_Problem_Description.jpg" width="45%">
+                                        <figcaption>Problem Description with Vendor</figcaption>
+                                    </figure>
+                                </center>
+                            </p>
+                            <p>
+                                Another question is what it is that I will study in this problem. So for that I have three ideas. And they are as follows.<br>
+                                Firstly, there are three cases.
+                                <ul>
+                                    <li>First thing that could be studied is the <b>Evacuation Time</b>. So this time could be calculated for three cases: when there are no vendors, when there is one vendor on one side of the pillar.</li>
+                            
+                                    <li>And then the other thing that could be studied is as follows. At the exit, at each time step, the average flux that is flowing out from the exits can be calculated and this flux value could be plotted with time. And then vendors could be introduced and the same plot of flux vs. time could be plotted.</li>
+                            
+                                    <li>And similarly there could be a case where I could select Region A and Region B beside the pillars and could plot the flux value at both regions with time for each case (no vendor, one vendor and two vendors).This is to study how does the flow rate of poeple change with the introduction of the vendor.</li>
+                                </ul>
+                            </p>
+                            <p>
+                                The results of the density evolution with time for each case are given below:<br>
+                                <center>
+                                    <figure>
+                                        <video controls>
+                                            <source width="45%" src="./Meeting_19/Without_Vender_A.mp4" type="video/mp4">
+                                        </video>
+                                        <figcaption>Without the Vendor in the domain</figcaption>
+                                    </figure>
+                                    <figure>
+                                        <img src="./Meeting_19/Flow_Rate_without_vendor.png" width="45%">
+                                        <figcaption>Flow Rate without Vendor</figcaption>
+                                    </figure>
+                                </center>
+                                <center>
+                                    <figure>
+                                        <video width="45%" controls>
+                                            <source src="./Meeting_19/With_Vendor_A.mp4" type="video/mp4">
+                                        </video>
+                                        <figcaption>With the Vendor present in the domain</figcaption>
+                                    </figure>
+                                    <figure>
+                                        <img src="./Meeting_19/Vendors_Flow_Rate_Image.png" width="45%">
+                                        <figcaption>Flow Rate with Vendor</figcaption>
+                                    </figure>
+                                </center>
+                            </p>
+                            Here is the code : <a href="./Meeting_19/Code.mlx">Download</a>
+                        </p>
+                        <p>
+                            <h3>Symmetric Problem to understand the unusual behavior of the crowd</h3>
+                            <p>
+                                So in order to solve the problem of the chocking problem, I have first fixed the geometry of the problem, and the second task was to have a third density already present in the train. And this third density will not be solved. And its only purpose is to just exist. And this density could be thought of as people that are present in the train and are just standing.
+                            </p>
+                            <p>
+                                There are still some debugging that is needed.
+                            </p>
+                        </p>
+                    </div>
+                </section>
+            </details>
             <hr>
 
             <!--Paper Iteration-->

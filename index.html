@@ -2357,10 +2357,12 @@
                                 <h3>Symmetric Problem to understand the unusual behavior of the crowd</h3>
                                 <p>
                                     So in order to solve the problem of the chocking problem, I have first fixed the geometry of the problem. By fixing I mean to add the symmetry in the domain. Just to recall, i thought that crowd unusually moving to the bottom part of the domain in the last meeting's result was because of the unsymmetric domain. The argument that I gave was that the doors at the top and the middle part of the domian was smaller than the bottom door. And therefore the crowd easily makes those two doors blocked and this leads to the crowd moving to the bottom doors. The rough sketch of the domain is given below.<br>
-                                    <figure>
-                                        <img src="./Meeting_19/Two_Crowd_Problem_Description.jpg" height="400vh">
-                                    </figure>
-                                    <figcaption>Rough sketch of problem description</figcaption>
+                                    <center>
+                                        <figure>
+                                            <img src="./Meeting_19/Chocking_Problem/Two_Crowd_Problem_Description.jpeg" height="400vh">
+                                        </figure>
+                                        <figcaption>Rough sketch of problem description</figcaption>
+                                    </center>
                                 </p>
                                 <p>
                                     So I have first tried solving the problem with just two crowd just like the above meeting but with the difference being that the domain is symmetric. And then I have introduced the third crowd and solved as suggested.
@@ -2372,7 +2374,8 @@
                                 <details style="width: 90%; margin-left: 5%; margin-right: 5%; background-color: rgb(255, 242, 125);">
                                     <summary>Two Crowd Chocking Problem</summary>
 
-                                    <p>So just to recall the problem involved two crowd. One which wants to go inside the train and the one which wants to go outside the train. In the problem solved below, I have take both the crowd to be of equal density. SO for example, densiyt equal to 2 means both the density of the crowd being equal to 2, initially.</p>
+                                    <p>So just to recall the problem involved two crowd. One which wants to go inside the train and the one which wants to go outside the train. In the problem solved below, I have take both the crowd to be of equal density. SO for example, densiyt equal to 2 means both the density of the crowd being equal to 2, initially. Just to recall, <span style="color: blue;">Crowd A wants to exit the train</span>, and <span style="color:red">Crowd B wants to exit the train.</span></p>
+
                                     <table border="1px" style="width:100%; table-layout: fixed;">
                                         <colgroup>
                                             <col style="width:50%;">
@@ -2441,7 +2444,7 @@
                                         <div id="three-crowd-problem" style="display:flex; flex-direction:column;">
                                             <div style="display: flex; flex-direction: column; align-items: center; justify-content: center;">
                                                 <figure>
-                                                    <img src="./Meeting_19/Three_Crowd_Problem_Description.jpg" height="400vh">
+                                                    <img src="./Meeting_19/Chocking_Problem/Two_Crowd_Problem_Description.jpeg" height="400vh">
                                                 </figure>
                                                 <figcaption>Rough sketch of problem description</figcaption>
                                             </div>
@@ -2456,29 +2459,78 @@
                                                     <li>Density of Crowd C is equal to 7.2 which is obtained by assuming that 90% of crowd is still there in the train.</li>
                                                 </ul>
                                             </div>
-                                        </div>
-                                        
+                                        </div>   
                                     </p>
 
-                                    And with the problem description that is <a href="#three-crowd-problem">shown</a> above, I have tried solving the problem and here are the results : <br>
-                                    <center>
-                                        <figure>
-                                            <video controls>
-                                                <source src="./Meeting_19/Chocking_Problem/third_density_actual_problem_1.mp4">
-                                            </video>
-                                        </figure>
-                                        <figcaption>For the Desnity of Crowd A being equal to 1</figcaption>
-                                    </center>
-                                    It is seen that the density more than the jam density is observed in the domain at t ~ 2.5 sec. So the next step I tried for the crowd density of A equal to 0.5.
-                                    <center>
-                                        <figure>
-                                            <video controls>
-                                                <source src="./Meeting_19/Chocking_Problem/third_density_actual_problem_0_5.mp4">
-                                            </video>
-                                        </figure>
-                                        <figcaption>For the Desnity of Crowd A being equal to 0.5</figcaption>
-                                    </center>
-                                    I see that the jam desnity is exceeded at t~2.65 sec. So this tiem I have solved the problem with density of the incoming crowd equal to 0.1 and have seen that there is no problem for the crowd to exchange. So this critical density for this problem has to be between 0.5 and 0.1.
+                                    <table border="1px" style="width:100%; table-layout: fixed;">
+                                        <colgroup>
+                                            <col style="width:50%;">
+                                            <col style="width:50%;">
+                                        </colgroup>
+
+                                        <thead>
+                                            <th>Resutls</th>
+                                            <th>Remarks</th>
+                                        </thead>
+
+                                        <tbody>
+                                            <tr>
+                                                <td>
+                                                    <figure>
+                                                        <video style="width:100%" controls>
+                                                            <source src="./Meeting_19/Chocking_Problem/third_density_actual_problem_1.mp4">
+                                                        </video>
+                                                        <figcaption>For the Desnity of Crowd A being equal to 1</figcaption>
+                                                    </figure>
+                                                    
+                                                </td>
+                                                <td>
+                                                    It is seen that the density more than the jam density is observed in the domain at t ~ 2.5 sec. So the next step I tried for the crowd density of A equal to 0.5.
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td>
+                                                    <figure>
+                                                        <video style="width:100%;" controls>
+                                                            <source src="./Meeting_19/Chocking_Problem/third_density_actual_problem_0_5.mp4">
+                                                        </video>
+                                                        <figcaption>For the Desnity of Crowd A being equal to 0.5</figcaption>
+                                                    </figure>
+                                                   
+                                                </td>
+                                                <td>
+                                                    I see that the jam desnity is exceeded at t~2.65 sec. So this tiem I have solved the problem with density of the incoming crowd equal to 0.1 and have seen that there is no problem for the crowd to exchange. So this critical density for this problem has to be between 0.5 and 0.1.
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td>
+                                                    <figure>
+                                                        <video style="width:100%;" controls>
+                                                            <source src="./Meeting_19/Chocking_Problem/third_density_actual_problem_0_25.mp4" type="video/mp4">
+                                                        </video>
+                                                        <figcaption>For the Desnity of Crowd A being equal to 0.25</figcaption>
+                                                    </figure>
+                                                </td>
+                                                <td>
+                                                    I see that the chocking has occured at time t ~ 2.30 sec. So finally I have tried for density of crowd entering the train to be equal to 0.1.
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td>
+                                                    <figure>
+                                                        <video style="width:100%;" controls>
+                                                            <source src="./Meeting_19/Chocking_Problem/third_density_actual_problem_0_1.mp4" type="video/mp4">
+                                                        </video>
+                                                        <figcaption>For the Desnity of Crowd A being equal to 0.1</figcaption>
+                                                    </figure>
+                                                    
+                                                </td>
+                                                <td>
+                                                    I see there is no problem wehn the crowd entering the train has desnity equal to 0.1, initially.
+                                                </td>
+                                            </tr>
+                                        </tbody>
+                                    </table>                                
                                 </details><br>
                             </p>
                         </details> 

@@ -1,14 +1,15 @@
 /**
- * @file hughes_solver.c
+ * @file core.c
  * @brief Main solver for the Hughes crowd flow model.
- *
  * @author Arush Chinchkhede
  * @date 2026-06-20
- * @version 1.0
+ * @version 0.1.0
  */
 
 #include<stdio.h>
 #include<stdlib.h>
+#include<math.h>
+#include<string.h>
 
 //This for colors
 #define RED    "\033[31m"
@@ -16,7 +17,7 @@
 #define YELLOW "\033[33m"
 #define BLUE   "\033[34m"
 #define RESET  "\033[0m"
-#define CLEAR "\x1b[2J\x1b[H"
+#define CLEAR "\033[2J\033[H"
 #define BOLD "\033[1m"
 #define UNDERLINE "\033[4m"
 
@@ -38,7 +39,6 @@ double** y_component;   // Y Component Matrix
  * |------------------------|
  * 
 */
-
 /* GREENSHEILD'S RELATION */
 double Vmax;    //Maximum Velocity
 double rho_max; //Maximum Density
@@ -71,12 +71,43 @@ void drake(int Nx, int Ny){
     return;
 }
 
-//This function will be used to make the speed and discomfort
-void makeSpeed(int Nx,int Ny,void (*f)(int, int)){
-    
+/**
+ * |---------------------|
+ * | DISCOMFORT RELATION |
+ * |---------------------|
+ * 
+*/
+//This is my function to calculate the discomfort
+void my_discomfort_model(int Nx, int Ny){
+    for(int i = 0;i<Nx;i++){
+        for(int j = 0;j<Ny;j++){
+            discomfort[i][j] = 0.002 * pow(density[i][j],2);
+        }
+    }
+    return;
+}
+/**
+ * |---------------------|
+ * |    COST FUNCTION    |
+ * |---------------------|
+ * 
+*/
+//Function to calculate the cost
+void my_cost(int Nx, int Ny){
+    for(int i = 0;i<Nx;i++){
+        for(int j = 0;j<Ny;j++){
+            cost[i][j] = ( 1 / speed[i][j] ) + discomfort[i][j];
+        }
+    }
     return;
 }
 
+/**
+ * |---------------------|
+ * |   TEST CASE SOLVER  |
+ * |---------------------|
+ * 
+*/
 /**
  * @brief Main Solver for solving the test case.
  * @param right Right Boundary Flux Values
@@ -87,7 +118,7 @@ void makeSpeed(int Nx,int Ny,void (*f)(int, int)){
  * 
  * @return - Updates the file containing the density evolution (CSV File).Later the function could be made to print the output for backend.
 */
-void test_case_solver(double* right, double* top, double* left, double* bottom){
+void test_case_solver(double* right, double* top, double* left, double* bottom, void (*speed_density_relation)(int, int), void (*discomfort_relation)(int, int)){
     const double CFL = 0.5;
     const double Lx = 100;
     const double Ly = 100;
@@ -103,19 +134,35 @@ void test_case_solver(double* right, double* top, double* left, double* bottom){
     double time = 0;
     double dt;
 
-    while (time < total_time){
-        //Calculate the Cost from the speed and discomfort
-
-
-        //Then solve the eikonal equation using the cost and the boundary condition of the outflow and inflow and obstacle.
-
-        //And then compute the components of the velocity using the potential and the speed value.
-
-        //And then solve the density at the next time step using the components of velocity and density in current time step.
-
-        //Update the files.
+    //Start only when user press y
+    char start = 'n';
+    while(start != 'y'){
+        printf(RED "\nStart Computation? (y) : ");
+        scanf("%c",&start);
     }
-    
+    printf("\n");
+    while (time < total_time){
+        // Print the time of computation
+        printf("Time Step : %lf\n",time);
+
+        // Calculate the Cost from the speed and discomfort
+        speed_density_relation(Nx,Ny);  // To calculate the speed
+        discomfort_relation(Nx,Ny);     // To calculate the discomfort
+
+
+        // Then solve the eikonal equation using the cost and the boundary condition of the outflow and inflow and obstacle.
+
+        // And then compute the components of the velocity using the potential and the speed value.
+
+        // Calculate the time interval
+        dt = 1;
+
+        // And then solve the density at the next time step using the components of velocity and density in current time step.
+
+        // Update the files and time step
+        time = time + dt;
+    }
+
 }
 
 //Prints the Headign of the software
@@ -134,10 +181,10 @@ void print_intro(){
     printf(RED "\n\nINSTRUCTION\033[0m\n\n" RESET);
     printf(GREEN "\nWelcome to the software. Given below are the " BOLD UNDERLINE "instructions" RESET GREEN " to use the software. Before using the software it is useful to have the knowledge about the Crowd-Dynamics and Hughe's Model to be able to use the software smoothly. For more information you can vist the website " UNDERLINE BOLD "https://arushraju.github.io/Crowd-Dynamics/" RESET GREEN " to understand about my work\n\n");
     printf("The input to the software will be put in the form of different steps. And tye are listed below.\n\n");
-    printf("0. Type of Problems\n");
-    printf("1.\tEnter the Speed Density Relation\n");
-    printf("2.\tEnter some other important paramter\n");
-    printf("");
+    printf("1.\tSpeed-Density Relation\n");
+    printf("2.\tProblem Type\n");
+    printf("3.\tSimulation Parameters\n");
+    printf("4.\tSomething Else\n");
     
     printf("\n");
 
@@ -150,34 +197,62 @@ void print_intro(){
 }
 //Prints the instructions to the type of problem
 void print_problem(){
-
+    printf(RED "\n\nTYPE OF PROBLEM\tSelect the Problem\n\n");
+    printf(GREEN "Test Problem\t\t0\nStandard Problem\t1\n");
+    printf("\nEnter the Problem : ");
+    return;
 }
 //Prints the option to select the spped and density relation
 void print_speed_density(){
-    printf(RED "\n\nSPEED - DENSITY RELATION\tSelect the Model\033[0m\n\n" RESET);
+    printf(RED "\n\nSPEED - DENSITY RELATION\tSelect the Model\n\n");
     printf(GREEN "Greensheild's relation\t\t0\nGreenberg's Relation\t\t1\nUnderwood Relation\t\t2\nPipe's Relation\t\t\t3\nDrake's Relation\t\t4\n");
+    printf("\nEnter the Model : ");
+    return;
 }
 
 // Main Function
 int main(){
+
+    printf(CLEAR);
 
     /* INSTRUCTION */
     print_head();
     print_intro();
 
     /* SPEED AND DENSITY RELATION */
-    int model;
-    void (*speed_relation)(int ,int); //This is the pointer to the function depending on the model selected
     print_head();
     print_speed_density();
-    //Scan the model that is selected
+
+    int model;
+    char* model_expression = (char*)malloc(200);
     scanf("%d",&model);
-    printf(GREEN "Model Selected : " RESET);
+
+    /* TYPE OF PROBLEM */
+    print_head();
+    print_problem();
+ 
+    int problem;
+    scanf("%d",&problem);
+
+    /* SOLVE PROBLEM */
+    print_head();
+    printf("\n\n" RED BOLD "SUMMARY OF SOLVER\n\n" RESET);
+    //print the model used for speed and density and also assign the appropriate speed density function
+    void (*speed_relation)(int ,int); //This is the pointer to the function depending on the model selected
+    void (*discomfort_relation)(int, int);//This points to the discomfort function
+    printf(GREEN "Speed-Density Model : \t" RESET);
     switch (model)
     {
         case 0:
-            printf(YELLOW "GREENSHEILD'S RELATION\n" RESET);
+            printf(YELLOW "GREENSHEILD'S RELATION\n\n" RESET);
             speed_relation = greenshield;
+            printf(GREEN "Free Crowd Velocity (Velocity of crowd at zero density) : ");
+            scanf("%lf",&Vmax);
+            printf("Jam Density (Density at which crowd cannot move) : ");
+            scanf("%lf",&rho_max);
+
+            //Express the Model in Equation
+            sprintf(model_expression,"speed = %lf * (1 - (density / %lf))",Vmax,rho_max);
             break;
         case 1:
             printf(YELLOW "GREENBERG'S RELATION\n" RESET);
@@ -198,19 +273,18 @@ int main(){
         default:
             break;
     }
+    //Print the Expression of Model
+    printf(RED "\nModel Expression : %s\n\n" RESET,model_expression);
 
-    /* TYPE OF PROBLEM */
-    print_head();
-    print_problem();
-    int problem;
-    scanf("%d",&problem);
-    printf(GREEN "Problem Selected : ");
+    discomfort_relation = my_discomfort_model;
 
-    //The first input is the program name, the second input is the type of problem, and rest is the input itself.
+    //Print the type of problem needs to be solved
+    printf(GREEN "Problem Type : \t\t" RESET);
     switch (problem)
     {
         case 0:
-            
+            printf(YELLOW "TEST CASE\n" RESET);
+
             //Test Case
             double* right_boundary;
             double* top_boundary;
@@ -223,17 +297,18 @@ int main(){
             left_boundary = (double*)calloc(100,sizeof(double));
             for(int i = 0;i<100;i++){left_boundary[i] = 2;}
 
+            
+
             //Solve the Problem
-            test_case_solver(right_boundary,top_boundary,left_boundary,bottom_boundary);
+            test_case_solver(right_boundary,top_boundary,left_boundary,bottom_boundary,speed_relation,discomfort_relation);
 
             break;
         case 1:
-            //Standard Problem
-        default:
+            printf(YELLOW "STANDARD PROBLEM\n" RESET);
             break;
     }
 
-    printf(RED "\nSucessfully Executed\n" RESET);
+    printf(RED BOLD "\nSucessfully Executed\n" RESET);
 
     return 0;
 

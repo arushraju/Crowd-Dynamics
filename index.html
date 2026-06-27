@@ -2918,10 +2918,13 @@
             </details>
             <hr>
 
+            <h2 class="sub-heading">Paper Preparation</h2>
+
+            
+
             <!--Paper Iteration-->
             <div style="border: 1px solid black; width: 100%;">
                 <div style="padding: 1%;">
-                    <h2>Paper Preparation</h2>
                     This section is about preparing the paper to be published. The journal that was aimed to be targeted is <b>Physics of Fluids (PoF)</b>. And the section of the paper are suggeted to be <br>
                     <div style="display:flex; flex-direction: row;">
                         <div style="flex:1;">
@@ -2939,23 +2942,130 @@
                         </div>
                     </div>
                     In here I will add words into the each of the above metioned sections. So I see that the online latex or overleaf gives many functionality for making the research paper. The direct link to edit the paper is given here : <a target="_blank" href="https://www.overleaf.com/9473258551fptvbjhwdhsr#822fd4">Overleaf</a><br>
+                    <!--Meeting 20-->
                     <details>
-                        <summary>Abstract</summary>
-                        <p>
-                            So for the abstract I was asked to answer the following questions. What is the problem, why is this problem important, what is the model and the method that I will be using, what has the study found, and finally why does it matter. So in the peice of words given below I tried answering these questions.
-                        </p>
-                        <p>
-                            This paper predicts the maximum number of pedestrian to enter the Mumbai Sub-Urban trains without causing the phenonmenon of chocking at the doors. It uses fifth order WENO scheme for advection and third order WENO Fast sweep method for Eikonal Eqaution to solve the Hughes' macrospopic multi-crowd model. For a given jam density and the geomtry of the train, maximum number of passengers were estimated that starts chokcing of incoming and outgoing crowd at the entrance of train doors. These results could be used to regulate the number of people in Mumbia Trians to prevent accidents related to crowd mis-managements.
-                        </p>
-                    </details>
-                    <details>
-                        <summary>Introduction</summary>
-                        <p>
-                            So this section would answer the following questions. Why is the problem important and it's context. Then what has already been done? What is missing? and finally what does our paper do?
-                        </p>
-                        <p>
-                            The Mumbai Suburban Railway is one of the busiest commuter rail systems in the world.[<a href="https://en.wikipedia.org/wiki/Mumbai_Suburban_Railway">s</a>].
-                        </p>
+                        <summary>Meeting 20</summary>
+                        <section class="intro-card">
+                            <div class="card">
+                                <h2>First Version</h2>
+                                <p>
+                                    In the last meeting, we discussed how the project will continue to advance if it is not stopped. I did have the idea of working with the geometry of the train doors, but I think these ideas will be endless. So, we discussed how the research paper could have a general theme of studying the choking of crowds in different situations. We have discussed the following:
+                                </p>                                
+                                <p>
+                                    We will be studying three situations that might commonly occur in day-to-day life. They are as follows:
+                                    <ol>
+                                        <!-- Single Type Crowd -->
+                                        <li>
+                                            <b>Effect of Obstacles</b> : For this, I could choose the problem where I studied the railway platform. Here, I could study how the addition of vendors could lead to achieving the choking of the crowd more quickly.
+                                        </li>
+                                
+                                        <!-- Multi Type Crowd (type 1) -->
+                                        <li>
+                                            <b>Exchange through the Same Doors</b> : These are the problems where two crowds are initially situated on opposite sides of the doors, and the exits are located on their respective opposite sides. The choking in this case could then be studied. Here, it could be shown how the change in density affects the time required for choking to occur.
+                                        </li>
+                                
+                                        <!-- Multi Type Crowd (type 2) -->
+                                        <li>
+                                            <b>Interaction of Crowds Moving Perpendicularly</b> : This could be the situation where one crowd is coming from the bottom and another from the left side, and they move and interact perpendicularly with each other. Here also, the flux could be increased, and the choking of the crowd could be studied.
+                                        </li>
+                                    </ol>
+                                </p>
+                                <p>
+                                    I am considering a paper from <i>Physics of Fluids</i>, and I will be using this paper as the basis for comparison in order to understand the style of <i>PoF</i>. I have also used one of my professor's papers on traffic flow to understand how the cases of study have been divided and how the paper has been structured. The links to these papers are given below:
+                                    <br>
+                                    <ul>
+                                        <li><a target="_blank" href="./Papers/Traffic_flow_paper.pdf">Traffic Flow Paper (Online)</a></li>
+                                        <li><a href="./Papers/Physics_of_fluid_paper_1.pdf" target="_blank">Physics of Fluids Paper (Online)</a></li>
+                                    </ul>
+                                </p>                                
+                                <p>
+                                    I will be preparing the skeletal paper in Google Docs, and all the editing and collaborative work on the paper will take place within Google Docs. Later, once the manuscript is finalized, I can convert the document into LaTeX for the final submission.
+
+                                    Talking about the sections of the paper, I plan to follow the structure given below:
+
+                                    <br>
+
+                                    <ol>
+                                        <li>
+                                            Abstract
+                                        </li>
+                                        <li>
+                                            Introduction
+                                            <ol>
+                                                <li>Background</li>
+                                                <li>
+                                                    Crowd Dynamics (Governing Equations)
+                                                    <ol>
+                                                        <li>Single-Crowd Hughes' Model</li>
+                                                        <li>Multi-Crowd Hughes' Model</li>
+                                                    </ol>
+                                                </li>
+                                            </ol>
+                                        </li>
+                                        <li>
+                                            Numerical Method
+                                            <ol>
+                                                <li>Eikonal Solver – WENO Fast Sweeping Method</li>
+                                                <li>Advection Solver – WENO Advection Scheme</li>
+                                                <li>Validation of the solver and its convergence</li>
+                                            </ol>
+                                        </li>
+                                        <li>
+                                            Simulation Details (Problem Description)
+                                            <ol>
+                                                <li>Case A: Single Crowd with Obstacles</li>
+                                                <li>Case B: Multi-Crowd Single-Door Exchange</li>
+                                                <li>Case C: Multi-Crowd Perpendicular Flow</li>
+                                            </ol>
+                                        </li>
+                                        <li>
+                                            Results and Discussion
+                                            <ol>
+                                                <li>
+                                                    Case A:
+                                                    <ol>
+                                                        <li>
+                                                            Effect of Flux on Choking
+                                                            <ol>
+                                                                <li>Initial flux at which choking occurs without vendors</li>
+                                                                <li>Initial flux at which choking occurs with vendors</li>
+                                                            </ol>
+                                                        </li>
+
+                                                        <li>
+                                                            Effect of Obstacles on the Time of Choking for a Given Flux
+                                                            <ol>
+                                                                <li>For a given flux, the time at which choking occurs with vendors</li>
+                                                                <li>For the same flux, the time at which choking occurs without vendors</li>
+                                                            </ol>
+                                                        </li>
+                                                    </ol>
+                                                </li>
+
+                                                <li>
+                                                    Case B:
+                                                    <ol>
+                                                        <li>Choking density for each door geometry (four cases)</li>
+                                                        <li>Time of choking for a given door size with varying density (four cases)</li>
+                                                    </ol>
+                                                </li>
+
+                                                <li>
+                                                    Case C:
+                                                    <ol>
+                                                        <li>Choking density for each entry door size (four cases)</li>
+                                                        <li>Time of choking for a given door size with varying density (four cases)</li>
+                                                    </ol>
+                                                </li>
+                                            </ol>
+                                        </li>
+                                        <li>
+                                            Conclusion
+                                        </li>
+                                    </ol>
+                                </p>
+                            </div>
+                        </section>
                     </details>
                 </div>
             </div>

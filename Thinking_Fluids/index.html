@@ -4,30 +4,175 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="icon" href="./crowd_icon.png" sizes="32x32" type="image/png">
+    <link rel="stylesheet" href="./style.css">
     <title>Thinking Fluids</title>
 </head>
 <body>
     <h1>Thinking Fluids</h1>
-    <p>
-        This will be the website for the solver. Here is the link to the video on youtube : <a target="_blank" href="https://youtu.be/lk8YWtLErEY">Link</a>
+
+    <!--Front End of the Thinking Fluids-->
+    <p class="box">
+        This is the product.
     </p>
-    <details>
-        <summary>How to use this website</summary>
-        <p>
-            Features : <br>
-            <ul>
-                <li>
-                    <b>Rectangular Domain Generator : </b>So there will be some dimension of the domain which will be of the size depending on the device on which this website is being used. And then the user will enter the size of the domain. And the aspect ration of the domain will change depending on the dimension of the domain entered.<br>
-                    I got another idea to make the lenght of the domainn and the space interval to be same. Add the another layer boundary boxes just to assign the inflow and outflow at the edges. And likewise the obstacle can also be inserted in the grid space available. And this will also keep the time of compuation in check.
-                </li>
-                <li>
-                    <b>Obstacle Generator : </b>Obstacle could be added in two ways. They could be generated and shifted on the domain manually by dragging. And the other way could be by assigning the cordinates of the obstacle. And this will make assign the obstacle manually. In the first case position and the dimension of the obstacle will be considered to calculate the corwdinates of the obstacle in indexing.
-                </li>
-                <li>
-                    For now I will make the inflow of the crowd as the entrie right boundary. And I will assign the top and bottom boundary to be the walls, and the entire left boundary will be assigned the outflow boundary condition. I willthink about how to make it user freindly for the user to assign the boundary condition of inflow and the outflow.
-                </li>
-            </ul>
-        </p>
-    </details>
+
+    <!--Icon for reaching to the Main Content of the Website-->
+    <div class="content-icon">
+        <a href="#content"><img class="content-icon-image" src="./Style/Content_Icon.png"></a>
+    </div>
+
+    <!--Everything except the Frontend will be considered as the Docuemntation and will be in this section-->
+    <div class="documentation" id="content">
+        This section discusses about the how I made the website and not the core algorithm. This will be more of towards the system design and structure of the website rather than about the core algorithm. This section has the following sub sections : <br>
+        <div class="table-container">
+            <table border="1px">
+                <thead>
+                    <th>Content</th>
+                    <th>Sub Heading</th>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><a href="#what_and_why_and_how">What, Why and How?</a></td>
+                        <td>
+                            <ul>
+                                <li><a href="#how">How to use this website?</a></li>
+                                <li><a href="#what">What is this Website?</a></li>
+                                <li><a href="#why">Why was this website made?</a></li>
+                            </ul>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td><a href="#input-files">Input Files</a></td>
+                        <td>
+                            <ul>
+                                <li><a href="#exit-matrix">Exit Matrix</a></li>
+                                <li><a href="#inflow-outflow-matrix">Inflow Ouflow Matrix</a></li>
+                                <li><a href="#density-matrix">Density Matrix</a></li>
+                                <li><a href="#obstacle-matrix">Obstacle Matrix</a></li>
+                            </ul>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td><a href="#Memories">Memories</a></td>
+                        <td>
+                            <ul>
+                                <li><a href="#my_very_first_video">Inception of Thinking Fluids</a></li>
+                            </ul>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <!--How to use the Website Section-->
+        <div class="variable-box">
+            <h2 id="what_and_why_and_how"><center>1.0.0 - What, Why and How</center></h2>
+            This section will discuss about how to use this website, what is the problem that this website solves, and fianlly why was this websitem made.<br>
+            <!--How to use this Website-->
+            <div class="variable-box">
+                <h3 id="how">1.1.0 - How to use this Website?</h3>
+                Given below is a video I made that explains, how to use this website. <br>
+                <video controls>
+                    <source src="">
+                </video><br>
+                Here is the text version of the same.
+            </div>
+            <!--What is this website-->
+            <div class="variable-box">
+                <h3 id="what">1.2.0 - What is this Website?</h3>
+                Ever Heard of <a target="_blank" href="https://en.wikipedia.org/wiki/Crowd_simulation#Crowd_dynamics">Crowd Dynamics</a>? So this is the field where Crowd is simulated in a given domain. And just like any other model, there are many ways to do that. But this website uses Hughe's Continum Model for simulating the Crowd Flow. And the original paper by hughes' refered this model to be similar to "Thinking Fluids". And this website allows you to solve hughes' Flow problem online. This model is heavily inspired from Fluid Mechanocs, as the authors clearly says that this is infact a special fluid which rather than forces as the cause of motion, has a desire to move in certain direction depending on the Exits, and crowd in front of it.
+            </div>
+            <!--Why did I make this Website-->
+            <div class="variable-box">
+                <h3 id="why">1.3.0 - Why I made this Website?</h3>
+                I in my bachelors, had my Undergrad Project in Crowd Dynamics. I worked with <a target="_blank" href="https://home.iitk.ac.in/~smittal/">Prof. Sanjay Mittal</a> to make a solver for Hughes' Pedestrian Flow. I started learning about the Crowd Dynamics in month of August 2025, and I and my professor worked on this for about one year. We are currently working on publishing the paper on Crowd Dynamics. And it was a wonderful experience. I believe this project could be much more than that. And Ths came the plan to make this website which allows not only me and my professor but also you users to enjoy the field of Crowd-Dynamics.
+            </div>
+            <p>
+                To know more about our work (Me and My professor), which I feel is the other side of Icebreg, please visit this Website : <a target="_blank" href="https://arushraju.github.io/Crowd-Dynamics/">Link</a>
+            </p>
+        </div><br><br>
+
+        <!--Introduction-->
+        <div class="variable-box">
+            <h2 id=""><center>2.0.0 - Introduction</center></h2>
+            This section will be discussing the bigger picture of how this website works. It will explain about how is this website is structured. All the discussion will be done from the perspective of Web Development.
+            <div class="variable-box">
+                <h3 id="">2.1.0 - Front-End</h3>
+            </div>
+            <div class="variable-box">
+                <h3 id="">2.2.0 - Back-End</h3>
+            </div>
+            <div class="variable-box">
+                <h3 id="">2.3.0 - Core Algorithm</h3>
+            </div>
+            Explanation about each topic is given below.
+        </div>
+
+        <!--Input Files-->
+        <div class="variable-box">
+            <h2 id="input-files"><center>2.0.0 - Input Files</center></h2>
+            So I am considering that files to me is like a matrix. An input file will be a matrix of the same size as of the computation domain. And this website will have four inputs. They are Exit Matrix, Inflow-Outflow Matrix, Density Matrix, and finally Obstacle Matrix.
+            <br>
+            <!--Exit Matrix-->
+            <div class="variable-box">
+                <h3 id="exit-matrix">2.1.0 - Exit Matrix</h3>
+                This will be a boolean matrix and this just has the information about where does the exit lies. Where ever there lies the exit, there the value of this matrix will be one and at all the places other than these, value of matrix will be zero.
+                <p>Another feature that I aim to put in this website is to allow the user be able to change the location of the exit with time. And this means that the csv file created will be having columns: <b>Time, X, Y, Value</b>. And this way in the porgram I will program the position of the exit at each time step. And all the values between them will be interpolated. This looks complicated and I will look at this later.</p>
+                <div class="variable-box">
+                    <h4>2.1.1 - Working of Exit Matrix</h4>
+                    Section discussing about how Exit matrix will be translated from frontend to solver.
+                </div>
+            </div><br>
+            <!--Inflow Outflow Matrix-->
+            <div class="variable-box">
+                <h3 id="inflow-outflow-matrix">2.2.0 - Inflow and Outflow Matrix</h3>
+                Information about the inflow and outflow location and the inflow flux will also have to be specified. I will again consider making the CSV file one for the x-flux at the right and left boundary and then the y-flux at top and bottom boundary through at all time step. And this means now the dimension and flux value can also change with time. One good thign about this feature is that the user will be able to solve for unsteady boundary condition.
+                <div class="variable-box">
+                    <h4>2.2.1 - Working of Inflow-Outflow Matrix</h4>
+                    Section discussing about how Inflow-Outflow matrix will be translated from frontend to solver.
+                </div>
+            </div><br>
+            <!--Density Matrix-->
+            <div class="variable-box">
+                <h3 id="density-matrix">2.3.0 - Density Matrix</h3>
+                This matrix will contain Information about the density of the matrix at inital time step. And this will allow the user to solve the evacuation problems. Or problems which contain some distribution of Density before the comutation begins. And this will surely be much smaller CSV file compared to others since this matrix will only have information at t = 0.
+                <div class="variable-box">
+                    <h4>2.3.1 - Working of Density Matrix</h4>
+                    Section discussing about how density matrix will be translated from frontend to solver.
+                </div>
+            </div><br>
+            <!--Obstacle Matrix-->
+            <div class="variable-box">
+                <h3 id="obstacle-matrix">2.4.0 - Obstacle Matrix</h3>
+                This matrix will be a boolean matrix and will be used to know where does the obstacle exist. This file will be used to make another file which will contain information where the fx_negative mjst be set to zero, and then fx_positive and then fy_negative and finally fy_positive must be set to zero. And therefore the boolean file will be used to generate four more CSV Files
+                <div class="variable-box">
+                    <h4>2.4.1 - Working of Obstacle Matrix</h4>
+                    This section is about how website Front end will be encoded to form which could be sent to the C solver.
+                </div>
+            </div>
+            <br>
+            Therefore total number of input files that will be generated from the front end will be Exit.csv, Density.csv, Obstacle.csv, and Inflow-Ouflow.csv (4). And the files that will be generated from the above files are : <br>fx_negative_obstacle.csv, fx_positive_obstacle.csv, fy_negative_obstacle.csv, fy_positive_obstacle.csv (4).
+            <br>This will all be generated from the front end, and the csv file will be generated from the front end into the directory through Node.js.
+        </div><br><br>
+
+        <!--This is the Memories Section-->
+        <div class="variable-box">
+            <h2 id="Memories">Memories</h2>
+            <p>
+                This is the section that will contain the process of me making the website.
+            </p>
+            <h3>First Video of the Inception of Thinking Fluid</h3>
+            <p>
+                This is the link to the video of me explaining the very first ideas of how the website will function. Link to the Video is given below : <br>
+                <div class="video-container" id="my_very_first_video">
+                    <video style="width: 50%;" controls>
+                        <source src="" type="video/mp4">
+                    </video>
+                </div>
+            </p>
+        </div>
+    </div>
+
+    
+    
 </body>
 </html>

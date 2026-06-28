@@ -28,7 +28,7 @@ html {
     scroll-behavior: smooth;
 }
 body{
-    background-image: url(./Style/asfalt-dark.png);
+    background-image: url(./asfalt-dark.png);
     background-color: rgb(255, 255, 255);
     background-attachment: fixed;
 }

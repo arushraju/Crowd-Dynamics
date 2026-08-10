@@ -2985,6 +2985,7 @@
 
                                     <br>
 
+                                    <!--Paper Structure-->
                                     <ol>
                                         <li>
                                             Abstract
@@ -2993,25 +2994,31 @@
                                             Introduction
                                             <ol>
                                                 <li>Background</li>
-                                                <li>
-                                                    Crowd Dynamics (Governing Equations)
-                                                    <ol>
-                                                        <li>Single-Crowd Hughes' Model</li>
-                                                        <li>Multi-Crowd Hughes' Model</li>
-                                                    </ol>
-                                                </li>
+                                                <li>Motivation</li>
+                                            </ol>
+                                        </li>
+                                        <li>
+                                            Governing Equation
+                                            <ol>
+                                                <li>Single-Crowd Hughes' Model</li>
+                                                <li>Multi-Crowd Hughes' Model</li>
                                             </ol>
                                         </li>
                                         <li>
                                             Numerical Method
                                             <ol>
+                                                <li>Computational Grid</li>
                                                 <li>Eikonal Solver – WENO Fast Sweeping Method</li>
                                                 <li>Advection Solver – WENO Advection Scheme</li>
-                                                <li>Validation of the solver and its convergence</li>
+                                                <li>Obstacle Modelling</li>
+                                                <li>Boundary Condition</li>
                                             </ol>
                                         </li>
                                         <li>
-                                            Simulation Details (Problem Description)
+                                            Benchmark Problem
+                                        </li>
+                                        <li>
+                                            Results and Discussion
                                             <ol>
                                                 <li>Case A: Single Crowd with Obstacles</li>
                                                 <li>Case B: Multi-Crowd Single-Door Exchange</li>
@@ -3019,50 +3026,421 @@
                                             </ol>
                                         </li>
                                         <li>
-                                            Results and Discussion
-                                            <ol>
-                                                <li>
-                                                    Case A:
-                                                    <ol>
-                                                        <li>
-                                                            Effect of Flux on Choking
-                                                            <ol>
-                                                                <li>Initial flux at which choking occurs without vendors</li>
-                                                                <li>Initial flux at which choking occurs with vendors</li>
-                                                            </ol>
-                                                        </li>
-
-                                                        <li>
-                                                            Effect of Obstacles on the Time of Choking for a Given Flux
-                                                            <ol>
-                                                                <li>For a given flux, the time at which choking occurs with vendors</li>
-                                                                <li>For the same flux, the time at which choking occurs without vendors</li>
-                                                            </ol>
-                                                        </li>
-                                                    </ol>
-                                                </li>
-
-                                                <li>
-                                                    Case B:
-                                                    <ol>
-                                                        <li>Choking density for each door geometry (four cases)</li>
-                                                        <li>Time of choking for a given door size with varying density (four cases)</li>
-                                                    </ol>
-                                                </li>
-
-                                                <li>
-                                                    Case C:
-                                                    <ol>
-                                                        <li>Choking density for each entry door size (four cases)</li>
-                                                        <li>Time of choking for a given door size with varying density (four cases)</li>
-                                                    </ol>
-                                                </li>
-                                            </ol>
-                                        </li>
-                                        <li>
                                             Conclusion
                                         </li>
                                     </ol>
+                                </p>
+                                <p>
+                                    Point wise description of the research paper is given here : 
+                                    <details>
+                                        <summary>Verison 1 - CLICK</summary>
+                                        <ol>
+                                            <!---Abstract-->
+                                            <li>
+                                                <h2 style="background-color: rgb(140, 219, 255);"><u><b>Abstract</b></u><br></h2>
+                                                <!-- <p>
+                                                    <i>This is the abstract given by the model : <br></i>
+                                                    
+                                                    <div style="
+                                                    border: 1px solid black;
+                                                    padding: 1%;
+                                                    background-color: aliceblue;
+                                                    ">
+                                                        <ul>
+                                                            <li>Dense pedestrian crowds passing through narrow openings — train doors, temple corridors, platform bottlenecks — can transition abruptly from free-flowing motion to a jammed, immobile state. We refer to this transition as <b>Choking</b>.</li>
+                                                            <li>In this work we simulate this phenomenon using <b>Hughes' dynamic continuum model</b>, in which a crowd is treated as a compressible, density-dependent fluid whose velocity field is derived from the gradient of a potential satisfying an Eikonal equation.</li>
+                                                            <li>The coupled system — a nonlinear advection equation for density and a nonlinear Eikonal equation for the travel-time potential — is solved using a fifth-order WENO scheme for advection, a third-order WENO fast-sweeping method for the Eikonal equation, and third-order TVD Runge–Kutta time integration.</li>
+                                                            <li>The solver is validated against a benchmark railway-station evacuation problem from the literature and shows good agreement in both density evolution and shock structure.</li>
+                                                            <li>We then extend the single-type model to a multi-type (heterogeneous) crowd formulation, in which several pedestrian populations share a common local density but pursue independent destinations.</li>
+                                                            <li>Using this framework we study three canonical choking scenarios: (A) evacuation through a doorway obstructed by a stationary obstacle (e.g., a vendor stall) on a station platform; (B) two opposing crowds exchanging places through a shared doorway (e.g., train boarding/alighting); and (C) two crowds meeting at a perpendicular junction.</li>
+                                                            <li>For each case we quantify the critical initial density and/or inflow flux at which choking occurs and the time at which it develops, as a function of door width and obstacle placement.</li>
+                                                            <li>Results show that choking onset is highly sensitive to door geometry and to the presence of even modest obstacles, and provide a quantitative basis for assessing pedestrian-facility safety margins.</li>
+                                                        </ul>
+                                                    </div>
+                                                </p>
+                                                <ul>
+                                                    <li>In the <b>first sentence</b>, I think adding the terms <b>train doors, temple corridors, platform bottlenecks</b> will make it more explicit. However, my aim is to keep the problems that are solved using the solver more abstract. Thus, this has to be changed. Also, adding the words <b>passing through narrow openings</b> is not the right thing, since this is true for the first and second cases but is not true for the third case.</li>
+                                                    <li>I think it is true that the crowd is assumed to be a compressible fluid, but saying that it is density dependent raises the question of what is meant by the "fluid being density dependent." In other words, a property of the fluid must be density dependent. If I were to consider the potential, velocity, and speed, all are density dependent, either directly or indirectly. Also, I think it is not necessary to say that the velocity field is derived from the gradient of the potential. Since, in that case, why not also say that the potential is obtained from the exits and the density distribution, and that the density at the next time step is obtained from the density at the current time step and the velocity components at the current time step, along with what is already mentioned, namely that the velocity is obtained from the potential gradient? So, either add the other two points or remove all the points.</li>
+                                                    <li>The third point seems good, explaining all the methods used for solving the Hughes flow.</li> 
+                                                    <li>It is true that the solver is tested against the benchmark problem of a railway station, but I think this seems to be a very informal way of referring to that paper. I would like to make it sound more professional and formal. Also, the agreement is not on the density evolution, but on the density at an instant of time. And yes, the shock structure seems to be matching.</li>
+                                                    <li>In this point, you may also add that this multi-crowd model is taken from the original Hughes paper, just as I should mention the paper when referring to the railway station problem. The description of the multi-crowd model is right.</li>
+                                                    <li>The first and the second problem descriptions are right, but I suggest you make them more abstract and less linked to real-life examples, since I don't want the paper to be inclined towards any particular real-life problem. I am also not sure about the word <b>"Canonical"</b> used here.</li>
+                                                    <li>Actually, in the first problem, the time at which choking occurred is compared between the cases where the obstacle is added and where it is removed. The placement of the obstacle is not studied. In the second case, the door geometry is studied along with the initial density for a given door geometry, but again, I want to keep this abstract. In the third problem, I wanted to study at what initial flux choking occurs and at what time, for each opening width.</li>
+                                                </ul> -->
+                                                <div style="
+                                                border: 1px solid black;
+                                                padding: 1%;
+                                                background-color: aliceblue;
+                                                ">
+                                                    <ul>
+                                                        <li>Dense pedestrian crowds can transition abruptly from free-flowing motion to a jammed, immobile state when their motion is obstructed, whether by a stationary obstacle or by other crowds sharing the same space. We refer to this transition as choking.</li>
+                                                        <li>
+                                                            We simulate this phenomenon using Hughes' dynamic continuum model, in which a crowd is treated as a compressible fluid, governed by a coupled system relating pedestrian density, a travel-time potential, and velocity, following the original formulation of Hughes' (2002).
+                                                        </li>
+                                                        <li>
+                                                            The resulting nonlinear system — an advection equation for density coupled to an Eikonal equation for the potential — is solved using a fifth-order WENO scheme for advection, a third-order WENO fast-sweeping method for the Eikonal equation, and third-order TVD Runge–Kutta time integration, following the original formulation of Huang, Wong, Zhang, Shu, and Lam (2009).
+                                                        </li> 
+                                                        <li>
+                                                            The solver is validated against a benchmark evacuation problem from the literature Huang, Wong, Zhang, Shu, and Lam (2009), showing close agreement with the reference density field and shock structure at a given time instant.
+                                                        </li>
+                                                        <li>
+                                                            The single-type formulation is extended, following Hughes' original multi-type hypothesis Hughes (2002), to a heterogeneous crowd model in which several pedestrian populations share a common local density while pursuing independent destinations.
+                                                        </li>
+                                                        <li>
+                                                            Using this framework, we examine three model problems involving confined openings: (A) a crowd evacuating past a stationary obstacle, where we determine the critical inflow flux at the onset of choking as a function of obstacle size; (B) two opposing crowds exchanging places through a shared opening, where we determine the critical initial density at the onset of choking as a function of opening width; and (C) two crowds entering through separate, perpendicularly oriented openings and crossing paths routed to separate exits, where we determine the critical inflow flux at the onset of choking as a function of passage width.
+                                                        </li>                                                        
+                                                        <li>
+                                                            Together, these results show how the geometry of a confined space affects the critical inflow flux at which choking begins, and help identify the required geometry for a given crowd.
+                                                        </li>                                                        
+                                                    </ul>
+                                                </div>
+                                                Finally the abstarct must also include the results that are obtained from the simulation. For each sections the following could be obtained:<br>
+                                                <ol>
+                                                    <li></li>
+                                                    <li></li>
+                                                    <li></li>
+                                                </ol>
+                                            </li>
+
+                                            <!--Introduction-->
+                                            <li>
+                                                <h2 style="background-color: rgb(140, 219, 255);"><u><b>Introduction</b></u><br></h2>
+                                                <hr>
+
+                                                <!--Background-->
+                                                <div>
+                                                    <h3>Background</h3>
+                                                    <!-- I am going to start with the background. This is the background given by the model:<br>
+                                                    <div style="
+                                                    border: 1px solid black;
+                                                    padding: 1%;
+                                                    background-color: aliceblue;
+                                                    ">
+                                                        <ul>
+                                                            <li>Crowd dynamics has traditionally been studied from two complementary viewpoints: microscopic models (e.g., social-force, cellular automata), which resolve individual pedestrians and their interactions, and macroscopic (continuum) models, which treat the crowd as a compressible fluid described by density and velocity fields.</li>
+                                                            <li>Continuum models are attractive for large, dense crowds because they scale independently of the number of pedestrians and connect naturally to well-developed numerical methods from computational fluid dynamics and hyperbolic conservation laws.</li>
+                                                            <li>Among continuum formulations, the model proposed by Hughes (2002) is widely used because it captures a distinctive and empirically observed feature of pedestrian motion: individuals choose paths that minimize their *estimated travel time* to a destination, rather than the shortest geometric distance, and this estimate itself depends on the local density (crowds avoid congested regions).</li>
+                                                            <li>Mathematically, this couples a scalar conservation law for density to a nonlinear Eikonal equation for a potential function, making the resulting system considerably richer — and numerically more demanding — than a simple advection problem.</li>
+                                                        </ul>
+                                                    </div>
+                                                    Given below are the remarks I have for the above Background. In the Background I will talk about the subject of Crowd Dynamics. And not about what in Crowd Dynamics.<br>
+                                                    <ul>
+                                                        <li>I would prefer starting the background with discussing the paper that used the first idea of Crowd Dynamics.And for whcih I would add the literature reference to this section.</li>
+                                                        <li>In here the word "two Contemporary viewpoint" seems to be too sophisticated word to be used. And I would prefer using some other easier words. Also I think it is not preferable to use those examples. Rest all is good to go.</li>
+                                                        <li>The word "Attractive" seems to be not right. I would like to add the saying that this links to the idea of Continum Model rather than using the phrase "Scale Independent of the numnber of pedestrians". And then adding the word Hyperbolic Conservation laws and CFD is not good, since the hyperbolic conservation laws is also part of CFD so it doesnt look good writing them seperately.</li>
+                                                        <li>In the third point use simpler word than "distintive and emperical". Rather than that what is mentioned, i would say that pedestrian would choose path that reduces their travel time and also the one which is less congested. Please frmae these phrases formally.</li>
+                                                        <li>This last line is such an uneccessary line and I would like to completely abandone it. It is so informal.</li>
+                                                        <li>I would like to add that fast sweep method was invented to solve the eikonal equation and it was faster than the well known .... method. ANd then I would also add say that this is in the paper ...</li>
+                                                        <li>And then I would add that WENO method was discovered by the paper ... and they have shown that it is very well schem to solve the advection scheme.</li>
+                                                        <li>And then I would discuss that the paper ... has used the higher order WENO Fast sweep and WENO Advection scheme to solve the complete Hughes' Equation.</li>
+                                                        <li>The current paper used this algorithm to study the congestion and crowd flow properties of some common scenarios.</li>
+                                                    </ul>
+                                                    So this is how I want to establih the backgrowd through all the algorithm and papers before the current one, and how I used them to make this one. Like how much has gone into making this paper.
+                                                    And here is the resultant backgorund after the above remarks. -->
+                                                    <div style="
+                                                    border: 1px solid black;
+                                                    padding: 1%;
+                                                    background-color: aliceblue;
+                                                    ">
+                                                       <ul>
+                                                            <li>Crowd dynamics as a continuum problem was  formalized by Hughes (2002), who proposed treating a crowd as a compressible fluid, described by a density field and a potential scalar field — a scalar field representing each pedestrian's estimated travel time to their destination.</li>
+                                                            <li>Since then, researchers have studied crowd motion from two broad viewpoints: microscopic models, which track each pedestrian and their interactions with others, and macroscopic (continuum) models, which treat the crowd as a whole using density and velocity fields to describe its motion.</li>
+                                                            <li>This second, continuum-based view is useful for large and dense crowds because it connects naturally to the idea of treating the crowd as a continum fluid, drawing on well-established numerical methods for solving conservation laws, including those used in computational fluid dynamics.</li>
+                                                            <li>A key idea in Hughes' model is that pedestrians choose a path that reduces their estimated travel time to their destination, and this path also depends on the surrounding density, since crowds tend to avoid regions that are more congested. Mathematically, this couples a conservation law for density to a nonlinear Eikonal equation for a potential function.</li>
+                                                            <li>The relation between speed and density used in the model — a linear decrease of pedestrian speed as density rises toward its jam value — follows the empirical speed–density relationship first proposed by Greenshields (1935) for vehicular traffic. This relation has since been widely adopted in continuum pedestrian models, including by Huang, Wong, Zhang, Shu, and Lam (2009) in their railway station study, where it was used together with the direction of motion — the unit vector along the negative gradient of the potential, whose dependence on local density was first formulated by Hughes (2002).</li>
+                                                            <li>To solve the Eikonal equation efficiently, Zhao (2005) introduced the fast sweeping method, an iterative technique that proved faster than the previously established fast marching method for computing solutions on a grid.</li>
+                                                            <li>Jiang and Shu (1996) developed the weighted essentially non-oscillatory (WENO) scheme, and demonstrated it to be a highly effective method for solving advection-type equations with sharp gradients and discontinuities.</li>
+                                                            <li>Building on both of these developments, Huang, Wong, Zhang, Shu, and Lam (2009) combined a higher-order WENO fast sweeping method for the Eikonal equation with a WENO advection scheme to solve the complete Hughes' pedestrian flow model, and used this coupled solver to study Hughes' Crowd flow in a railway station scenario.</li>
+                                                            <li>The present work adopts this same algorithm to study congestion behavior and crowd flow characteristics across several common scenarios.</li>
+                                                       </ul>
+                                                    </div>
+                                                </div>
+
+                                                <!--Motivation-->
+                                                <div>
+                                                    <hr>
+                                                    <h3>Motivation</h3>
+                                                    <!-- Here I will discuss about chocking what is it, and why is it important to study. This is what the model has given initially.<br>
+                                                    <div style="
+                                                        border: 1px solid black;
+                                                        padding: 1%;
+                                                        background-color: aliceblue;
+                                                    ">
+                                                        <ul>
+                                                            <li>A recurring failure mode in real pedestrian facilities — railway coaches, temple corridors, stadium exits — is not merely slow movement but an outright halt: local density saturates at the jam value and the crowd becomes locally immobile, a state we call *choking*.</li>
+                                                            <li>Understanding the conditions under which choking occurs, and how facility design (door width, presence of obstacles, separation of opposing flows) delays or prevents it, is of direct practical importance for crowd safety.</li>
+                                                            <li>This motivates the present study, which uses a validated high-order numerical implementation of Hughes' model to systematically probe choking in three representative geometries.</li>
+                                                        </ul>
+                                                    </div>
+                                                    Given below are the reviews for this Motivation section:<br>
+                                                    <ul>
+                                                        <li>I want to first explain about chocking of the crowd and what does it mean.</li>
+                                                        <li>I would then want to make the list out the failure of the facilites were such chockign could cause discomfort or unformtunate incidents.(Note that I am going to talk about three scenarios in my paper which is effect of obstacle on chocking, and then effect of geometry of common door on chokcing when crowd exchange, and effect of geometry of opening on chocking when crowds exchange perpendicularly).</li>
+                                                        <li>Then i would like to note some real world incidents of chockign and its negative repurcations.</li>
+                                                        <li>the second point in the model's motivation is good enough.</li>
+                                                        <li>And this last line is also good.</li>
+                                                    </ul>
+                                                    This is the result after the above reviews:<br>
+                                                     -->
+                                                    <div style="
+                                                        border: 1px solid black;
+                                                        padding: 1%;
+                                                        background-color: aliceblue;
+                                                    ">
+                                                        <ul>
+                                                            <li>In Hughes' model, pedestrian speed decreases as local density increases, following a relation such as Greenshields' law. As density rises, at some point it can reach the jam density — the maximum density at which no further compression is physically possible. At this value, the model predicts that pedestrian speed drops to zero: the crowd is locally saturated and cannot move, even though people continue to push into the region from behind. This state, where a facility fails not because motion is slow but because it stops entirely, is what we refer to as choking.</li>
+                                                            <li>This kind of failure can occur in a range of common facility layouts, and the present study focuses on three representative cases where choking is likely: (i) crowd flow past an internal obstacle, such as a pillar or a vendor's stall on a railway platform, which locally constricts the available space; (ii) two opposing crowds exchanging through a single shared door, such as passengers simultaneously boarding and alighting a train coach; and (iii) two crowds intersecting perpendicularly through a shared opening, such as a corridor junction where separate streams of pedestrians cross paths.</li>
+                                                            <li>Real incidents corresponding to each of these three geometries illustrate how choking, specifically, has produced fatal outcomes:<br>
+                                                            - Obstacle-narrowed passage: At Mumbai's Elphinstone Road station in 2017, a narrow footbridge staircase — already constricted by vendor stalls along its width — became so densely packed during rush hour that commuters on the stairs were unable to move or breathe; several people died of suffocation while trapped in the jammed crowd, matching the obstacle-choking scenario directly.<br>
+                                                            - Bidirectional exchange through a shared narrow opening: In the 2022 Itaewon crowd crush in Seoul, two opposing streams of pedestrians converged in an alley only about four meters wide; as density exceeded the jam threshold, the crowd came to a complete stop and compressive asphyxia killed over 150 people, closely mirroring the shared-door exchange case.<br>
+                                                            - Perpendicular crowd convergence: In the 2015 Mina crush during the Hajj, two large pilgrim streams met at a street intersection where two paths merged; the combined density exceeded the point at which individuals could no longer move independently, leading to suffocation and hundreds of deaths — a direct real-world analogue of the perpendicular-flow scenario.</li>
+                                                            <li>Understanding the conditions under which choking occurs, and how facility design (door width, presence of obstacles, separation of opposing flows) delays or prevents it, is of direct practical importance for crowd safety.</li>
+                                                            <li>This motivates the present study, which uses a validated high-order numerical implementation of Hughes' model to systematically study choking in three representative geometries.</li>
+                                                        </ul>
+                                                    </div>
+                                                </div>
+                                            </li>
+
+                                            <!--Governing Equation-->
+                                            <li>
+                                                <h2 style="background-color: rgb(140, 219, 255);"><u><b>Governing Equation</b></u><br></h2>
+                                                <!--Single Type Crowd-->
+                                                <!-- This is what the model has suggested : <br>
+                                                <div style="
+                                                    border: 1px solid black;
+                                                    padding: 1%;
+                                                    background-color: aliceblue;
+                                                ">
+                                                    <ul>
+                                                        <li><b>Speed–density relation:<br></b> Local walking speed decreases with local density, e.g. the Greenshields-type relation f(ρ) = v_f (1 − ρ/ρ_max), where v_f is the free-flow speed and ρ_max is the jam density.</li>
+                                                        <li><b>Potential / Eikonal equation: <br></b> Pedestrians are assumed to minimize an estimated travel time to their destination, encoded in a potential φ satisfying |∇φ| = g(ρ,x,y,t) / f(ρ), where g is a "discomfort" function (taken as unity in the baseline model, following Hughes).</li>
+                                                        <li><b>Velocity field:<br></b> The velocity direction is the negative gradient of φ (steepest descent of the potential), with magnitude given by f(ρ): **u** = −f(ρ) ∇φ / |∇φ|.</li>
+                                                        <li><b>Conservation of pedestrians:<br></b>Density obeys the continuity equation ∂ρ/∂t + ∇·(ρ **u**) = 0.</li>
+                                                        
+                                                    </ul>
+                                                </div>
+                                                Given below are my reviews:
+                                                <ul>
+                                                    <li>The Governing equation must start with saying that all the hyothesis is atken from the hughes paper. And then the hypothesis are as follows:</li>
+                                                    <li>Start with the saying that the walking speed at a point is determined only by the local density at that point. And then say that Greensheild is the model I used.</li>
+                                                    <li>Pedestrian move perpendicular to the constant cost line becuse moving in the same cost line gives them no advantage.</li>
+                                                    <li>Cost of the pedestrain depends on the estimated time it takes to reach the exit, and extremely high density regions. Pedestrain tried to minimize the cost whcih minimzes the estimated time to reach the exits and avoid High-Density region. The expressino of cost can vary. It was of some for in the hughe's paper and some other in the railway station paper.</li>
+                                                    <li>Following the conservation law, the number of pedestrians are conserved for a control volume.</li>
+                                                    <li>And finally I would like to tell that this hypothesis is valid for single type crowd which is what is considered in the Case 1.</li>
+                                                </ul> -->
+
+                                                <div style="
+                                                    border: 1px solid black;
+                                                    padding: 1%;
+                                                    background-color: aliceblue;
+                                                ">
+                                                    <p>The governing equations of the model are based on the hypotheses proposed by Hughes (2002), which are summarized below.</p>
+                                                    <ul>
+                                                        <li>
+                                                            <b>Hypothesis 1: <br></b> Hughes' first hypothesis is that the walking speed of a pedestrian at a point is determined only by the local density at that point. In Huang et al. (2009), the Greenshields model is used to represent this relation. The relation is as follows:
+                                                        </li>
+                                                        <li>
+                                                            <b>Hypothesis 2:<br></b>
+                                                            <ul>
+                                                                <li>Pedestrians are assumed to choose their direction of movement so as to minimize their potential or cost.</li>
+                                                                <li>Since moving along a line of constant cost offers no advantage in reducing the cost to reach the exit, pedestrians move perpendicular to these lines.</li>
+                                                                <li>The relation for the direction of their velocity with the cost is given below:</li>
+                                                            </ul>   
+                                                        </li>
+                                                        <li>
+                                                            <b>Hypothesis 3: <br></b> The cost depends on the speed of the pedestrian and on the avoidance of extremely high-density regions; pedestrians seek to minimize this cost, which simultaneously minimizes their estimated travel time and keeps them away from high-density regions. The precise expression for cost is not unique — Hughes (2002) proposes one form, while other studies (e.g. In Huang et al. (2009)) adopt different forms suited to their context. In the present study, the cost function is taken to be the sum of the inverse of speed and a discomfort function, just like in Huang et al. (2009). Hughes suggests that the Cost and Cost function satisfy Eikonal Equation given below:
+                                                        </li>
+                                                        <li>
+                                                            <b>Hypothesis 4: <br></b> Following the conservation law, the number of pedestrians is conserved within any control volume, giving the continuity equation as they move in the domain. The expression for this is given below:
+                                                        </li>
+                                                        <li>
+                                                            <b>Velocity field:<br></b> Combining the above, the velocity direction is given by Hypothesis 2 and the magnitude is given by Hypothesis 1. The complete expression for velocity is given below.
+                                                        </li>
+                                                        <li>
+                                                            <b>Scope of validity:<br></b> These hypotheses, and the resulting model, are valid for a single type (homogeneous) crowd. It is assumed that all the pedestrians in the crowd have similar goals (to reach the exit), and there is no conflict of interest amongst the crowd. This model is used in studying Case 1.
+                                                        </li>
+                                                    </ul>
+                                                </div>
+
+                                                <!--Multiple Type Crowd-->
+                                                This is the section where I listed the governing equation for Multiple Crowd.
+                                                <div style="
+                                                    border: 1px solid black;
+                                                    padding: 1%;
+                                                    background-color: aliceblue;
+                                                ">
+                                                    <ul>
+                                                        <li>This model for multiple crowd types is obtained by extending Hughes' original formulation, which he derived for both single and multiple pedestrian types.</li>
+                                                        <li>
+                                                            <b>Hypothesis 1:</b> The relation between speed and density at a point still holds, except that the speed of a crowd of type <i>i</i> now depends on the sum of the densities of all crowd types present at that point, rather than on its own density alone. The expression is given below:
+                                                        </li>
+                                                        <li>
+                                                            Except in Hypothesis 4, where the density of each crowd type is advected separately as its own quantity, density wherever it appears in Hypotheses 1, 2, and 3 refers to the total density — i.e. the sum of the densities of all crowd types at that point, not the density of any single type in isolation.
+                                                        </li>
+                                                        <li>
+                                                            <b>Hypothesis 2:</b> Each crowd type seeks to minimize its own potential, and the direction of velocity for a given type is perpendicular to the lines of constant potential for that type. The expression for the direction of velocity of a crowd of type <i>i</i> is given below:
+                                                        </li>
+                                                        <li>
+                                                            <b>Hypothesis 3:</b> The cost function for each crowd type depends on its own estimated travel time and its own discomfort, so that each type minimizes a cost defined with respect to itself. The expression is given below:
+                                                        </li>
+                                                        <li>
+                                                            <b>Hypothesis 4:</b> The conservation law holds separately for the density and velocity of each crowd type. The corresponding expressions are given below:
+                                                        </li>
+                                                    </ul>
+                                                </div>
+                                            </li>
+
+                                            <!--Numric Method-->
+                                            <li>
+                                                <h2 style="background-color: rgb(140, 219, 255);"><u><b>Numeric Method</b></u><br></h2>
+                                                
+                                                Start with the staggered grid, then I will explain the Eikonal scheme for the interior point, then advection scheme for the same, and then finally boundary condition for both.
+                                                This is what the model has suggetsed:
+                                                <div style="
+                                                    border: 1px solid black;
+                                                    padding: 1%;
+                                                    background-color: aliceblue;
+                                                ">
+                                                    <ul>
+                                                        <!--Computational Grid (Staggered Grid)-->
+                                                        <li>Following Huang et al. (2009), the computational domain is discretized on a uniformly spaced mesh with grid spacing Δx = Δy = h, arranged such that the physical boundaries of the domain (entrance, exit, and solid walls) lie at the midpoint between two grid points rather than coinciding with a grid node itself.</li>
+                                                        <li>This staggered arrangement requires the introduction of "ghost points" outside the computational domain (e.g., the first ghost point below a bottom wall at y = 0 is located at y₀ = −½Δy), which are needed to evaluate the numerical fluxes at the domain boundary and are populated according to the boundary conditions described below.</li>
+                                                        <!--Eikonal Scheme (WENO)-->
+                                                        <li>The cost potential φ(x, y, t) is obtained by solving the steady-state Eikonal equation ‖∇φ‖ = c(x, y, t) at each time step, using the third-order WENO fast sweeping method of Zhang et al. (2006), as adopted and applied to the pedestrian flow problem in Huang et al. (2009).</li>
+                                                        <li>The iteration is initialized using the (less accurate but computationally inexpensive) first-order Godunov fast sweeping solution of Zhao (2005) as the initial guess, after which four alternating-direction Gauss–Seidel sweeps are performed until the solution satisfies the convergence criterion ‖φⁿᵉʷ − φᵒˡᵈ‖ ≤ δ, with δ = 10⁻⁹, following the same procedure and tolerance reported in the reference paper.</li>
+                                                        <!--Advection Scheme (WENO)-->
+                                                        <li>The density conservation law ρₜ + ∇·f = 0 is discretized in space using the fifth-order finite-difference WENO scheme of Jiang and Shu (1996), as employed by Huang et al. (2009) for the pedestrian density–flux equation, in which the numerical flux at each cell interface is formed as a nonlinear convex combination of three third-order candidate stencils weighted by smoothness indicators.</li>
+                                                        <li>To handle the general case where the flux Jacobian may change sign, a Lax–Friedrichs flux splitting is used to separate the flux into positive and negative wind-direction components prior to reconstruction, exactly as prescribed in the reformulated model.</li>
+                                                        <!--TVD Runga Kutta Method for time marching-->
+                                                        <li>Time integration of the semi-discretized conservation law is carried out using the third-order total-variation-diminishing (TVD) Runge–Kutta scheme of Shu and Osher (1988), adopted in Huang et al. (2009) to preserve the non-oscillatory property of the spatial WENO discretization.</li>
+                                                        <li>Each full time step is thus computed as a convex combination of three successive Euler forward sub-steps, with the Eikonal equation re-solved at each stage to update the flux before advancing the density field.</li>
+                                                        <!--Obstacle Modelling-->
+                                                        <li>Obstacles are incorporated by excluding the enclosed grid points from the computation entirely: density values inside the obstruction are held at zero, the potential is fixed at a large constant (10¹²) to prevent pedestrians from routing through it, and the normal component of the flux across the obstacle boundary is set to zero, mirroring the treatment of the internal obstruction in the railway-platform example of Huang et al. (2009).</li>
+                                                        <!--Boundary Condition-->
+                                                        <li>On the inflow boundary Γₒ, the flux f is prescribed directly according to the (possibly time-varying) pedestrian demand, while the density and potential at the corresponding ghost points are obtained by extrapolation from the interior of the domain, as specified in the reformulated boundary conditions of the reference model.</li>
+                                                        <li>On the solid wall (hard) boundary Γₕ, including the walls of any internal obstruction, the normal flux is set to zero, with the density at the interior ghost points set to zero and the potential set to the large constant 10¹², preventing any flow across these boundaries.</li>
+                                                        <li>On the outflow (destination) boundary Γ_d, the potential is fixed at φ = 0, consistent with its interpretation as the minimum instantaneous travel cost to the destination, while the density at the corresponding ghost points is obtained by extrapolation from inside the computational domain.</li>
+                                                    </ul>
+                                                </div>
+                                            </li>
+
+                                            <!--Benchmark Problem-->
+                                            <li>
+                                                <h2 style="background-color: rgb(140, 219, 255);"><u><b>Benchmark Problem</b></u><br></h2>
+                                                
+                                                This section is about how I solved the benchmark problem, and I will first describe the domain, and would then show the results and then compare the result with that generated from my solver.
+
+                                                <div style="
+                                                    border: 1px solid black;
+                                                    padding: 1%;
+                                                    background-color: aliceblue;
+                                                ">
+                                                    <ul>
+                                                        <!--Describe the problem-->
+                                                        <li>The problem considered is a railway platform of dimensions 100 m × 50 m, with pedestrians entering through the entire left boundary (width 50 m) and leaving through two exit gates on the right boundary, each of width 15 m, with a 20 m × 20 m square obstruction located in the middle of the platform.</li>
+                                                        <li>The study horizon is T = 300 s, and the platform is assumed empty at t = 0, i.e., ρ₀(x, y) = 0 everywhere in the domain.</li>
+                                                        <li>The inflow demand at the left boundary is time-varying: it increases linearly from zero to a peak of 5 ped/m/s at t = 60 s, then decreases linearly back to zero at t = 120 s, after which no further pedestrians enter the facility.</li>
+                                                        <li>A linear (Greenshields-type) speed–density relation U(ρ) = 2(1 − ρ/10) is assumed, with a maximum free-flow speed of 2 m/s and a jam density of 10 ped/m², together with a quadratic discomfort function G(ρ) = 0.002ρ², giving the generalized cost C(ρ) = 1/[2(1 − ρ/10)] + 0.002ρ², and the computational domain is discretized on a 100 × 50 grid, consistent with the mesh resolution reported in Huang et al. (2009).</li>
+                                                        <li>Given below is a sketch of the problem.<br><img src="./Meeting_20/Benchmark_Problem_Problem_Description-1.png" width="100%"></li>
+                                                        <!--Describe the comparison of the results-->
+                                                        <li>Given below is the figure to compare the results:<br><img src="./Meeting_20/Benchmark_Problem/Figure_1.png" width="100%"><img src="./Meeting_20/Benchmark_Problem/Figure_2.png" width="100%"></li>
+                                                    </ul>
+                                                </div>
+                                            </li>
+
+                                            <!--CASE A-->
+                                            <li>
+                                                <h2 style="background-color: rgb(140, 219, 255);"><u><b>Case A: Relation between inflow flux and size of obstacle in single type crowd problem</b></u><br></h2>
+                                                
+                                                <div style="
+                                                    border: 1px solid black;
+                                                    padding: 1%;
+                                                    background-color: aliceblue;
+                                                ">
+                                                    <ul>
+                                                        <!--Desrcibe the problem (Numerically)-->
+                                                        <li></li>
+                                                        <li></li>
+                                                        <li>Given below is the sketch of the domain.<br><img src="./Meeting_20/Problem_Description_Figure-1.png" width="100%"></li>
+                                                        <!--Results-->
+                                                        <li></li>
+                                                        <li></li>
+                                                        <li>Given below is the video frames of the crowd for case of obstacle size...</li>
+                                                        <li>Given below is the figure showcasing the result.</li>
+                                                    </ul>
+                                                </div>
+                                            </li>
+
+                                            <!--CASE B-->
+                                            <li>
+                                                <h2 style="background-color: rgb(140, 219, 255);"><u><b>Case B: Relation between initial density and length of exchange doors in multi type crowd problem</b></u><br></h2>
+                                                
+                                                <div style="
+                                                    border: 1px solid black;
+                                                    padding: 1%;
+                                                    background-color: aliceblue;
+                                                ">
+                                                    <ul>
+                                                        <!--Desrcibe the problem (Numerically)-->
+                                                        <li></li>
+                                                        <li></li>
+                                                        <li>Given below is the sketch of the domain.</li>
+                                                        <li>Given below is the sketch of the domain.<br><img src="./Meeting_20/Problem_Description-1.png" width="100%"></li>
+                                                        <!--Results-->
+                                                        <li></li>
+                                                        <li></li>
+                                                        <li>Given below is the video frames of the crowd for case of obstacle size...</li>
+                                                        <li>Given below is the figure showcasing the result.</li>
+                                                    </ul>
+                                                </div>
+                                            </li>
+
+                                            <!--CASE C-->
+                                            <li>
+                                                <h2 style="background-color: rgb(140, 219, 255);"><u><b>Case B: Relation between inflow flux and width of passage in multi type crowd problem</b></u><br></h2>
+                                                
+                                                <div style="
+                                                    border: 1px solid black;
+                                                    padding: 1%;
+                                                    background-color: aliceblue;
+                                                ">
+                                                    <ul>
+                                                        <!--Desrcibe the problem (Numerically)-->
+                                                        <li></li>
+                                                        <li></li>
+                                                        <li>Given below is the sketch of the domain.</li>
+                                                        <li>Given below is the sketch of the domain.<br><img src="./Meeting_20/Problem_Description_1-1.png" width="100%"></li>
+                                                        <!--Results-->
+                                                        <li></li>
+                                                        <li></li>
+                                                        <li>Given below is the video frames of the crowd for case of obstacle size...</li>
+                                                        <li>Given below is the figure showcasing the result.</li>
+                                                    </ul>
+                                                </div>
+                                            </li>
+
+                                            <!--Conclusion-->
+                                            <li>
+                                                <h2 style="background-color: rgb(140, 219, 255);"><u><b>Conclusion</b></u><br></h2>
+                                                
+                                                <div style="
+                                                    border: 1px solid black;
+                                                    padding: 1%;
+                                                    background-color: aliceblue;
+                                                ">
+                                                    <ul>
+                                                        <!--Conclusion-->
+                                                        <li></li>
+                                                        <li></li>
+                                                        <li></li>
+                                                        <li></li>
+                                                    </ul>
+                                                </div>
+                                            </li>
+
+                                        </ol>
+                                    </details>
+                                    
                                 </p>
                             </div>
                         </section>
@@ -3093,7 +3471,7 @@
             <div class="footer-flex">  
                 <div class="logo-cards">
                     <div class="software-logo">
-                        <a target="_blank" href="./Thinking_Fluids/">
+                        <a target="_blank" href="./Thinking_Fluids/index.html">
                             <img src="./style/Thinking_Fluid_Icon.png">
                         </a>
                     </div>
@@ -3113,86 +3491,7 @@
                     </div>
                 </div>
             </div>
-                
         </div>
     </div>
-
-    
-    
-    <!--This is  for the Script for the loading page-->
-    <!-- <script>
-        
-        //This function is to laod the images
-        let loadingDone = false;
-
-        function update_percentage(){
-            if (loadingDone) return;
-
-            i++;
-
-            let total = total_video + total_images;
-            let percentage = (i / total) * 100;
-
-            document.querySelector('.loader').style.width = `${percentage}%`;
-
-            if (percentage >= 100) {
-                loadingDone = true;
-
-                setTimeout(() => {
-                    document.querySelector('.loading-page-container').style.opacity = '0';
-                    setTimeout(()=>{
-                        document.querySelector('.loading-page-container').style.display = 'none';
-                        document.querySelector('body').style.overflow = 'auto';
-                    },2000);
-                }, 2000);
-            }
-        }
-        
-        //Collect all the images videos from the document.
-        const videos = document.querySelectorAll('video');
-        const imgs = document.querySelectorAll('img');
-
-        let i = 0;
-        let total_images = imgs.length;
-        let total_video = videos.length;
-
-        videos.forEach(video => {
-            if (video.readyState >= 2) {
-                update_percentage();
-            } else {
-                video.addEventListener('loadeddata', update_percentage);
-                video.addEventListener('error', update_percentage);
-            }
-        });
-
-        imgs.forEach(img => {
-            if (img.complete) {
-                update_percentage();
-            } else {
-                img.addEventListener('load', update_percentage);
-                img.addEventListener('error', update_percentage); // VERY IMPORTANT
-            }
-        });
-
-        document.querySelector('.loading-page-container').style.display = 'block';
-        document.querySelector('.loader').style.width = `${0}%`;
-        document.querySelector('body').style.overflow = 'hidden';
-
-        // setTimeout(() => {
-        //     if (!loadingDone) {
-        //         console.log("Force finishing loader...");
-        //         document.querySelector('.loader').style.width = `100%`;
-
-        //         document.querySelector('.loading-page-container').style.opacity = '0';
-        //         setTimeout(()=>{
-        //             document.querySelector('.loading-page-container').style.display = 'none';
-        //             document.querySelector('body').style.overflow = 'auto';
-        //         },2000);
-        //     }
-        // }, 10000); // 5 sec fallback
-        
-
-    </script> -->
-</body>
-
+    </body>
 </html>

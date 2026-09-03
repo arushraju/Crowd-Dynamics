@@ -198,6 +198,12 @@
             font-weight: 700;
             user-select: none;
         }
+        .meeting_21_table{
+            display: grid; 
+            grid-template-columns: 1fr 1fr; 
+            background-color: rgb(219, 255, 255);
+        }
+        
 
         @media(width < 768px){
             video{
@@ -223,6 +229,10 @@
                 height: 30px;
                 border: 1px solid rgb(0, 0, 0);
                 box-shadow: 0px 0px 10px black;
+            }
+            .meeting_21_table{
+                display: flex;
+                flex-direction: column;
             }
         }
     </style>
@@ -2644,7 +2654,13 @@
                                 The result given below are the ones to answer the above questions.<br>
 
                                 <!--Symmetric Chocking Problem-->
-                                <details style="width: 90%; margin-left: 5%; margin-right: 5%; background-color: rgb(255, 171, 188);">
+                                <details style="
+                                    width: 90%; 
+                                    margin-left: 5%; 
+                                    margin-right: 5%; 
+                                    background-color: rgb(255, 171, 188);
+                                
+                                ">
                                     <summary>Symmetric Chocking Problem  (Studying the Door Geometry)</summary>
                                     <p>
                                         So given below is the table for all the cases that are solved. I have plotted for <b>eight</b> door sizes starting from a very small value to a very large ones. I have entered the results (Animation), Critical Desnity, the estimated Exchange time, and the position where the density exceeded 10, in the table. I have later plotted the graph of the result.<br>
@@ -3554,9 +3570,10 @@
                                 </p>
 
 
-                                <div style="display: grid; grid-template-columns: 1fr 1fr; background-color: rgb(219, 255, 255);">
+                                <div class="meeting_21_table">
+                                    <!--L = 10m-->
                                     <div>
-                                        <figure>
+                                        <figure style="width: 100%; margin: 1%;">
                                             <table border="1">
                                                 <tr>
                                                     <th>Obstacle Length</th>
@@ -3654,7 +3671,7 @@
                                     
                                     <!--L = 20m-->
                                     <div>
-                                        <figure>
+                                        <figure style="width: 100%; margin: 1%;">
                                             <table border="1">
                                                 <tr>
                                                     <th>Obstacle Length</th>
@@ -3752,7 +3769,7 @@
 
                                     <!--L = 30m-->
                                     <div>
-                                        <figure>
+                                        <figure style="width: 100%; margin: 1%;">
                                             <table border="1">
                                                 <tr>
                                                     <th>Obstacle Length</th>
@@ -3850,7 +3867,7 @@
 
                                     <!--L = 40m-->
                                     <div>
-                                        <figure>
+                                        <figure style="width: 100%; margin: 1%;">
                                             <table border="1">
                                                 <tr>
                                                     <th>Obstacle Length</th>
@@ -3972,6 +3989,12 @@
                                 <p>
                                     Hence, I tried plotting an interesting plot. I have tried plotting the density at one of the corners of the obstacle with time. Because we see that this density increases and then decreases with time, plotting this would let us see the exact frequency and also the amplitude of the oscillation. The plots are shown below:
                                     <br>
+                                    <center>
+                                        <img width="100%" src="./Meeting_21/Case_A/Corner_Density_Image.jpg" style="max-width: 500px; min-width: 200px;">
+                                    </center>
+
+                                    <img width="100%" src="./Meeting_21/Case_A/L_10/More_Detailed_Analysis/Frequency_VS_Inflow_Flux_Result.png"  style="max-width: 500px; min-width: 200px;">
+
                                 </p>
                                 
                                 <p>
@@ -3984,7 +4007,7 @@
                                 
                                 <p>
                                     I have also produced the result for the inflow flux, where I thought it is important to increment the inflow flux by 0.1 for better results. I have made the
-                                </p>
+                                </p>                                
                                 
                             </div>
                         </section>

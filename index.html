@@ -3472,21 +3472,32 @@
 
                                 <h2>Benchmark Problem</h2>
                                 <p>
-                                    Earlier, while trying to solve the problem of density accumulation at the outflow boundary, I had extrapolated the flux value at the physical boundary at the exit. This forced the density to drain out of the domain. Results are shown below:
+                                    Earlier, there was this problem of density accumulation at the outflow boundary. Results are shown below:
                                     <br>
+                                    <center>
+                                        <img width="49%" src="./Meeting_21/Benchmark_Slice_at_diff_timesteps/Earlier_Result.png">
+                                        <img width="49%" src="./Meeting_21/Benchmark_Slice_at_diff_timesteps/Earlier_Results_2.png">
+                                    </center>
                                 </p>
                                 
                                 <p>
-                                    But I still saw a huge spike in the density, although it stopped getting accumulated at the exit. And so, my next decision was to extrapolate the velocities at the exits and the ghost point, and this surely made the density converge to the paper's result. Given below is the image explaining the way I have done this and the results as well.
+                                    I tried extrapolating the velocities at the exits and the ghost point, and this surely made the density converge to the paper's result. Given below is the image explaining the way I have done this and the results as well.
                                     <br>
-                                    <center>
-                                        <img width="50%" src="./Meeting_21/Benchmark_with_Velocity_Extrapolation/Velocity_Extrapolation_Image.jpg">
-                                    </center>
-                                    
-                                    <center>
-                                        <img width="49%" src="./Meeting_21/Benchmark_with_Velocity_Extrapolation/Density_at_Y_33_Obtained.png">
-                                        <img width="49%" src="./Meeting_21/Benchmark_with_Velocity_Extrapolation/Density_at_X_36_Result_Comparision.png">
-                                    </center>
+                                    <div style="display: grid; grid-template-columns: 1fr 1fr;">
+                                        <div><img width="80%" src="./Meeting_21/Benchmark_with_Velocity_Extrapolation/Velocity_Extrapolation_Image.jpg"></div>
+
+                                        <div>
+                                            <ul>
+                                                <li>Velocity direction of the flow depends on the slope of the potential.</li>
+                                                <li>At the ghost points I created an artifical slope as shown in the image at points Nx-2, Nx-1, Nx.</li>
+                                                <li>Hence due to this slope added, this drives the crowd to move further and reach the edge of the domain.</li>
+                                            </ul>
+                                        </div>
+
+                                        <div><img width="80%" src="./Meeting_21/Benchmark_with_Velocity_Extrapolation/Density_at_Y_33_Obtained.png"></div>
+
+                                        <div><img width="80%" src="./Meeting_21/Benchmark_with_Velocity_Extrapolation/Density_at_X_36_Result_Comparision.png"></div>
+                                    </div>
                                     <br>
                                     
                                     But again, this result was not as expected. There were some parts of the graph which did not fit well.
@@ -3512,8 +3523,7 @@
                                     <br>
                                     
                                     All these results could be compared with those of the paper. There are problems with these results. The other option I thought of was to apply flux extrapolation as well, and see what happens. This means extrapolating the flux at the ghost point from the last computational grid point.
-                                </p>
-                                
+                                </p>  
 
                                 <p>
                                     Here, I had extrapolated the flux at the ghost points and observed the following results:
@@ -3541,14 +3551,26 @@
                                 </p>
                                 
                                 <p>
-                                    Another thought I had was to check the indices. Since it might be possible that a mismatch of even one index could make the size of the obstacle or exits bigger or smaller by one space interval, which is equal to 1 m. These are the results after debugging the code again:
+                                    Another thought I had was to check the indices. Since it might be possible that a mismatch of even one index could make the size of the obstacle or exits bigger or smaller by one space interval, which is equal to 1 m. It turns out I was plotting the graph at y = 32m and I was supposed to y = 33m. Given below are the results:
                                     <br>
+                                    <center>
+                                        <img src="./Meeting_21/Benchmark_Slice_at_diff_timesteps/Paper_Result.png" width="49%">
+                                    </center>
+                                    <center>
+                                        <img src="./Meeting_21/Benchmark_Slice_at_diff_timesteps/Result_Corrected_2.png" width="49%">
+                                        <img src="./Meeting_21/Benchmark_Slice_at_diff_timesteps/Result_Corrected.png" width="49%">
+                                    </center>
                                 </p>
                                 
 
-                                <h2>CASE A</h2>
+                                <h2>CASE A - Flow over an Obstacle</h2>
                                 <p>
+                                    This problem is inspired from situations where there are huge crowds moving through platforms or roads with vendors in between, or places where there are pillars or rooms built in between the pathway.<br><br>
+
+                                    Some other examples include crowded railway stations with stalls or kiosks placed along the platform, marketplaces with shops or temporary structures occupying parts of the walking path, pedestrian roads with street vendors in between, corridors with large structural columns or rooms obstructing the pathway, and public spaces where utility structures or enclosed areas are built within the pedestrian flow.<br><br>
+
                                     Given below is the problem description of this problem:
+
                                     <br>
                                     <img src="./Meeting_21/Case_A/Problem_Description.png" width="70%">
                                     <br>
@@ -3997,18 +4019,318 @@
 
                                 </p>
                                 
+                                
+                                
+                                <p>
+                                    I have also produced the result for the inflow flux, where I thought it is important to increment the inflow flux by some smaller value. Becasue this would give us a more accurate estimation of the critical flux. For the case where L = 10m and L = 40m, I have provided the resutls below.<br>
+                                </p>                                
+                                <p>
+                                    <div class="meeting_21_table">
+    
+                                        <!--L = 10m-->
+                                        <div>
+                                            <figure style="width: 100%; margin: 1%;">
+                                                <table border="1">
+                                                    <tr>
+                                                        <th>Obstacle Length</th>
+                                                        <th>Inflow Flux</th>
+                                                        <th>Density Contour</th>
+                                                        <th>Chocking Boolean</th>
+                                                    </tr>
+                                                    
+                                                    <tr>
+                                                        <td rowspan="11"><i>L = 10m<br>Simulation: 350s</i></td>
+                                                        <td><i>f = 3.81</i></td>
+                                                        <td>
+                                                            <a target="_blank" href="./Meeting_21/Case_A/L_10/More_Detailed_Analysis/Density_L_10_F_3.81.mp4">
+                                                                View Video
+                                                            </a>
+                                                        </td>
+                                                        <td>Not occured</td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td><i>f = 3.83</i></td>
+                                                        <td>
+                                                            <a target="_blank" href="./Meeting_21/Case_A/L_10/More_Detailed_Analysis/Density_L_10_F_3.83.mp4">
+                                                                View Video
+                                                            </a>
+                                                        </td>
+                                                        <td>Occured at t = 315.61s</td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td><i>f = 3.85</i></td>
+                                                        <td>
+                                                            <a target="_blank" href="./Meeting_21/Case_A/L_10/More_Detailed_Analysis/Density_L_10_F_3.85.mp4">
+                                                                View Video
+                                                            </a>
+                                                        </td>
+                                                        <td>Occured at t = 298.49s</td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td><i>f = 3.87</i></td>
+                                                        <td>
+                                                            <a target="_blank" href="./Meeting_21/Case_A/L_10/More_Detailed_Analysis/Density_L_10_F_3.87.mp4">
+                                                                View Video
+                                                            </a>
+                                                        </td>
+                                                        <td>Occured at t = 322.61s</td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td><i>f = 3.89</i></td>
+                                                        <td>
+                                                            <a target="_blank" href="./Meeting_21/Case_A/L_10/More_Detailed_Analysis/Density_L_10_F_3.89.mp4">
+                                                                View Video
+                                                            </a>
+                                                        </td>
+                                                        <td>Occured at t = 309.74s</td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td><i>f = 3.91</i></td>
+                                                        <td>
+                                                            <a target="_blank" href="./Meeting_21/Case_A/L_10/More_Detailed_Analysis/Density_L_10_F_3.91.mp4">
+                                                                View Video
+                                                            </a>
+                                                        </td>
+                                                        <td>Occured at t = 288.51s</td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td><i>f = 3.93</i></td>
+                                                        <td>
+                                                            <a target="_blank" href="./Meeting_21/Case_A/L_10/More_Detailed_Analysis/Density_L_10_F_3.93.mp4">
+                                                                View Video
+                                                            </a>
+                                                        </td>
+                                                        <td>Occured at t = 281.85s</td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td><i>f = 3.95</i></td>
+                                                        <td>
+                                                            <a target="_blank" href="./Meeting_21/Case_A/L_10/More_Detailed_Analysis/Density_L_10_F_3.95.mp4">
+                                                                View Video
+                                                            </a>
+                                                        </td>
+                                                        <td>Occured at t = 259.86s</td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td><i>f = 3.97</i></td>
+                                                        <td>
+                                                            <a target="_blank" href="./Meeting_21/Case_A/L_10/More_Detailed_Analysis/Density_L_10_F_3.97.mp4">
+                                                                View Video
+                                                            </a>
+                                                        </td>
+                                                        <td>Occured at t = 241.78s</td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td><i>f = 4.25</i></td>
+                                                        <td>
+                                                            <a target="_blank" href="./Meeting_21/Case_A/L_10/More_Detailed_Analysis/Density_L_10_F_4.25.mp4">
+                                                                View Video
+                                                            </a>
+                                                        </td>
+                                                        <td>Occured at t = 156.06s</td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td><i>f = 4.75</i></td>
+                                                        <td>
+                                                            <a target="_blank" href="./Meeting_21/Case_A/L_10/More_Detailed_Analysis/Density_L_10_F_4.75.mp4">
+                                                                View Video
+                                                            </a>
+                                                        </td>
+                                                        <td>Occured at t = 123.93s</td>
+                                                    </tr>
+                                                </table>
+                                                <center><figcaption>Results for Obstacle lenght 10m (f_critical = 3.82)</figcaption></center>
+                                            </figure>
+                                        </div>
+    
+                                        <!--L = 40m-->
+                                        <div>
+                                            <figure style="width: 100%; margin: 1%;">
+                                                <table border="1">
+                                                    <tr>
+                                                        <th>Obstacle Length</th>
+                                                        <th>Inflow Flux</th>
+                                                        <th>Density Contour</th>
+                                                        <th>Chocking Boolean</th>
+                                                    </tr>
+                                                    <tr>
+                                                        <td rowspan="18"><i>L = 40m<br>Simulation: 400s</i></td>
+                                                        <td><i>f = 0.50</i></td>
+                                                        <td>
+                                                            <a target="_blank" href="./Meeting_21/Case_A/L_40/More_Detailed_Analysis/Density_L_10_F_0.50.mp4">
+                                                                View Video
+                                                            </a>
+                                                        </td>
+                                                        <td>Not occured</td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td><i>f = 0.60</i></td>
+                                                        <td>
+                                                            <a target="_blank" href="./Meeting_21/Case_A/L_40/More_Detailed_Analysis/Density_L_10_F_0.60.mp4">
+                                                                View Video
+                                                            </a>
+                                                        </td>
+                                                        <td>Not occured</td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td><i>f = 0.70</i></td>
+                                                        <td>
+                                                            <a target="_blank" href="./Meeting_21/Case_A/L_40/More_Detailed_Analysis/Density_L_10_F_0.70.mp4">
+                                                                View Video
+                                                            </a>
+                                                        </td>
+                                                        <td>Not Occured</td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td><i>f = 0.80</i></td>
+                                                        <td>
+                                                            <a target="_blank" href="./Meeting_21/Case_A/L_40/More_Detailed_Analysis/Density_L_10_F_0.80.mp4">
+                                                                View Video
+                                                            </a>
+                                                        </td>
+                                                        <td>Not Occured</td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td><i>f = 0.90</i></td>
+                                                        <td>
+                                                            <a target="_blank" href="./Meeting_21/Case_A/L_40/More_Detailed_Analysis/Density_L_10_F_0.90.mp4">
+                                                                View Video
+                                                            </a>
+                                                        </td>
+                                                        <td>Not Occured</td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td><i>f = 1.00</i></td>
+                                                        <td>
+                                                            <a target="_blank" href="./Meeting_21/Case_A/L_40/More_Detailed_Analysis/Density_L_10_F_1.00.mp4">
+                                                                View Video
+                                                            </a>
+                                                        </td>
+                                                        <td>Not Occured</td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td><i>f = 1.10</i></td>
+                                                        <td>
+                                                            <a target="_blank" href="./Meeting_21/Case_A/L_40/More_Detailed_Analysis/Density_L_10_F_1.10.mp4">
+                                                                View Video
+                                                            </a>
+                                                        </td>
+                                                        <td>Not Occured <b>*</b></td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td><i>f = 1.20</i></td>
+                                                        <td>
+                                                            <a target="_blank" href="./Meeting_21/Case_A/L_40/More_Detailed_Analysis/Density_L_10_F_1.20.mp4">
+                                                                View Video
+                                                            </a>
+                                                        </td>
+                                                        <td>Occured at t = 333.25s</td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td><i>f = 1.30</i></td>
+                                                        <td>
+                                                            <a target="_blank" href="./Meeting_21/Case_A/L_40/More_Detailed_Analysis/Density_L_10_F_1.30.mp4">
+                                                                View Video
+                                                            </a>
+                                                        </td>
+                                                        <td>Occured at t = 294.50s</td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td><i>f = 1.40</i></td>
+                                                        <td>
+                                                            <a target="_blank" href="./Meeting_21/Case_A/L_40/More_Detailed_Analysis/Density_L_10_F_1.40.mp4">
+                                                                View Video
+                                                            </a>
+                                                        </td>
+                                                        <td>Occured at t = 268.25s</td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td><i>f = 1.50</i></td>
+                                                        <td>
+                                                            <a target="_blank" href="./Meeting_21/Case_A/L_40/More_Detailed_Analysis/Density_L_10_F_1.50.mp4">
+                                                                View Video
+                                                            </a>
+                                                        </td>
+                                                        <td>Occured at t = 246.50s</td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td><i>f = 1.75</i></td>
+                                                        <td>
+                                                            <a target="_blank" href="./Meeting_21/Case_A/L_40/More_Detailed_Analysis/Density_L_10_F_1.75.mp4">
+                                                                View Video
+                                                            </a>
+                                                        </td>
+                                                        <td>Occured at t = 193.75s</td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td><i>f = 2.25</i></td>
+                                                        <td>
+                                                            <a target="_blank" href="./Meeting_21/Case_A/L_40/More_Detailed_Analysis/Density_L_10_F_2.25.mp4">
+                                                                View Video
+                                                            </a>
+                                                        </td>
+                                                        <td>Occured at t = 138.75s</td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td><i>f = 2.75</i></td>
+                                                        <td>
+                                                            <a target="_blank" href="./Meeting_21/Case_A/L_40/More_Detailed_Analysis/Density_L_10_F_2.75.mp4">
+                                                                View Video
+                                                            </a>
+                                                        </td>
+                                                        <td>Occured at t = 115.75s</td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td><i>f = 3.25</i></td>
+                                                        <td>
+                                                            <a target="_blank" href="./Meeting_21/Case_A/L_40/More_Detailed_Analysis/Density_L_10_F_3.25.mp4">
+                                                                View Video
+                                                            </a>
+                                                        </td>
+                                                        <td>Occured at t = 96.50s</td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td><i>f = 3.75</i></td>
+                                                        <td>
+                                                            <a target="_blank" href="./Meeting_21/Case_A/L_40/More_Detailed_Analysis/Density_L_10_F_3.75.mp4">
+                                                                View Video
+                                                            </a>
+                                                        </td>
+                                                        <td>Occured at t = 84.25s</td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td><i>f = 4.25</i></td>
+                                                        <td>
+                                                            <a target="_blank" href="./Meeting_21/Case_A/L_40/More_Detailed_Analysis/Density_L_10_F_4.25.mp4">
+                                                                View Video
+                                                            </a>
+                                                        </td>
+                                                        <td>Occured at t = 68.50s</td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td><i>f = 4.75</i></td>
+                                                        <td>
+                                                            <a target="_blank" href="./Meeting_21/Case_A/L_40/More_Detailed_Analysis/Density_L_10_F_4.75.mp4">
+                                                                View Video
+                                                            </a>
+                                                        </td>
+                                                        <td>Occured at t = 60.50s</td>
+                                                    </tr>
+                                                </table>
+                                                <center><figcaption>Results for Obstacle lenght 40m (f_critical = 1.15)</figcaption></center>
+                                            </figure>
+                                        </div>
+                                    </div>
+                                </p>
+
                                 <p>
                                     Now, coming to the regime of flow where choking is certain to occur, I think it would be interesting to plot the graph between the time it took for choking to occur and the inflow flux. So, for a given geometry of the obstacle, when the inflow flux (which is already more than the critical flux) is increased, the time at which choking would occur will decrease. And this is plotted below.
                                     <br>
                                     <center>
-                                        <img src="./Meeting_21/Case_A/Time_of_chocking_vs_Inflow_Flux_Result.png" width="60%">
+                                        <img src="./Meeting_21/Case_A/Time_of_chocking_vs_Inflow_Flux_Result.png" width="49%">
+                                        <img src="./Meeting_21/Case_A/Time_of_chocking_vs_inflow_flux_result_2.png" width="49%">
                                     </center>
                                 </p>
-                                
-                                <p>
-                                    I have also produced the result for the inflow flux, where I thought it is important to increment the inflow flux by 0.1 for better results. I have made the
-                                </p>                                
-                                
                             </div>
                         </section>
                     </details>

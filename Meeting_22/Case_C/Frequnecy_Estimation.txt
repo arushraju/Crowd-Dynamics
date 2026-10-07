@@ -1,0 +1,36 @@
+====================================================
+  Results for Width = 10 (Crowd A, t >= 120.0 s)
+====================================================
+F = 0.50 | Dominant Frequency: 0.0624 Hz
+F = 1.00 | Dominant Frequency: 0.0874 Hz
+F = 1.50 | Dominant Frequency: 0.0998 Hz
+F = 2.00 | Dominant Frequency: 0.1248 Hz
+F = 2.50 | Dominant Frequency: 0.1248 Hz
+F = 3.00 | Dominant Frequency: 0.0125 Hz
+
+====================================================
+  Results for Width = 20 (Crowd A, t >= 100.0 s)
+====================================================
+F = 0.50 | Dominant Frequency: 0.0350 Hz
+F = 1.00 | Dominant Frequency: 0.0250 Hz
+F = 1.50 | Dominant Frequency: 0.0300 Hz
+F = 2.00 | Dominant Frequency: 0.0300 Hz
+F = 2.50 | Dominant Frequency: 0.0650 Hz
+
+====================================================
+  Results for Width = 30 (Crowd A, t >= 100.0 s)
+====================================================
+F = 0.50 | Dominant Frequency: 0.0250 Hz
+F = 1.00 | Dominant Frequency: 0.0350 Hz
+F = 1.50 | Dominant Frequency: 0.1050 Hz
+F = 2.00 | Dominant Frequency: 0.0400 Hz
+F = 2.50 | Dominant Frequency: 0.0550 Hz
+
+====================================================
+  Results for Width = 40 (Crowd A, t >= 100.0 s)
+====================================================
+F = 0.50 | Dominant Frequency: 0.0350 Hz
+F = 1.00 | Dominant Frequency: 0.0450 Hz
+F = 1.50 | Dominant Frequency: 0.1233 Hz
+F = 2.00 | Dominant Frequency: 0.0567 Hz
+>> 

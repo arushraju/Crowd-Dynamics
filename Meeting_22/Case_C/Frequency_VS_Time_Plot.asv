@@ -323,8 +323,8 @@ for i = 1:length(F_values_W40)
     st_W40(i) = dominantSt;
 end
 xlabel('Time ($s$)', 'Interpreter', 'latex', 'FontSize', 11);
-ylabel('Outflow Flux ($Ped.m/s$)', 'Interpreter', 'latex', 'FontSize', 11);
-title('Outflow Flux vs Time ( $W = 40$ )', 'Interpreter', 'latex', 'FontSize', 12, 'FontWeight', 'bold');
+ylabel('Outflow Flux ', 'Interpreter', 'latex', 'FontSize', 11);
+title('Outflow Flux vs Time, $W = 40$', 'Interpreter', 'latex', 'FontSize', 12, 'FontWeight', 'bold');
 legend('Location', 'eastoutside', 'Interpreter', 'latex', 'FontSize', 9);
 grid on;
 box on;
@@ -340,9 +340,9 @@ plot(F_values_W10, freqs_W10, '-o', 'LineWidth', 1.5, 'MarkerFaceColor', 'auto',
 plot(F_values_W20, freqs_W20, '-s', 'LineWidth', 1.5, 'MarkerFaceColor', 'auto', 'DisplayName', '$W = 20$');
 plot(F_values_W30, freqs_W30, '-^', 'LineWidth', 1.5, 'MarkerFaceColor', 'auto', 'DisplayName', '$W = 30$');
 plot(F_values_W40, freqs_W40, '-d', 'LineWidth', 1.5, 'MarkerFaceColor', 'auto', 'DisplayName', '$W = 40$');
-xlabel('Inflow Flux ($Ped.m/s$)', 'Interpreter', 'latex', 'FontSize', 11);
-ylabel('Frequency ($Hz$)', 'Interpreter', 'latex', 'FontSize', 11);
-title('Dominant Oscillation Frequency vs Inflow Flux', 'Interpreter', 'latex', 'FontSize', 12, 'FontWeight', 'bold');
+xlabel('$F$ Parameter', 'Interpreter', 'latex', 'FontSize', 11);
+ylabel('Dominant Frequency ($Hz$)', 'Interpreter', 'latex', 'FontSize', 11);
+title('Cross-Flow Oscillation Frequency vs $F$ Parameter', 'Interpreter', 'latex', 'FontSize', 12, 'FontWeight', 'bold');
 legend('Location', 'eastoutside', 'Interpreter', 'latex', 'FontSize', 10);
 grid on;
 box on;
@@ -372,9 +372,9 @@ end
 if ~isempty(choking_W40)
     plot(flux_value, choking_W40, '-d', 'LineWidth', 1.5, 'MarkerFaceColor', 'auto', 'DisplayName', '$W = 40$');
 end
-xlabel('Inflow Flux ($Ped.m/s$)', 'Interpreter', 'latex', 'FontSize', 11);
-ylabel('Choking Time ($s$)', 'Interpreter', 'latex', 'FontSize', 11);
-title('Choking Time vs. Inflow FLux', 'Interpreter', 'latex', 'FontSize', 12, 'FontWeight', 'bold');
+xlabel('Flux Value ($F$)', 'Interpreter', 'latex', 'FontSize', 11);
+ylabel('Choking Metric ($s$)', 'Interpreter', 'latex', 'FontSize', 11);
+title('Choking Threshold vs. Flux Value across Bottleneck Widths', 'Interpreter', 'latex', 'FontSize', 12, 'FontWeight', 'bold');
 legend('Location', 'eastoutside', 'Interpreter', 'latex', 'FontSize', 10);
 grid on;
 xlim([0 5]);

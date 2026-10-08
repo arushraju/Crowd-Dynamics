@@ -1,36 +1,35 @@
 ====================================================
   Results for Width = 10 (Crowd A, t >= 120.0 s)
 ====================================================
-F = 0.50 | Dominant Frequency: 0.0624 Hz
-F = 1.00 | Dominant Frequency: 0.0874 Hz
-F = 1.50 | Dominant Frequency: 0.0998 Hz
-F = 2.00 | Dominant Frequency: 0.1248 Hz
-F = 2.50 | Dominant Frequency: 0.1248 Hz
-F = 3.00 | Dominant Frequency: 0.0125 Hz
+F = 0.50 | Dominant Frequency: 0.0624 Hz | Strouhal Number: 0.3120
+F = 1.00 | Dominant Frequency: 0.0874 Hz | Strouhal Number: 0.4368
+F = 1.50 | Dominant Frequency: 0.0998 Hz | Strouhal Number: 0.4992
+F = 2.00 | Dominant Frequency: 0.1248 Hz | Strouhal Number: 0.6240
+F = 2.50 | Dominant Frequency: 0.1248 Hz | Strouhal Number: 0.6240
+F = 3.00 | Dominant Frequency: 0.0125 Hz | Strouhal Number: 0.0624
 
 ====================================================
   Results for Width = 20 (Crowd A, t >= 100.0 s)
 ====================================================
-F = 0.50 | Dominant Frequency: 0.0350 Hz
-F = 1.00 | Dominant Frequency: 0.0250 Hz
-F = 1.50 | Dominant Frequency: 0.0300 Hz
-F = 2.00 | Dominant Frequency: 0.0300 Hz
-F = 2.50 | Dominant Frequency: 0.0650 Hz
+F = 0.50 | Dominant Frequency: 0.0350 Hz | Strouhal Number: 0.3500
+F = 1.00 | Dominant Frequency: 0.0250 Hz | Strouhal Number: 0.2500
+F = 1.50 | Dominant Frequency: 0.0300 Hz | Strouhal Number: 0.3000
+F = 2.00 | Dominant Frequency: 0.0300 Hz | Strouhal Number: 0.3000
+F = 2.50 | Dominant Frequency: 0.0650 Hz | Strouhal Number: 0.6500
 
 ====================================================
   Results for Width = 30 (Crowd A, t >= 100.0 s)
 ====================================================
-F = 0.50 | Dominant Frequency: 0.0250 Hz
-F = 1.00 | Dominant Frequency: 0.0350 Hz
-F = 1.50 | Dominant Frequency: 0.1050 Hz
-F = 2.00 | Dominant Frequency: 0.0400 Hz
-F = 2.50 | Dominant Frequency: 0.0550 Hz
+F = 0.50 | Dominant Frequency: 0.0250 Hz | Strouhal Number: 0.3750
+F = 1.00 | Dominant Frequency: 0.0350 Hz | Strouhal Number: 0.5250
+F = 1.50 | Dominant Frequency: 0.1050 Hz | Strouhal Number: 1.5750
+F = 2.00 | Dominant Frequency: 0.0400 Hz | Strouhal Number: 0.6000
+F = 2.50 | Dominant Frequency: 0.0550 Hz | Strouhal Number: 0.8250
 
 ====================================================
   Results for Width = 40 (Crowd A, t >= 100.0 s)
 ====================================================
-F = 0.50 | Dominant Frequency: 0.0350 Hz
-F = 1.00 | Dominant Frequency: 0.0450 Hz
-F = 1.50 | Dominant Frequency: 0.1233 Hz
-F = 2.00 | Dominant Frequency: 0.0567 Hz
->> 
+F = 0.50 | Dominant Frequency: 0.0350 Hz | Strouhal Number: 0.7000
+F = 1.00 | Dominant Frequency: 0.0450 Hz | Strouhal Number: 0.9000
+F = 1.50 | Dominant Frequency: 0.1233 Hz | Strouhal Number: 2.4667
+F = 2.00 | Dominant Frequency: 0.0567 Hz | Strouhal Number: 1.1333

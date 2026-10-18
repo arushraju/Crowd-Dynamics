@@ -4356,16 +4356,26 @@
 
                                 <!--Case A-->
                                 <details>
-                                    <summary>Case A: Crowd moving through obstacle</summary>
+                                    <summary>Case A: Crowd flow around an obstacle</summary>
                                     <section class="intro-card">
                                         <div style="background-color: rgb(255, 180, 195);">
                                             <ul>
                                                 <li>
-                                                    Given below is the problem description.<br>
-                                                    <img src="./Meeting_22/Case_A/Domain_Description.png" style="width: 60%; min-width: 200px;">
+                                                    There are many instances of crowd interaction with an obstacle. It is important to know in this common situation, how a certain amount of crowd will behave with a certain size of obstacle. The problem below is a simplistic version of the problem of "Crowd flow around an obstacle".
                                                 </li>
                                                 <li>
-                                                    Given below are the explanation of results that are captured from the simulation for all inflow fluxes and sizes of the obstacle.<br>
+                                                    The problem contains crowd flow entering the domain with the inflow flux represented by <i>f</i>, which then redirects to squeeze through the openings on both sides of the obstacle and finally exits through the other boundary.
+                                                </li>
+                                                <li>
+                                                    The domain is a rectangle with a width of 50 m and a length of 100 m, and the obstacle is a square of side length <i>L</i>, situated at the center in X but displaced by 1 m from the center (in the direction to the right with respect to the incoming crowd) in Y. The fluxes will be changed from 0.5 ped/m·s to 5.0 ped/m·s, with an increment of 0.5 ped/m·s. All fluxes are tested for each side length of the obstacle, from 10 m to 40 m, with an increment of 10 m.
+                                                </li>
+                                                <li>
+                                                    <img src="./Meeting_22/Case_A/Domain_Description.png" style="width: 60%; min-width: 200px;">
+                                                </li>
+                                                <li>The spatial interval of the problem is taken to be equal to 1 m, and the total simulation time for each case is 450 s.</li>
+                                                <!--Results Explanation-->
+                                                <li>
+                                                    Given below are the explanations of the results captured from the simulation for all inflow fluxes and obstacle sizes.<br>
                                                     <table border="1">
                                                         <thead>
                                                             <th>Result</th>
@@ -4374,26 +4384,27 @@
                                                         <tbody>
                                                             <tr>
                                                                 <td><b>Density Contour</b></td>
-                                                                <td>This is the Density of crowd with time. This is just one kind of crowd and hence there is no need of colored density contour.</td>
+                                                                <td>This is the density of the crowd over time. This is a single-crowd problem, and hence there is no need to generate a coloured density contour.</td>
                                                             </tr>
                                                             <tr>
                                                                 <td><b>Shock Visualisation</b></td>
                                                                 <td>
-                                                                    This is to visualise the shocks that are form. And I have plotted the quantity "Gradient of Density dot product with Velocity<br>
+                                                                    This is to visualise the shocks that are formed. I have plotted the quantity "Gradient of Density dot product with Velocity."<br>
                                                                     <img src="./Meeting_22/Density_Gradient_Expression.png" width="100%" style="max-width: 300px;">
                                                                 </td>
                                                             </tr>
                                                             <tr>
                                                                 <td><b>Flow Rate at Station A and B</b></td>
-                                                                <td>This is just the flow rate at station A and B with time plots. This will be used to study the oscillations of crowd.</td>
+                                                                <td>These are simply the flow rate versus time plots at stations A and B. These will be used to study the oscillations of the crowd. Note that station A is smaller than Station B by 1m.</td>
                                                             </tr>
                                                             <tr>
-                                                                <td><b>Velocity Profile at Station C with time</b></td>
-                                                                <td>This is the 2D contour where the X-axis is time and the Y-axis is the Y-cordinate, and the colors represent the magnitude represent the magnitude of component of velocity. And hecne there will eb two plots, one with X-velocity magnitude and the other one being Y-Velocity magnitude.</td>
+                                                                <td><b>Space-Time Contour of Velocity Profile at Station C</b></td>
+                                                                <td>This is a 2D contour in which the X-axis represents time, the Y-axis represents the Y-coordinate, and the colours represent the magnitude of the velocity component. Hence, there will be two plots: one showing the magnitude of the X-velocity component and the other showing the magnitude of the Y-velocity component.</td>
                                                             </tr>
                                                         </tbody>
                                                     </table>
                                                 </li>
+                                                <!--Results-->
                                                 <li>
                                                     Given below are the results that are generated.<br>
                                                     <div style="width: 100%; overflow: scroll; border: 1px solid black; height: 350px;">
@@ -5301,6 +5312,7 @@
                                                         </table>
                                                     </div>
                                                 </li>
+                                                <!--Oscillation Study-->
                                                 <li>
                                                     Given below is the plot of flowrate at station A and B for all fluxes and length of the obstacle.<br>
                                                     <div style="display: flex; flex-wrap: wrap; gap: 20px; justify-content: center;">
@@ -5334,12 +5346,27 @@
                                                 <li>
                                                     Given below are my observations:<br>
                                                     <ul>
-                                                        <li></li>
+                                                        <li>It is observed that the flow is regular and non-oscillatory (Flow Regime 1) for lower fluxes. It then changes to regular and oscillatory flow (Flow Regime 2) for higher fluxes, after which choking is observed for fluxes greater than the critical flux (Flow Regime 3).</li>
+                                                        <li>It is also observed that the effect of asymmetry is far more in the case of larger obstacles than in the case of smaller obstacles. This can be seen from the fact that the mean outflow rates of the crowd through stations A and B do not align, and the baseline of station B is lower than that of station A (meaning that station A has a greater width than station B, which is true). This can be seen clearly in the case of L = 40 m and f = 0.5 ped/m·s.</li>
+                                                        <li>Discuss the amplitude and frequency of the crowd oscillations.</li>
+                                                        <li>There are instances where the crowd alternates between choosing station A and station B, as can be seen from the phase difference between the outflow rates at stations A and B. The reason for this could be that when the crowd density at one station becomes slightly higher than at the other, pedestrians choose the other station to minimise their discomfort, thereby increasing the density at that station. This phenomenon then repeats itself.</li>
+                                                        <li>It is also observed that the outflow appears to approach an asymptotic value for fluxes greater than the critical flux. This can be derived empirically. For example, when the obstacle length is 10 m, the total space available for the crowd to bypass the obstacle is 40 m, with 20 m available at each station. Therefore, the maximum capacity for the crowd to move through station A is the maximum flux (i.e., 5 ped/m·s) multiplied by the width of station A. This is equal to 100 ped/s, which can also be observed in the graph. Similarly, this value can be derived for all other obstacle sizes.</li>
                                                     </ul>
                                                 </li>
+                                                <!--Choking time-->
                                                 <li>
-                                                    Given below is the time of choking and the flux.<br>
+                                                    Given below are the choking times for different inflow fluxes.<br>
                                                     <img src="./Meeting_22/Case_A/ChokingTime_VS_Flux.png" style="width: 60%; min-width: 200px;">
+                                                </li>
+                                                <li>
+                                                    <ul>
+                                                        <li>
+                                                            It can be seen that the graph is nonlinear. At higher fluxes, an increase in flux has a relatively small effect on the choking time, whereas, at lower fluxes, the effect on the choking time is much larger.
+                                                        </li>
+                                                        <li>
+                                                            We also observe that, for any given flux, increasing the size of the obstacle makes choking more likely to occur, and hence, the time of choking decreases with increasing obstacle length.
+                                                        </li>
+                                                    </ul>
                                                 </li>
                                             </ul>
                                         </div>
@@ -5348,17 +5375,28 @@
 
                                 <!--Case B-->
                                 <details>
-                                    <summary>Case B: Two crowd moving perpendicularly through each other</summary>
+                                    <summary>Case B: Interaction of Two Perpendicular Pedestrian Flows</summary>
                                     <section class="intro-card">
                                         <ul style="background-color: rgb(214, 255, 255);">
-                                            <li>In this case as discussed, there are two crowds and they are moving perpendicularly through each other.</li>
+                                            <!--Problem Description-->
                                             <li>
-                                                This is the problem description.<br>
+                                                Situations involving multiple crowds are also very common. The interaction of two crowds, for example, at a junction in a railway station, on a traffic road, or in a mall due to the intersection of paths, is also a common scenario in day-to-day life.
+                                            </li>
+                                            <li>
+                                                In this setup, there are two crowds differentiated not by their physical characteristics (such as jam density) or performance (such as maximum speed), but by their exits. Crowd A enters from side AB with flux <i>f_A</i> and moves towards its exit on side CD. Similarly, Crowd B enters through side QP with inflow flux <i>f_B</i> and leaves through side RS.
+                                            </li>
+                                            <li>
+                                                The inflow fluxes <i>f_A</i> and <i>f_B</i> are kept equal in all cases and are therefore, sometimes referred to as <i>f</i>. The width of the passage is given by <i>W</i>.
+                                            </li>
+                                            <li>
                                                 <img src="./Meeting_22/Case_C/Problem_Description.png" width="60%">
                                             </li>
-                                            <li>I first ran the simulation for inflow flux from 0.5 to 5 and for passage width from 10 to 40m, and came up with some results.</li>
                                             <li>
-                                                Let me first explain the results. For each cases, (which is for each flux for a given width of passage), I have obtained the following result. 
+                                                I first ran the simulation for inflow flux <i>f</i> ranging from 0.5 to 5 ped/m·s, with an increment of 0.5 ped/m·s, and for passage widths ranging from 10 m to 40 m, with an increment of 10 m, and obtained some results.
+                                            </li>
+                                            <!--Problem Explanation-->
+                                            <li>
+                                                Let me first explain the results. For each case (i.e., for each flux at a given passage width), I have obtained the following results.
                                                 <table border="1" style="border-color: black;">
                                                     <thead>
                                                         <th>Result</th>
@@ -5366,34 +5404,33 @@
                                                     </thead>
                                                     <tbody>
                                                         <tr>
-                                                            <td><b>Density Contour (Non-colored)</b></td>
-                                                            <td>which is just contour of density sum of both the crowds</td>
+                                                            <td><b>Density Contour (Non-coloured)</b></td>
+                                                            <td>This is the contour of the total density of both crowds combined. That is sum of density of both the crowd.</td>
                                                         </tr>
                                                         <tr>
-                                                            <td><b>Density Contour (Colored)</b></td>
-                                                            <td>which is contour of density but for each density seperately using different colors</td>
+                                                            <td><b>Density Contour (Coloured)</b></td>
+                                                            <td>This is the density contour for each crowd separately, with different colours used to distinguish between them.</td>
                                                         </tr>
                                                         <tr>
-                                                            <td><b>Potential Contour A and B</b></td>
-                                                            <td>which is contour of potential of each crowds seperately</td>
+                                                            <td><b>Potential Contours A and B</b></td>
+                                                            <td>These are the potential contours for each crowd separately.</td>
                                                         </tr>
                                                         <tr>
-                                                            <td><b>Outflow rate for Crowd A and B</b></td>
-                                                            <td>which is the flow rate of crowd A and B escaping their respective exits (this is done to study the oscillation in the problem, at fluxes where choking doesnt occur)</td>
+                                                            <td><b>Outflow Rates for Crowds A and B</b></td>
+                                                            <td>These represent the flow rates of Crowds A and B as they leave through their respective exits CD and RS. These plots are used to study the oscillations in the problem at fluxes for which choking does not occur.</td>
                                                         </tr>
                                                         <tr>
                                                             <td><b>Shock Visualisation A and B</b></td>
                                                             <td>
-                                                                which is the plot of quantity gradient of density dot product with velocity for each crowd seperately. The expression of the same is given below:<br>
+                                                                These are plots of the quantity given by the dot product of the density gradient and velocity for each crowd separately. The expression for this quantity is given below:<br>
                                                                 <img style="min-width: 150px; width: 50%;" src="./Meeting_22/Density_Gradient_Expression.png">
                                                             </td>
                                                         </tr>
                                                     </tbody>
-                                                        
                                                 </table>
                                             </li>
                                             <li>
-                                                Given below are the results. <span style="color: red;">Due to large time taken for the simualtion, I have obtained detailed results for case W = 10m and W = 20m. But as the passage width increases, the points at which density needs to be computed also increased and hence the computation time was also increased. Considering that I only captured Density Contour (non-colored) for cases W = 30m and W = 40m.</span><br>
+                                                Given below are the results. <span style="color: red;">Due to the long computation time required for the simulations, I have obtained detailed results for cases with passage widths of W = 10 m and W = 20 m. However, as the passage width increases, the number of points at which the density needs to be computed also increases, resulting in longer computation times. Therefore, I have captured only the non-coloured density contours for cases with W = 30 m and W = 40 m.</span><br>
                                                 <div style="border: 1px solid black; height: 400px; width: 100%; overflow-x: scroll; overflow-y: scroll;">
                                                     <table border="1" style="border-color: black;">
                                                         <thead>
@@ -6619,51 +6656,53 @@
                                                 </div>
                                                 <span style="color: red;">Please let me know if this table is not comfortable to control and interpret.</span>From all the data that is generated, the crowd dynamics is studied in two cases that is in Pre-Choking Regime and in Choking regime. 
                                             </li>
+                                            <!--Pre Choking-->
                                             <li>
                                                 <h3>Pre-Choking Regime of Crowd Flow</h3>
-                                                <p>Lets imagine all the cases where choking doesnt occur at any time in the simulation time domain. Oscillation and patterns are observed at the junction of two paths. And this oscialltion has an affect on the outflow rate of crowd at the exit. In order to study these oscialltion I had already captured the outflow rate data for all cases. The outflow rate for all fluxes and for each Width case is given below:<br></p>
+                                                <p>Let us consider all cases in which choking does not occur at any point during the simulation time. Oscillations and patterns are observed at the junction of the two paths. These oscillations affect the outflow rate of the crowd at the exits. To study these oscillations, I have already captured the outflow rate data for all cases. The outflow rates for all fluxes and each passage width are given below:<br></p>
 
-                                                <div style="display: flex; flex-wrap: wrap; justify-content: center; align-items: flex-start; gap: 1%;">
-                                                    <figure style="width: 45%; min-width: 200px; margin: 0;">
-                                                        <img width="100%" src="./Meeting_22/Case_C/Outflow_Flux_W_10.png">
-                                                        <figcaption>Width <i>10m</i></figcaption>
-                                                    </figure>
+                                            <div style="display: flex; flex-wrap: wrap; justify-content: center; align-items: flex-start; gap: 1%;">
+                                                <figure style="width: 45%; min-width: 200px; margin: 0;">
+                                                    <img width="100%" src="./Meeting_22/Case_C/Outflow_Flux_W_10.png">
+                                                    <figcaption>Width <i>10 m</i></figcaption>
+                                                </figure>
 
-                                                    <figure style="width: 45%; min-width: 200px; margin: 0;">
-                                                        <img width="100%" src="./Meeting_22/Case_C/Outflow_Flux_W_20.png">
-                                                        <figcaption>Width <i>20m</i></figcaption>
-                                                    </figure>
+                                                <figure style="width: 45%; min-width: 200px; margin: 0;">
+                                                    <img width="100%" src="./Meeting_22/Case_C/Outflow_Flux_W_20.png">
+                                                    <figcaption>Width <i>20 m</i></figcaption>
+                                                </figure>
 
-                                                    <figure style="width: 45%; min-width: 200px; margin: 0;">
-                                                        <img width="100%" src="./Meeting_22/Case_C/Outflow_Flux_W_30.png">
-                                                        <figcaption>Width <i>30m</i></figcaption>
-                                                    </figure>
+                                                <figure style="width: 45%; min-width: 200px; margin: 0;">
+                                                    <img width="100%" src="./Meeting_22/Case_C/Outflow_Flux_W_30.png">
+                                                    <figcaption>Width <i>30 m</i></figcaption>
+                                                </figure>
 
-                                                    <figure style="width: 45%; min-width: 200px; margin: 0;">
-                                                        <img width="100%" src="./Meeting_22/Case_C/Outflow_Flux_W_40.png">
-                                                        <figcaption>Width <i>40m</i></figcaption>
-                                                    </figure>
-                                                </div>
+                                                <figure style="width: 45%; min-width: 200px; margin: 0;">
+                                                    <img width="100%" src="./Meeting_22/Case_C/Outflow_Flux_W_40.png">
+                                                    <figcaption>Width <i>40 m</i></figcaption>
+                                                </figure>
+                                            </div>
 
-                                                I have listed my observations below:<br>
-                                                <ul>
-                                                    <li>For the case W = 10m, the outflow is osciallatory and repetative. But for width more then 10 the flow for lower inflow fluxes is either steady or for higher inflow flux the flow is very irregular. This could mean that the regime of transition from regular to irregular flow becomes narrower as the width of the passage is increased.</li>
-                                                    <li>Also it is seen that irregularity that occurs at width more than 10m causes the outflow rate oscillation in crowd A and B to become out of phase. Indicating that the crowd move in such a way that there they take turns to move through the center. There are times when the outflow of A becomes more than B and then vice versa. But it also means that for lower fluxes, this doesnt occur, and all the crowd moves such that outflow rate oscillation phase difference is equal to zero. Similar to what happened in Case A.</li>
-                                                    <li>It is also seen that for Width 10m, the dominant frquency of crowd increases for flux 0.5 to 2.0 and then dipping before the flux when choking is seen. And the graph below shows that.<br>
+                                            I have listed my observations below:<br>
+                                            <ul>
+                                                <li>For the case W = 10 m, the outflow is oscillatory and repetitive. However, for passage widths greater than 10 m, the flow at lower inflow fluxes is either steady, while at higher inflow fluxes, it becomes highly irregular. This could mean that the transition regime from regular to irregular flow becomes narrower as the passage width increases.</li>
+                                                <li>It is also observed that the irregularity occurring at passage widths greater than 10 m causes the outflow rate oscillations of Crowds A and B to become out of phase. This indicates that the crowds may move in such a way that they take turns passing through the centre. At times, the outflow rate of Crowd A becomes greater than that of Crowd B, and vice versa. However, this also means that, at lower fluxes, this behaviour does not occur, and both crowds move such that the phase difference between their outflow rate oscillations is zero. This is similar to what was observed in Case A.</li>
+                                                <li>It is also observed that, for a passage width of 10 m, the dominant frequency of the crowd increases as the flux increases from 0.5 to 2.0 ped/m·s, after which it decreases before choking occurs. The graph below illustrates this observation.<br>
                                                     <img src="./Meeting_22/Case_C/Summary_Frequency_vs_F.png" width="50%" style="min-height: 20px;">
-                                                    </li>
-                                                </ul>
-                                                
+                                                </li>
+                                            </ul>
+
                                             </li>
+                                            <!--Post Choking-->
                                             <li>
                                                 <h3>Choking Regime of Crowd Flow</h3>
-                                                Here I have plotted the following. For each case of width, I have plotted the fluxes (which is greater than critical flux) and the time at which choking was seen for it. The plot given below shows it.<br>
+                                                Here, I have plotted the inflow fluxes (which are greater than the critical flux) and the corresponding times at which choking occurs for each passage width. The plot given below shows these results.<br>
                                                 <img src="./Meeting_22/Case_C/Choking_vs_Flux_Summary.png" style="width: 50%; min-width: 150px;">
                                                 <br>
-                                                Here are my observation.<br>
+                                                Here are my observations.<br>
                                                 <ul>
-                                                    <li>The graph is very Non-Linear. And seem to achieve somewhat constant value at larger fluxes, suggesting that for larger flux, the time at which choking occurs as approximately same for all cases.</li>
-                                                    <li>It is trivial that by increasing the rate of pedestrain entering the domain makes choking to occur early, thus decreasing the choking time. Also increasing the width of the passage would delay choking causing Choking time to decrease. But when both of it happens at the same time (that is increase in number of pedestrains inflow rate, and width of the passage), the effect of increased inflow rate is dominant. And hence for a given inflow flux, choking occurs early in wider passage, and choking is delayed for narrower passage.</li>
+                                                    <li>The graph is highly nonlinear and appears to approach a nearly constant value at higher fluxes, suggesting that, at higher inflow fluxes, the time at which choking occurs is approximately the same for all cases.</li>
+                                                    <li>It is intuitive that increasing the inflow rate of pedestrians entering the domain causes choking to occur earlier, thereby decreasing the choking time. Increasing the passage width, on the other hand, would delay choking, thereby increasing the choking time. However, when both factors change simultaneously (i.e., when both the pedestrian inflow rate and the passage width increase), the effect of the increased inflow rate appears to dominate. Hence, for a given inflow flux, choking occurs earlier in wider passages and is delayed in narrower passages.</li>
                                                 </ul>
                                             </li>
                                         </ul>
@@ -6675,15 +6714,22 @@
                                     <summary>Case C: Two Crowds exchanging through comon doors</summary>
                                     <section class="intro-card">
                                         <ul style="background-color: rgb(168, 255, 226);">
-                                            <li>In this case we discuss a problem where there are two kinds of crowd situated at the opposite sides of a wall, containign two common doors. And the crowds are supposed to use the common doors,and move to the opposite sides of domain.</li>
+                                            <!--Problem Description-->
                                             <li>
-                                                This is the problem description.<br>
+                                                Another multi-crowd problem that was studied involves two crowds situated on opposite sides of a wall containing two common doors. Both crowds are supposed to use the common doors and move towards the opposite sides of the domain. This situation can be observed in many forms of public transport, such as buses and trains, and sometimes even at large gateways and lifts.
+                                            </li>
+                                            <li>
                                                 <img src="./Meeting_22/Case_B/Problem_Description.png" width="60%">
                                             </li>
-                                            <li>I first ran the simulations from density going from 0.5 to 10 with the interval of 0.5. Since there are no inflow regions in the problem, the parameter that is studied along with the door dimension is, initial density of the crowd (unlike the inflow flux in the previous case).</li>
-                                            <li>The the dimension of the Door is chnaged from </li>
                                             <li>
-                                                The following results are obtained from each simulation for different densities and door lengths.<br>
+                                                The complete domain is square in shape, with dimensions of 15 m by 15 m. The walls are situated at the centre, and the problem is symmetric about the X- and Y-axes. <i>rho_A</i> and <i>rho_B</i> represent the initial densities of the two crowds. The initial crowd density distribution is set to be uniform in space, with each crowd spread across an area of 30 m². The door size is represented by <i>D</i>. Four cases are studied, with <i>D</i> ranging from 2.00 m to 5.00 m, in increments of 1.00 m. Throughout the study, the initial densities <i>rho_A</i> and <i>rho_B</i> are kept equal and are therefore sometimes represented by <i>rho</i>. For each door length, the initial density is varied from 0.5 ped/m2 to 10 ped/m2 (the maximum jam density), in increments of 0.5 ped/m2.
+                                            </li>
+                                            <li>
+                                                I first ran the simulations with initial densities ranging from 0.5 to 10 ped/m2, in increments of 0.5 ped/m2. Since there are no inflow regions in this problem, the parameter studied alongside the door dimensions is the initial crowd density, unlike the inflow flux used in the previous cases. The door dimension is varied from 2.00 m to 5.00 m, in increments of 1.00 m.
+                                            </li>
+                                            <!--Result Explanation-->
+                                            <li>
+                                                The following results are obtained from each simulation for different initial densities and door lengths.<br>
                                                 <table border="1">
                                                     <thead>
                                                         <th>Result</th>
@@ -6693,27 +6739,29 @@
                                                     <tbody>
                                                         <tr>
                                                             <td><b>Combined Density Contour</b></td>
-                                                            <td>This is the contour of the sum of density of Crowd A and Crowd B. This was made because lower densities are difficult to see in Colored Density contours.</td>
+                                                            <td>This is the contour of the sum of the densities of Crowds A and B. It was generated because lower densities are difficult to distinguish in the coloured density contours.</td>
                                                         </tr>
                                                         <tr>
-                                                            <td><b>Colored Density Contour</b></td>
-                                                            <td>These are density contour where both the densities are plotted sperately using different colors.</td>
+                                                            <td><b>Coloured Density Contour</b></td>
+                                                            <td>These are density contours in which the densities of the two crowds are plotted separately using different colours.</td>
                                                         </tr>
                                                         <tr>
-                                                            <td><b>Potential A and B</b></td>
-                                                            <td>These are two contours plotting the potential of a given crowd with time</td>
+                                                            <td><b>Potentials A and B</b></td>
+                                                            <td>These are two contours showing the potentials of Crowds A and B over time.</td>
                                                         </tr>
                                                         <tr>
                                                             <td><b>Shock Visualisation A and B</b></td>
-                                                            <td>This is the plot of term gradient of density dot product with the veloctiy, for each crowd A and B, sperately.</td>
+                                                            <td>These are plots of the dot product of the density gradient and velocity for Crowds A and B, shown separately.</td>
                                                         </tr>
                                                         <tr>
-                                                            <td><b>Total number of pedestrains escaped</b></td>
-                                                            <td>This is the plot of total number of pedestrians escaped from the domain. This is only captured for one of the crowd (Crowd A). This is plotted to again study the the interaction characteristics at the point of contact by studing the flow at the exits.</td>
+                                                            <td><b>Total Number of Pedestrians Escaped</b></td>
+                                                            <td>This is a plot of the total number of pedestrians who have escaped from the domain. This quantity is captured for only one of the crowds (Crowd A). The plot is used to study the interaction characteristics at the point of contact by examining the flow at the exits.</td>
                                                         </tr>
                                                     </tbody>
                                                 </table>
+
                                             </li>
+                                            <!--Result-->
                                             <li>
                                                 The table given below lists all the results as discussed above.
                                                 <div style="border: 1px solid black;width: 100%; overflow: scroll; height: 500px;">
@@ -9864,9 +9912,10 @@
                                                 </div>
                                                 Using all the data generated, I had analysied the initial density cases where choking doesnt occur and cases where choking occurs.
                                             </li>
+                                            <!--Pre Choking Regime-->
                                             <li>
                                                 <h3>Pre-Choking Initial Densities</h3>
-                                                For all the initial density where Choking doesnt occur, I had plotted the total number of pedestrians escaped with time for both crowd A and B. And the plots are given below.
+                                                For all initial densities at which choking does not occur, I plotted the total number of pedestrians who escaped over time for both Crowd A and Crowd B. The plots are given below.
                                                 <br>
                                                 <img src="./Meeting_22/Case_B/Ped_Esc_VS_Door_1.png" width="49%">
                                                 <img src="./Meeting_22/Case_B/Ped_Esc_VS_Door_2.png" width="49%">
@@ -9874,31 +9923,36 @@
                                                 <img src="./Meeting_22/Case_B/Ped_Esc_VS_Door_4.png" width="49%">
                                             </li>
                                             <li>
-                                                Given below are the observation made seeing the above Results.
+                                                Given below are the observations made from the above results.
                                                 <ul>
-                                                    <li>Both crowd escaped symmetrically to their exit, and there are no oscillation observed in the crowd escaping. This could be seen from the graph of Crowd A and Crowd B being overlapping each ohter for all case. This indicates that no crowd is favoured in the problem due to geometry of the problem, which is trivial</li>
-                                                    <li>I found that the rate at which pedestrains escaped for all the cases of initial density for a given Door Length to be almost same visually. And hence I plotted the rate of pedestrains escpaing the domain with time, and the plots are given below.<br>
-                                                    <img src="./Meeting_22/Case_B/Ped_Esc_Derivative_VS_Door_1.png" width="45%" style="min-width: 200px;">
-                                                    <img src="./Meeting_22/Case_B/Ped_Esc_Derivative_VS_Door_2.png" width="45%" style="min-width: 200px;">
-                                                    <img src="./Meeting_22/Case_B/Ped_Esc_Derivative_VS_Door_3.png" width="45%" style="min-width: 200px;">
-                                                    <img src="./Meeting_22/Case_B/Ped_Esc_Derivative_VS_Door_4.png" width="45%" style="min-width: 200px;"><br>
-                                                    It looks like the rate are different.
+                                                    <li>Both crowds evacuated symmetrically towards their respective exits, and no oscillations were observed in the evacuation process. This can be seen from the overlapping plots for Crowds A and B in all cases. This indicates that neither crowd is favoured by the geometry of the problem, which is expected due to the symmetry of the geometry.</li>
+                                                    <li>I observed that the pedestrian evacuation rates appeared to be almost the same for all initial densities at a given door length. Therefore, I plotted the rate of pedestrian evacuation over time. The plots are given below.
+                                                        <br>
+                                                        <img src="./Meeting_22/Case_B/Ped_Esc_Derivative_VS_Door_1.png" width="45%" style="min-width: 200px;">
+                                                        <img src="./Meeting_22/Case_B/Ped_Esc_Derivative_VS_Door_2.png" width="45%" style="min-width: 200px;">
+                                                        <img src="./Meeting_22/Case_B/Ped_Esc_Derivative_VS_Door_3.png" width="45%" style="min-width: 200px;">
+                                                        <img src="./Meeting_22/Case_B/Ped_Esc_Derivative_VS_Door_4.png" width="45%" style="min-width: 200px;">
+                                                        <br>
+                                                        However, the plots suggest that the evacuation rates are different.
                                                     </li>
                                                     <li>
-                                                        Since this is an Evaculation Problem, studing the relation between the Evacuation time with Door Length and Initial Density of Crowd would be important. Plotted below is how the Evacuation time depends on the D and Rho.
+                                                        Since this is an evacuation problem, studying the relationship between evacuation time, door length, and the initial crowd density is important. The plot below shows how the evacuation time depends on the door length (D) and the initial density (ρ).
                                                         <br>
                                                         <img src="./Meeting_22/Case_B/Total_Evacuation_Time_vs_Initial_Density.png" width="60%">
                                                     </li>
                                                 </ul>
                                             </li>
+                                            <!--Post Choking Regime-->
                                             <li>
-                                                <h3>Post Choking Initial densities</h3>
-                                                The time at which choking occured is plotted for all initial densities for all door length. And the same is given below:<br>
+                                                <h3>Post-Choking Initial Densities</h3>
+                                                The choking time is plotted against the initial density for all door lengths. The plots are given below.
+                                                <br>
                                                 <img src="./Meeting_22/Case_B/Choking_Time_vs_Initial_Density.png" width="60%">
                                             </li>
                                             <li>
-                                                It is observed that the Choking Time decreases with increase in initial density. And this is trivial since more crowd could easily get choked, which is seen as early choking. But one intersting observation is that the choking time later increases as well. The reason could be the folowing.<br>
-                                                With more density, it is trivial that chokign time decreases. But in the problem above, crowds are not connected directly. They have a place of 0.5m between them at the start. And the crowd will have to travel some distance before comming in cointatc with the opposing crowd. And as the density increases the speed of the crowd also decreases causing the them to take greater time to travel that distance. And hence there comes a point where the slow speed becomes the dominating factor to increase the time of choking.
+                                                It is observed that the choking time initially decreases as the initial density increases. This is expected, as a denser crowd can become choked more easily, resulting in earlier choking. However, one interesting observation is that the choking time begins to increase. A possible explanation for this behaviour is given below.
+                                                <br>
+                                                As the initial density increases, the choking time is expected to decrease because a denser crowd can become choked more easily. However, in the problem considered above, the two crowds are not initially in direct contact. There is a gap of 0.5 m between them, and each crowd must travel some distance before coming into contact with the opposing crowd. As the initial density increases, the crowd speed decreases, causing the crowds to take longer to cover this distance. Consequently, there may be a point beyond which the reduction in crowd speed becomes the dominant factor, causing the choking time to increase with increase in initial density.
                                             </li>
                                         </ul>
                                     </section>

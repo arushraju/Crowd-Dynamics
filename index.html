@@ -2936,8 +2936,6 @@
 
             <h2 class="sub-heading">Paper Preparation</h2>
 
-            
-
             <!--Paper Iteration-->
             <div style="border: 1px solid black; width: 100%;">
                 <div style="padding: 1%;">
@@ -5290,6 +5288,29 @@
                                                             We also observe that, for any given flux, increasing the size of the obstacle makes choking more likely to occur, and hence, the time of choking decreases with increasing obstacle length.
                                                         </li>
                                                     </ul>
+                                                </li>
+                                                <!--After generating the CSV data-->
+                                                <li>
+                                                    Actually at the time when I was having problems with the advection solver, I made the value of alpha to be maximum of the velocity component time 1.5. Unlike the paper where the value was equal to 1.0. And later when I discovered that the problem was in the mirror symmetry (during meeting_15), I then forgot to correct this change I made. I have corrected it now, and I believe that this has solved the problem entirely.<br>
+                                                    <pre>
+                                                        <code>
+alpha = max(x_velocity(:)) * 1.5; % $gt--- Changed this
+alpha = max(x_velocity(:)) * 1.0; % $gt--- To this
+                                                        </code>
+                                                    </pre>
+                                                    Lots of data was geenrated during this time, and it wasnt possible for me to push this into the usual github directory, so I have stored it in the github releases. And the data given below is data that is downloadable
+                                                    <table border="1">
+                                                        <thead>
+                                                            <th>File_Name</th>
+                                                            <th>Download Link</th>
+                                                        </thead>
+                                                        <tbody>
+                                                            <tr>
+                                                                <td>L_10</td>
+                                                                <td><a href="https://github.com/arushraju/Crowd-Dynamics/releases/download/v1.1/L_10.zip">Download (1.47GB)</a></td>
+                                                            </tr>
+                                                        </tbody>
+                                                    </table>
                                                 </li>
                                             </ul>
                                         </div>
@@ -9179,11 +9200,176 @@
                                         Link to the PDF: <a target="_blank" href="https://docs.google.com/document/d/1WLxOt3F-i1B913xU0DIKCQ9xPMH-qTFE5yFYpGw0Gv4/edit?usp=sharing">Compiled Result (First Version of Paper)</a>
                                     </section>
                                 </details>
+
                             </div>
                         </section>
                     </details>
+
+                    <!--Meeting 23-->
+                    <details>
+                        <summary>Meeting 23</summary>
+                        <section class="intro-card">
+                            <div class="card">
+                                In the last meeting, I was said to do the following tasks:<br>
+                                <ul>
+                                    <li>
+                                        Firstly I was asked to have the numerical results of the cases we are studying and not just their simulation video. So for that reason, I changed the workflow of the entire software. Given below shows how my solver works, after I made changes in it.
+                                        
+                                        <!--Chart-->
+
+                                    </li>
+
+                                    <!--Case A-->
+                                    <li style="background-color: rgb(255, 180, 195);">
+                                        <p>In Case A, I was suggested to change the solver such that the obstacle is placed at the center in the X-axis and Y-axis. I have reset the indices such that I have the obstacle at the center. The problem I was facing earlier was that since I want to solve for cases L = 10, L = 20, L = 30, and L = 40, we cannot have these obstacles at the center if the entire domain has an even number of points (say, 50). The thing is that we need 51 points to have 50 line segments forming the width, which would mean having 50 units of dimension. But then the space interval has to be set accordingly to make it what we want it to be (like h = L/(N-1), because N = 50 + 1 and L = 50).</p>
+
+                                        <p>After making the changes, I would solve Case A for four situations: the symmetric case, the case where the obstacle is placed entirely at the top, and two more intermediate cases between these two. So, there will be four cases in total. I have explained the exact cases I will be solving for Case A.</p>
+
+                                        <p>
+                                            I will be solving for this case A and that too for just one size of the obstacle. Which is equal to 30m. It is known that the last inflow flux where choking dosen't happen is 2.0 ped/m/s. And hence the flow will be studied till the flux reaches 2.0 ped/m/s.
+                                            <table border="1">
+                                                <thead>
+                                                    <th>Station A Length</th>
+                                                    <th>Flux Cases</th>
+                                                </thead>
+                                                <tbody>
+                                                    <tr>
+                                                        <td>0 (Asymmetric)</td>
+                                                        <td>[0.5, 1.0, 1.5, 1.75, 2.0, 2.25, 2.5]</td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td>3</td>
+                                                        <td>[0.5, 1.0, 1.5, 1.75, 2.0, 2.25, 2.5]</td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td>7</td>
+                                                        <td>[0.5, 1.0, 1.5, 1.75, 2.0, 2.25, 2.5]</td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td>10 (Symmetric)</td>
+                                                        <td>[0.5, 1.0, 1.5, 1.75, 2.0, 2.25, 2.5]</td>
+                                                    </tr>
+                                                </tbody>
+                                            </table>
+                                        </p>
+                                    </li>
+                                    <li style="background-color: rgb(255, 180, 195);">
+                                        Given below is what i have done to fix the CASE A.<br>
+                                        <details>
+                                            <summary>Fix for CASE - A</summary>
+                                            <section class="intro-card">
+                                                I have actually checked the csv data and found that the obstacle is actually placed exactly at the center. Which is strange, because having the obstacle at center, i would expect for the flow to not be flowing to just one side of the obstacle. Strange. I think this is just becuase of the algorithm. When processing the bgrid points, i was goign from i = 1 to i = Nx and similarly, j = 1 to j = Ny. And what i think is that if I change the sequence from j = 1:Ny to Ny:1, this could result in different results. I will try it and see if it makes the result opposite.
+
+                                                
+                                                <p>
+                                                    Discussed below is how I have changed my workflow.<br>
+
+                                                    Given below are the CSV data that have been generated and used to plot the results. I have also provided the code that was used to generate these results.<br>
+                                                    *<!--CSV Data-->*
+                                                    <table border="1">
+                                                        <tbody>
+                                                            <tr>
+                                                                <td><b>Code - Case_A.m</b></td>
+                                                                <td><a href="https://github.com/arushraju/Crowd-Dynamics/releases/download/v1.1/Case_A.m">Link to Download (29.2 KB)</a></td>
+                                                            </tr>
+                                                            <tr>
+                                                                <td><b>Data for 10m Obstacle - L_10.zip</b></td>
+                                                                <td><a href="https://github.com/arushraju/Crowd-Dynamics/releases/download/v1.1/L_10.zip">Link to Download (1.4 GB)</a></td>
+                                                            </tr>
+                                                            <tr>
+                                                                <td><b>Data for 20m Obstacle - L_20.zip</b></td>
+                                                                <td><a href="https://github.com/arushraju/Crowd-Dynamics/releases/download/v1.1/L_20.zip">Link to Download (1.15 GB)</a></td>
+                                                            </tr>
+                                                            <tr>
+                                                                <td><b>Data for 30m Obstacle - L_30.zip</b></td>
+                                                                <td><a href="https://github.com/arushraju/Crowd-Dynamics/releases/download/v1.1/L_30.zip">Link to Download (420 MB)</a></td>
+                                                            </tr>
+                                                            <tr>
+                                                                <td><b>Data for 40m Obstacle - L_40.zip</b></td>
+                                                                <td><a href="https://github.com/arushraju/Crowd-Dynamics/releases/download/v1.1/L_40.zip">Link to Download (244 MB)</a></td>
+                                                            </tr>
+                                                        </tbody>
+                                                    </table>
+                                                    Using the data, I have plotted the results given below.<br>
+                                                    <ol>
+                                                        <li>
+                                                            As suggested by the professor, I am plotting the density at the entrance (x = 0m) and the inflow flux. For each time step, I will take the average density at x = 0, and then I will take the time average of the density at each time step. This density will then be plotted for that flux and obstacle. What one would expect is to get a parabolic curve. This result will be used to ensure that the density and flux are related to each other in the same way as we are expecting. The exact derivation of the relation is given below.<br>
+
+                                                            <br>
+                                                            Code that has been used to plot the above: <a href="">Link to Download</a>
+                                                        </li>
+                                                        <li>
+                                                            Another thing that could be plotted is inflow flux vs. outflow flux. They must be the same until choking takes place. After choking, the outflow must reach some maximum value, while the inflow must be more than the outflow. Another thing that could be plotted is the number of pedestrians present in the domain with time. This will help in knowing, during choking, at what rate the density accumulates.
+
+                                                            <br>
+                                                            Code that has been used to plot the above: <a href="">Link to Download</a>
+                                                        </li>
+                                                        <li>
+                                                            And then the plot of the time of choking with the inflow flux for all obstacle lengths could be plotted. The results about the accumulation of density with time, along with this, could be used to know if this time could be estimated. In that case, this will be just a plot to validate and not to investigate.
+
+                                                            <br>
+                                                            Code that has been used to plot the above: <a href="">Link to Download</a>
+                                                        </li>
+                                                        <li>
+                                                            Another thing that is captured is the flow rate at Station A and Station B, and these values are then plotted with time. This is where the oscillation is studied. With the data about the oscillation in flow rate, we could plot the FFT graph and then the power spectral density to further study the frequency and amplitude of the oscillation and how they are related to obstacle length and inflow flux.
+
+                                                            <br>
+                                                            Code that has been used to plot the above: <a href="">Link to Download</a>
+                                                        </li>
+                                                        <li>
+                                                            Another plot that could be captured is the flow rate on both sides of the obstacle, followed by plotting the phase-space representation. This is a new figure that may help.
+
+                                                            <br>
+                                                            Code that has been used to plot the above: <a href="">Link to Download</a>
+                                                        </li>
+                                                    </ol>
+                                                </p>
+                                                <p>
+                                                    Given below are the actual results.
+                                                </p>
+
+                                            </section>
+                                        </details>
+                                    </li>
+
+                                    <!--Case B-->
+                                    <li style="background-color: rgb(214, 255, 255);">
+                                        <p>In case B, we found out that the passage width that I was having was actually 2 meters short. Earlier when I saw the reduced flowrate, I thought maybe the problem is with the outflow flux, or in other word, I thought it's the solver's problem. But it turns out that I was going wrong in setting up the length.</p>
+
+                                        <p>For that reason now I am taking 91 points in total and will scale the dimension of 90m to these grid points. And now I will be able to situate the passage at the center with the right dimension.</p>
+
+                                        <p>
+                                            I may not generate density contour since that might take days to render. But I could surely plot the graphs of outflow rates quite easily and in short time, using the CSV data generated.
+                                        </p>
+                                    </li>
+                                    <li style="background-color: rgb(214, 255, 255);">
+                                        <p>Here the problem was that I was stopping the simulation as soon as the density reaches more than Jam Density at any point in the domain. And it is because of this, I get choking time to be very unstable. What I could do is keep the simulation going even after the crowd is jammed at some point in the domain. But I have done that in the past and found that the results blew up. So I will have to come up with some way to model situation, where even after Jam Density is reached, the simulation handles that situation without blowing up and continue producing sensible results.</p>
+
+                                        <p>
+                                            This problem was inspired by crowd exchanging through local trains. Sir, also said that there are infact possiblity of crowd getting crammed into small space at some region and the rest are still able to move and exchange through the doors.
+                                        </p>
+                                    </li>
+                                    <!--Case C-->
+                                    <li style="background-color: rgb(168, 255, 226);">
+                                        In case C I was getting the problem of lenght of the passage being less by 2 units. And this caused problem with the outflow rate of the problem. I will have to take a loo at it and fix it.
+                                    </li>
+                                </ul>
+                            </div>
+                        </section>
+                    </details>
+
+                <h2 class="sub-heading">Panic Effect</h2>
+
+                <details>
+                    <summary>Meeting 24</summary>
+                    <section class="intro-card">
+                        <p>For a very long time I always wanted to simulate the Panic in Crowd. My professor has recommended me to use this paper () to try extending the solver that we have made to be able to handle crowd as well. This section is where I have attempted to replicate the results of this paper using this extended Hughes Flow Solver.</p>
+                    </section>
+                </details>
                 </div>
             </div>
+
+
 
             <!--Reference-->
             <div style="border: 1px solid black; width: 100%;">

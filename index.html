@@ -9214,12 +9214,10 @@ alpha = max(x_velocity(:)) * 1.0; % $gt--- To this
                                 <ul>
                                     <li>
                                         Firstly I was asked to have the numerical results of the cases we are studying and not just their simulation video. So for that reason, I changed the workflow of the entire software. Given below shows how my solver works, after I made changes in it.
-                                        
-                                        <!--Chart-->
-
                                     </li>
 
                                     <!--Case A-->
+                                    <h4>Case A: Crowd Flow around an Obstacle</h4>
                                     <li style="background-color: rgb(255, 180, 195);">
                                         <p>In Case A, I was suggested to change the solver such that the obstacle is placed at the center in the X-axis and Y-axis. I have reset the indices such that I have the obstacle at the center. The problem I was facing earlier was that since I want to solve for cases L = 10, L = 20, L = 30, and L = 40, we cannot have these obstacles at the center if the entire domain has an even number of points (say, 50). The thing is that we need 51 points to have 50 line segments forming the width, which would mean having 50 units of dimension. But then the space interval has to be set accordingly to make it what we want it to be (like h = L/(N-1), because N = 50 + 1 and L = 50).</p>
 
@@ -9252,106 +9250,303 @@ alpha = max(x_velocity(:)) * 1.0; % $gt--- To this
                                                 </tbody>
                                             </table>
                                         </p>
+
+                                        <p>I noticed one blunder is assigning the exit condition on the outflow. I hav efixed it and now I am expecting to not see such unsymmetric flow dynamics in case L = 40 and L = 30.</p>
                                     </li>
                                     <li style="background-color: rgb(255, 180, 195);">
                                         Given below is what i have done to fix the CASE A.<br>
                                         <details>
                                             <summary>Fix for CASE - A</summary>
-                                            <section class="intro-card">
+                                            <section class="intro-card"  style="background-color: rgb(255, 180, 195);">
                                                 I have actually checked the csv data and found that the obstacle is actually placed exactly at the center. Which is strange, because having the obstacle at center, i would expect for the flow to not be flowing to just one side of the obstacle. Strange. I think this is just becuase of the algorithm. When processing the bgrid points, i was goign from i = 1 to i = Nx and similarly, j = 1 to j = Ny. And what i think is that if I change the sequence from j = 1:Ny to Ny:1, this could result in different results. I will try it and see if it makes the result opposite.
 
                                                 
                                                 <p>
                                                     Discussed below is how I have changed my workflow.<br>
-
                                                     Given below are the CSV data that have been generated and used to plot the results. I have also provided the code that was used to generate these results.<br>
-                                                    *<!--CSV Data-->*
-                                                    <table border="1">
-                                                        <tbody>
-                                                            <tr>
-                                                                <td><b>Code - Case_A.m</b></td>
-                                                                <td><a href="https://github.com/arushraju/Crowd-Dynamics/releases/download/v1.1/Case_A.m">Link to Download (29.2 KB)</a></td>
-                                                            </tr>
-                                                            <tr>
-                                                                <td><b>Data for 10m Obstacle - L_10.zip</b></td>
-                                                                <td><a href="https://github.com/arushraju/Crowd-Dynamics/releases/download/v1.1/L_10.zip">Link to Download (1.4 GB)</a></td>
-                                                            </tr>
-                                                            <tr>
-                                                                <td><b>Data for 20m Obstacle - L_20.zip</b></td>
-                                                                <td><a href="https://github.com/arushraju/Crowd-Dynamics/releases/download/v1.1/L_20.zip">Link to Download (1.15 GB)</a></td>
-                                                            </tr>
-                                                            <tr>
-                                                                <td><b>Data for 30m Obstacle - L_30.zip</b></td>
-                                                                <td><a href="https://github.com/arushraju/Crowd-Dynamics/releases/download/v1.1/L_30.zip">Link to Download (420 MB)</a></td>
-                                                            </tr>
-                                                            <tr>
-                                                                <td><b>Data for 40m Obstacle - L_40.zip</b></td>
-                                                                <td><a href="https://github.com/arushraju/Crowd-Dynamics/releases/download/v1.1/L_40.zip">Link to Download (244 MB)</a></td>
-                                                            </tr>
-                                                        </tbody>
-                                                    </table>
+                                                    <!--CSV Data-->
+                                                    <center>
+                                                        <table border="1">
+                                                            <tbody>
+                                                                <tr>
+                                                                    <td><b>Code - Case_A.m</b></td>
+                                                                    <td><a href="https://github.com/arushraju/Crowd-Dynamics/releases/download/v1.1/Case_A.m">Link to Download (29.2 KB)</a></td>
+                                                                </tr>
+                                                                <tr>
+                                                                    <td><b>Data for 10m Obstacle - L_10.zip</b></td>
+                                                                    <td><a href="https://github.com/arushraju/Crowd-Dynamics/releases/download/v1.1/L_10.zip">Link to Download (1.4 GB)</a></td>
+                                                                </tr>
+                                                                <tr>
+                                                                    <td><b>Data for 20m Obstacle - L_20.zip</b></td>
+                                                                    <td><a href="https://github.com/arushraju/Crowd-Dynamics/releases/download/v1.1/L_20.zip">Link to Download (1.15 GB)</a></td>
+                                                                </tr>
+                                                                <tr>
+                                                                    <td><b>Data for 30m Obstacle - L_30.zip</b></td>
+                                                                    <td><a href="https://github.com/arushraju/Crowd-Dynamics/releases/download/v1.1/L_30.zip">Link to Download (420 MB)</a></td>
+                                                                </tr>
+                                                                <tr>
+                                                                    <td><b>Data for 40m Obstacle - L_40.zip</b></td>
+                                                                    <td><a href="https://github.com/arushraju/Crowd-Dynamics/releases/download/v1.1/L_40.zip">Link to Download (244 MB)</a></td>
+                                                                </tr>
+                                                            </tbody>
+                                                        </table>
+                                                    </center>
+                                                    
                                                     Using the data, I have plotted the results given below.<br>
                                                     <ol>
                                                         <li>
-                                                            As suggested by the professor, I am plotting the density at the entrance (x = 0m) and the inflow flux. For each time step, I will take the average density at x = 0, and then I will take the time average of the density at each time step. This density will then be plotted for that flux and obstacle. What one would expect is to get a parabolic curve. This result will be used to ensure that the density and flux are related to each other in the same way as we are expecting. The exact derivation of the relation is given below.<br>
-
-                                                            <br>
-                                                            Code that has been used to plot the above: <a href="">Link to Download</a>
+                                                            <!--Density Contour-->
+                                                            <h3 style="display: flex; justify-content: start;"><u>A.1. Density Contour (Animation)</u></h3>
+                                                            <b>Explanation:</b> This is just the video showing the density contour evolution with time.<br>
+                                                            <b>Results:</b><br>
+                                                            <b>Observations:</b>
                                                         </li>
                                                         <li>
-                                                            Another thing that could be plotted is inflow flux vs. outflow flux. They must be the same until choking takes place. After choking, the outflow must reach some maximum value, while the inflow must be more than the outflow. Another thing that could be plotted is the number of pedestrians present in the domain with time. This will help in knowing, during choking, at what rate the density accumulates.
-
-                                                            <br>
-                                                            Code that has been used to plot the above: <a href="">Link to Download</a>
+                                                            <h3 style="display: flex; justify-content: start;"><u>A.2. Inflow Flux V.S. Density at the Entrance</u></h3>
+                                                            <b>Explanation:</b> As suggested by the professor, I am plotting the density at the entrance (x = 0m) and the inflow flux. For each time step, I will take the average density at x = 0, and then I will take the time average of the density at each time step. This density will then be plotted for that flux and obstacle. What one would expect is to get a parabolic curve. This result will be used to ensure that the density and flux are related to each other in the same way as we are expecting. The exact derivation of the relation is given below.<br>
+                                                            <b>Results:</b><br>
+                                                            <b>Observations:</b><br>
                                                         </li>
                                                         <li>
-                                                            And then the plot of the time of choking with the inflow flux for all obstacle lengths could be plotted. The results about the accumulation of density with time, along with this, could be used to know if this time could be estimated. In that case, this will be just a plot to validate and not to investigate.
-
-                                                            <br>
-                                                            Code that has been used to plot the above: <a href="">Link to Download</a>
+                                                            <h3 style="display: flex; justify-content: start;"><u>A.3. Inflow Rate V.S. Outflow Rate</u></h3>
+                                                            <b>Explanation:</b> Another thing that could be plotted is inflow flux vs. outflow flux. They must be the same until choking takes place. After choking, the outflow must reach some maximum value, while the inflow must be more than the outflow. Another thing that could be plotted is the number of pedestrians present in the domain with time. This will help in knowing, during choking, at what rate the density accumulates.<br>
+                                                            <b>Results:</b><br>
+                                                            <b>Observations:</b><br>
                                                         </li>
                                                         <li>
-                                                            Another thing that is captured is the flow rate at Station A and Station B, and these values are then plotted with time. This is where the oscillation is studied. With the data about the oscillation in flow rate, we could plot the FFT graph and then the power spectral density to further study the frequency and amplitude of the oscillation and how they are related to obstacle length and inflow flux.
-
-                                                            <br>
-                                                            Code that has been used to plot the above: <a href="">Link to Download</a>
+                                                            <h3 style="display: flex; justify-content: start;"><u>A.4. Time of Choking V.S. Inflow Flux</u></h3>
+                                                            <b>Explanation:</b> And then the plot of the time of choking with the inflow flux for all obstacle lengths could be plotted. The results about the accumulation of density with time, along with this, could be used to know if this time could be estimated. In that case, this will be just a plot to validate and not to investigate.<br>
+                                                            <b>Results:</b><br>
+                                                            <b>Observations:</b><br>
                                                         </li>
                                                         <li>
-                                                            Another plot that could be captured is the flow rate on both sides of the obstacle, followed by plotting the phase-space representation. This is a new figure that may help.
-
-                                                            <br>
-                                                            Code that has been used to plot the above: <a href="">Link to Download</a>
+                                                            <h3 style="display: flex; justify-content: start;"><u>A.5. Flow rate at Station A and B V.S. Time</u></h3>
+                                                            <b>Explanation:</b> Another thing that is captured is the flow rate at Station A and Station B, and these values are then plotted with time. This is where the oscillation is studied. With the data about the oscillation in flow rate, we could plot the FFT graph and then the power spectral density to further study the frequency and amplitude of the oscillation and how they are related to obstacle length and inflow flux.<br>
+                                                            <b>Reults:</b><br>
+                                                            <b>Observations:</b><br>
+                                                        </li>
+                                                        <li>
+                                                            <h3 style="display: flex; justify-content: start;"><u>A.6. Phase Space Representation of flowrate at station A and B</u></h3>
+                                                            <b>Explanation</b> Another plot that could be captured is the flow rate on both sides of the obstacle, followed by plotting the phase-space representation. This is a new figure that may help.<br>
+                                                            <b>Results:</b><br>
+                                                            <b>Observations:</b><br>
                                                         </li>
                                                     </ol>
                                                 </p>
                                                 <p>
+                                                    Code that has been used to plot the above: <a href="">Link to Download</a><br><br>
                                                     Given below are the actual results.
                                                 </p>
-
                                             </section>
                                         </details>
                                     </li>
+                                    <hr>
 
                                     <!--Case B-->
+                                    <h4>Case B: Two Crowds intersecting Perpendicularly</h4>
                                     <li style="background-color: rgb(214, 255, 255);">
                                         <p>In case B, we found out that the passage width that I was having was actually 2 meters short. Earlier when I saw the reduced flowrate, I thought maybe the problem is with the outflow flux, or in other word, I thought it's the solver's problem. But it turns out that I was going wrong in setting up the length.</p>
 
                                         <p>For that reason now I am taking 91 points in total and will scale the dimension of 90m to these grid points. And now I will be able to situate the passage at the center with the right dimension.</p>
-
-                                        <p>
-                                            I may not generate density contour since that might take days to render. But I could surely plot the graphs of outflow rates quite easily and in short time, using the CSV data generated.
-                                        </p>
                                     </li>
-                                    <li style="background-color: rgb(214, 255, 255);">
+                                    <li>
+                                        <details  style="background-color: rgb(214, 255, 255);">
+                                            <summary>Fix For Case - B</summary>
+                                            <section class="intro-card"  style="background-color: rgb(214, 255, 255);">
+                                                <p>
+                                                    The work flow to generate result for this case is given below:
+                                                    <img src=""><br>
+                                                    The intermediate CSV data that is generated is given below. In here there are files for Density of A and B and Total Density, and Potential of A and B and X and Y velocity at A and B crowd, at each time step. But these are just for W = 10 and 20. Due to memory issue, I have not included the total density and the potential for the case W = 30 and 40. (Github releases supports file size no more than 2GB, hence for the case W = 40, i have stored it in a online google drive)<br>
+                                                    <center>
+                                                        <table border="1">
+                                                            <tbody>
+                                                                <tr>
+                                                                    <td><b>Code - <i>Case_B.m</i></b></td>
+                                                                    <td><a href="https://github.com/arushraju/Crowd-Dynamics/releases/download/v1.1/Case_C.m">Link to Download (40 KB)</a></td>
+                                                                </tr>
+                                                                <tr>
+                                                                    <td><b>Passage Width 10m - W_10.zip</b></td>
+                                                                    <td><a href="https://github.com/arushraju/Crowd-Dynamics/releases/download/v1.1/W_10.zip">Link to Download (1.23 GB)</a></td>
+                                                                </tr>
+                                                                <tr>
+                                                                    <td><b>Passage Width 20m - W_20.zip</b></td>
+                                                                    <td><a href="https://github.com/arushraju/Crowd-Dynamics/releases/download/v1.1/W_20.zip">Link to Download (1.96 GB)</a></td>
+                                                                </tr>
+                                                                <tr>
+                                                                    <td><b>Passage Width 30m - W_30.zip</b></td>
+                                                                    <td><a href="https://github.com/arushraju/Crowd-Dynamics/releases/download/v1.1/W_30.zip">Link to Download (1.78 GB)</a></td>
+                                                                </tr>
+                                                                <tr>
+                                                                    <td><b>Passage Width 40m - W_40.zip</b></td>
+                                                                    <td><a href="https://drive.google.com/file/d/1WN69qmOGGVjerK8Y1xAmcMm4LD93N0pj/view?usp=drive_link">Link to Download (2.10 GB)</a></td>
+                                                                </tr>
+                                                            </tbody>
+                                                        </table>
+                                                    </center>
+                                                </p>
+                                                <p>
+                                                    Using the abive data I have ploted some results, which I though would suit this problem. Given below are the explanation of results, the results itself and the observations from them.<br>
+                                                    <ul>
+                                                        <li>
+                                                            <!--Density Contour-->
+                                                            <h3 style="display: flex; justify-content: start;"><u>B.1. Density Contour (Animation)</u></h3>
+                                                            <b>Explanation:</b> This is just the video showing the density contour evolution with time.<br>
+                                                            <b>Results:</b><br>
+                                                            <b>Observations:</b>
+                                                        </li>
+                                                        <li>
+                                                            <h3 style="display: flex; justify-content: start;"><u>B.2. Flow rate at Exits (Crowd A and B) V.S. Time</u></h3>
+                                                            <b>Explanation:</b> Here i ahve selected a section at the exit and have captured the flowrate of each crowd at the exit at all time for all cases, and plotted it. Dues to oscillations, I went a step further and also plotted Fourier and Power Spectrum of the outflow. This will help in finding the dominant frequency. I have also plotted the time averaged flowrate for all the cases.<br>
+                                                            <b>Results:</b><br>
+                                                            <b>Observation:</b><br>
+                                                        </li>
+                                                        <li>
+                                                            <h3 style="display: flex; justify-content: start;"><u>B.3. Cross-Corelation between the two crowd outflow</u></h3>
+                                                             <b>Explanation:</b> From the flow rate that are obtanied for both the crowd to understand if the crowd move in phase or not, I have plotted the co-relation of both the crowd.<br>
+                                                             <b>Results:</b><br>
+                                                             <b>Observations:</b><br>
+                                                        </li>
+                                                        <li>
+                                                            <h3 style="display: flex; justify-content: start;"><u>B.4. Spacio-tamporal Density Diagram</u></h3>
+                                                            <b>Explanation:</b> I have taken a horizontal and vertical centerline and have plotted the density at these cross-section at all time. This was done to unerstand the interaction of both the crowd. There is also the line passing diagonally to the junction where the density with time will be recorded. For more details I have provided a diagram below:
+                                                            <img src="" style="width: 100%; min-width: 250px; max-width: 500px;">
+                                                            <br>
+                                                            <b>Results:</b><br>
+                                                            <b>Observations:</b><br>
+                                                        </li>
+                                                        <li>
+                                                            <h3 style="display: flex; justify-content: start;"><u>B.5. Congestion Area V.S. Time</u></h3>
+                                                            <b>Explanation:</b> This plot would help to understand how does the area of density more than certain threshold density increase or decrease. This could help to understand the sevearity of the crowd at the junction.<br>
+                                                            <b>Results:</b><br>
+                                                            <b>Observations:</b><br>
+                                                        </li>
+                                                        <li>
+                                                            <h3 style="display: flex; justify-content: start;"><u>B.6. Total population at the junction with time</u></h3>
+                                                            <b>Explanation:</b> This plot will help to understand how does the crowd accumulates at the time of choking. What coud be studied is rate at which the crowd accumulates and also to find if there is a specific number of pedestrain for all cases at which chokign occurs.<br>
+                                                            <b>Results:</b><br>
+                                                            <b>Observations:</b><br>
+                                                        </li>
+                                                        <li>
+                                                            <h3 style="display: flex; justify-content: start;">B.7. Time of Chocking V.S. Inflow Flux</h3>
+                                                            <b>Explanation:</b> Given an inflow flux that is greater than Critical flux, when increased will make the process of CHokign faster. So intuitively increasing the inflow flux will reduce the tiem of choking. And the same is plotted.<br>
+                                                            <b>Results:</b><br>
+                                                            <b>Observations:</b><br>
+                                                        </li>
+                                                    </ul>
+                                                </p>
+                                                <p>
+                                                    Following is the link to code that was used to plot the above results: <a href="">Link to Download</a>
+                                                </p>
+                                            </section>
+                                        </details>
+                                    </li>
+                                    <hr>
+
+                                    <!--Case C-->
+                                    <h4>Case C: Two Crowd exchanging from same door</h4>
+                                    <li style="background-color: rgb(214, 255, 219);">
                                         <p>Here the problem was that I was stopping the simulation as soon as the density reaches more than Jam Density at any point in the domain. And it is because of this, I get choking time to be very unstable. What I could do is keep the simulation going even after the crowd is jammed at some point in the domain. But I have done that in the past and found that the results blew up. So I will have to come up with some way to model situation, where even after Jam Density is reached, the simulation handles that situation without blowing up and continue producing sensible results.</p>
 
                                         <p>
                                             This problem was inspired by crowd exchanging through local trains. Sir, also said that there are infact possiblity of crowd getting crammed into small space at some region and the rest are still able to move and exchange through the doors.
                                         </p>
                                     </li>
-                                    <!--Case C-->
-                                    <li style="background-color: rgb(168, 255, 226);">
-                                        In case C I was getting the problem of lenght of the passage being less by 2 units. And this caused problem with the outflow rate of the problem. I will have to take a loo at it and fix it.
+                                    <li>
+                                        <details style="background-color: rgb(214, 255, 219);">
+                                            <summary>Fix for Case C</summary>
+                                            <section style="background-color: rgb(214, 255, 219);" class="intro-card">
+                                                And as the previous two cases, I have changed the workflow of the code. And it is given below:<br>
+                                                <center><img src="./Meeting_23/Case_C/Case_C_Workflow.jpg" style="width: 100%; min-width: 300px; max-width: 500px;"></center>
+                                                <br>
+                                                First there is the main solver that actually solves for the density by computation. After which the Density, Potential and Velocity datas are generated in the CSV format. Then a seperate code for results uses these generated data to generate the result. It takes much less time now to generate all the videos and plots. Which allows us to change the tiny details in the plot, without thinking about the additional time it would take.
+
+                                                <p>
+                                                    The initermediate CSV file that are generated are given below. I have captured the inidividual densities (Density A and B) at each time, total density at each time, x_velocities, y_velocities, and finally potentials at each time for this problem. I have different folders for different Door Length:
+                                                    <br>
+
+                                                    <!--CSV Data to Download-->
+                                                    <center>
+                                                        <table border="1">
+                                                            <tbody>
+                                                                <tr>
+                                                                    <td>Code - Case_C.m</td>
+                                                                    <td><a href="https://github.com/arushraju/Crowd-Dynamics/releases/download/v1.1/Case_B.m">Link to Download (40 KB)</a></td>
+                                                                </tr>
+                                                                <tr>
+                                                                    <td>Door Lenght 2m - D_2.zip</td>
+                                                                    <td><a href="https://github.com/arushraju/Crowd-Dynamics/releases/download/v1.1/D_2.zip">Link to Download (248 MB)</a></td>
+                                                                </tr>
+                                                                <tr>
+                                                                    <td>Door Length 3m - D_3.zip</td>
+                                                                    <td><a href="https://github.com/arushraju/Crowd-Dynamics/releases/download/v1.1/D_3.zip">Link to Download (283 MB)</a></td>
+                                                                </tr>
+                                                                <tr>
+                                                                    <td>Door Length 4m - D_4.zip</td>
+                                                                    <td><a href="https://github.com/arushraju/Crowd-Dynamics/releases/download/v1.1/D_4.zip">LInk to Download (381 MB)</a></td>
+                                                                </tr>
+                                                                <tr>
+                                                                    <td>Door Length 5m - D_5.zip</td>
+                                                                    <td><a href="https://github.com/arushraju/Crowd-Dynamics/releases/download/v1.1/D_5.zip">Link o Download (382 MB)</a></td>
+                                                                </tr>
+                                                            </tbody>
+                                                        </table>
+                                                    </center>
+                                                </p>
+
+                                                <p>
+                                                    Given below are the results that are generated. I have explain the kind of result I am  plotting and then showed the result. Finally listed my observations from the results.
+                                                    <br>
+                                                    <ul>
+                                                        <li>
+                                                            <!--Density Contour-->
+                                                            <h3 style="display: flex; justify-content: start;"><u>C.1. Density Contour (Animation)</u></h3>
+                                                            <b>Explanation:</b> This is just the video showing the density contour evolution with time.<br>
+                                                            <b>Results:</b><br>
+                                                            <b>Observations:</b>
+                                                        </li>
+                                                        <li>
+                                                            <!--Number of Pedestrains inside the Domain V.S. Time-->
+                                                            <h3 style="display: flex; justify-content: start;"><u>C.2. Number of Pedestrians inside the domain V.S. Time</u></h3>
+                                                            <b>Explanation:</b> Density insdie the domain is integrated over the area to obtain the number of pedestrain int he domain at a given time. And the same is repeated for each timestep and plotted. This plot tell us the instanteneous population of criwd insde the domain, which will help us to find the evacuation time at each case.<br>
+                                                            <b>Results:</b><br>
+                                                            <b>Observations:</b><br>
+                                                        </li>
+                                                        <li>
+                                                            <!--Total Evacuation Time V.S. Initial Density-->
+                                                            <h3 style="display: flex; justify-content: start;"><u>C.3. Total Evacuation Time V.S. Initial Density</u></h3>
+                                                            <b>Explanation:</b> From the data obtained above, I have plotted the evacuation time for all the flux cases for all door lengths.<br>
+                                                            <b>Results:</b><br>
+                                                            <b>Observations:</b>
+                                                        </li>
+                                                        <li>
+                                                            <!--Area of Congestion V.S. Time-->
+                                                            <h3 style="display: flex; justify-content: start;"><u>C.4. Area of Congestion V.S. Time</u></h3>
+                                                            <b>Explanation:</b> I picked some threshold density, let say rho, and then at each time step I have caculated the area where density reaches more than rho. Instanteneous areas, where density exceeds this threshold density is plotted with time. The threshold density is picked to be 5 ped/m2 - Minor Congestion region, 8 ped/m2 - Severe Congestion Region. This is plotted for all the flux of a given door lenght on the same plot.<br>
+                                                            <b>Results:</b><br>
+                                                            <b>Observations:</b><br>
+                                                        </li>
+                                                        <li>
+                                                            <!--Flow rate of Crowd A and B through each Doors V.S. Time-->
+                                                            <h3 style="display: flex; justify-content: start;"><u>C.5. Flow rate of Crowd A and B through each doors V.S. Time</u></h3>
+                                                            <b>Explanation:</b> I calculated the flow rate through each doors (for crowd A only), and plotted them. This would help to understand if the problem is progressing symmetrically or not. Since we know the maximum flow rate possible from both the doors, this result will also help us to compare how efficiently is the flow rate of Crowds through the door.<br>
+                                                            <b>Results:</b><br>
+                                                            <b>Observations:</b><br>
+                                                        </li>
+                                                        <li>
+                                                            <!--Time of Choking V.S. Initial Density-->
+                                                            <h3 style="display: flex; justify-content: start;"><u>C.6. Time of Chocking V.S. Initial Density</u></h3>
+                                                            <b>Explanation:</b> This as usual is the time at which choking will occur plotted against intial density. It is understood that choking will occur early in cases with larger population. But the trend of the graph and by what amount, could be understood with this graph.<br>
+                                                            <b>Results:</b><br>
+                                                            <b>Observations:</b>
+                                                        </li>
+                                                    </ul>   
+                                                </p>
+
+                                                <p>
+                                                    Following is the link to download the code to generate the above results: <a href="">Link to Download</a>
+                                                </p>
+                                            </section>
+                                        </details>
                                     </li>
                                 </ul>
                             </div>

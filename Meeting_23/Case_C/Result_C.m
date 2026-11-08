@@ -35,8 +35,8 @@ Nx = 67;
 Ny = 67;
 
 % Grid spacing
-dx = 1;
-dy = 1;
+dx = 15/61;
+dy = 15/61;
 
 % Capture frequency for animation
 videoFPS = 10;

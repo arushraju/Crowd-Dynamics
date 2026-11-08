@@ -9657,7 +9657,6 @@ alpha = max(x_velocity(:)) * 1.0; % $gt--- To this
                                                             <h3 style="display: flex; justify-content: start;"><u>C.2. Number of Pedestrians inside the domain V.S. Time</u></h3>
                                                             <b>Explanation:</b> Density inside the domain is integrated over the area to obtain the number of pedestrain int he domain at a given time. And the same is repeated for each timestep and plotted. This plot tell us the instanteneous population of criwd insde the domain, which will help us to find the evacuation time at each case. Due to lots of density I have picked five density to be plotted for this graph.<br>
                                                             <b>Results:</b><br>
-                                                            <h5>Door Length D = 2.0 m</h5>
                                                             <img src="./Meeting_23/Case_C/D_2/Population/Total_Population_Ly_2.00.png" style="width: 49%; min-width: 250px;">
                                                             <img src="./Meeting_23/Case_C/D_3/Population/Total_Population_Ly_3.00.png" style="width: 49%; min-width: 250px;">
                                                             <img src="./Meeting_23/Case_C/D_4/Population/Total_Population_Ly_4.00.png" style="width: 49%; min-width: 250px;">
@@ -9672,20 +9671,51 @@ alpha = max(x_velocity(:)) * 1.0; % $gt--- To this
                                                             <h3 style="display: flex; justify-content: start;"><u>C.3. Total Evacuation Time V.S. Initial Density</u></h3>
                                                             <b>Explanation:</b> From the data obtained above, I have plotted the evacuation time for all the flux cases for all door lengths.<br>
                                                             <b>Results:</b><br>
-                                                            <b>Observations:</b>
+                                                            <img src="./Meeting_23/Case_C/Evacuation_Time_Comparison.png" style="width: 100%; min-width: 250px; max-width: 500px;"><br><br>
+                                                            <b>Observations:</b><br>
+                                                            <ol>
+                                                                <li></li>
+                                                            </ol>
                                                         </li>
                                                         <li>
                                                             <!--Area of Congestion V.S. Time-->
                                                             <h3 style="display: flex; justify-content: start;"><u>C.4. Area of Congestion V.S. Time</u></h3>
                                                             <b>Explanation:</b> I picked some threshold density, let say rho, and then at each time step I have caculated the area where density reaches more than rho. Instanteneous areas, where density exceeds this threshold density is plotted with time. The threshold density is picked to be 5 ped/m2 - Minor Congestion region, 8 ped/m2 - Severe Congestion Region. This is plotted for all the flux of a given door lenght on the same plot.<br>
+
                                                             <b>Results:</b><br>
+                                                            <h5>Door Length: 2.00 m</h5>
+                                                            <img src="./Meeting_23/Case_C/D_2/Congestion/Congestion_Area_Rho_5.0_Ly_2.00.png" width="33%">
+                                                            <img src="./Meeting_23/Case_C/D_2/Congestion/Congestion_Area_Rho_8.0_Ly_2.00.png" width="33%">
+                                                            <img src="./Meeting_23/Case_C/D_2/Congestion/Congestion_Area_Rho_9.9_Ly_2.00.png" width="33%"><br>
+                                                            <h5>Door Length: 3.00 m</h5>
+                                                            <img src="./Meeting_23/Case_C/D_3/Congestion/Congestion_Area_Rho_5.0_Ly_3.00.png" width="33%">
+                                                            <img src="./Meeting_23/Case_C/D_3/Congestion/Congestion_Area_Rho_8.0_Ly_3.00.png" width="33%">
+                                                            <img src="./Meeting_23/Case_C/D_3/Congestion/Congestion_Area_Rho_9.9_Ly_3.00.png" width="33%">
+                                                            <h5>Door Length: 4.00 m</h5>
+                                                            <img src="./Meeting_23/Case_C/D_4/Congestion/Congestion_Area_Rho_5.0_Ly_4.00.png" width="33%">
+                                                            <img src="./Meeting_23/Case_C/D_4/Congestion/Congestion_Area_Rho_8.0_Ly_4.00.png" width="33%">
+                                                            <img src="./Meeting_23/Case_C/D_4/Congestion/Congestion_Area_Rho_9.9_Ly_4.00.png" width="33%">
+                                                            <h5>Door Length: 5.00 m</h5>
+                                                            <img src="./Meeting_23/Case_C/D_5/Congestion/Congestion_Area_Rho_5.0_Ly_5.00.png" width="33%">
+                                                            <img src="./Meeting_23/Case_C/D_5/Congestion/Congestion_Area_Rho_8.0_Ly_5.00.png" width="33%">
+                                                            <img src="./Meeting_23/Case_C/D_5/Congestion/Congestion_Area_Rho_9.9_Ly_5.00.png" width="33%"><br><br>
+
                                                             <b>Observations:</b><br>
+                                                            <ol>
+                                                                <li></li>
+                                                            </ol>
                                                         </li>
                                                         <li>
                                                             <!--Flow rate of Crowd A and B through each Doors V.S. Time-->
                                                             <h3 style="display: flex; justify-content: start;"><u>C.5. Flow rate of Crowd A and B through each doors V.S. Time</u></h3>
                                                             <b>Explanation:</b> I calculated the flow rate through each doors (for crowd A only), and plotted them. This would help to understand if the problem is progressing symmetrically or not. Since we know the maximum flow rate possible from both the doors, this result will also help us to compare how efficiently is the flow rate of Crowds through the door.<br>
+
                                                             <b>Results:</b><br>
+                                                            <img src="./Meeting_23/Case_C/D_2/Door_Flow/Crowd_A_Door_Flow_Ly_2.00.png" style="width: 49%; min-width: 250px;">
+                                                            <img src="./Meeting_23/Case_C/D_3/Door_Flow/Crowd_A_Door_Flow_Ly_3.00.png" style="width: 49%; min-width: 250px;">
+                                                            <img src="./Meeting_23/Case_C/D_4/Door_Flow/Crowd_A_Door_Flow_Ly_4.00.png" style="width: 49%; min-width: 250px;">
+                                                            <img src="./Meeting_23/Case_C/D_5/Door_Flow/Crowd_A_Door_Flow_Ly_5.00.png" style="width: 49%; min-width: 250px;"><br><br>
+
                                                             <b>Observations:</b><br>
                                                         </li>
                                                         <li>
@@ -9693,6 +9723,7 @@ alpha = max(x_velocity(:)) * 1.0; % $gt--- To this
                                                             <h3 style="display: flex; justify-content: start;"><u>C.6. Time of Chocking V.S. Initial Density</u></h3>
                                                             <b>Explanation:</b> This as usual is the time at which choking will occur plotted against intial density. It is understood that choking will occur early in cases with larger population. But the trend of the graph and by what amount, could be understood with this graph.<br>
                                                             <b>Results:</b><br>
+                                                            <img src="./Meeting_23/Case_C/Choking_Time_Comparison.png" style="width: 100%; min-width: 250px; max-width: 500px;"><br><br>
                                                             <b>Observations:</b>
                                                         </li>
                                                     </ul>   

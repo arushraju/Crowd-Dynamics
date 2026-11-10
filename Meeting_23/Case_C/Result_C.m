@@ -38,6 +38,11 @@ Ny = 67;
 dx = 15/61;
 dy = 15/61;
 
+% Physical coordinates of the interior cell centres (0 to 15 m)
+% Interior region = cells 4:Nx-3 and 4:Ny-3 -> 61 cells
+xCoord = ((1:Nx-6) - 0.5)*dx;
+yCoord = ((1:Ny-6) - 0.5)*dy;
+
 % Capture frequency for animation
 videoFPS = 10;
 
@@ -259,9 +264,8 @@ for l = 1:length(doorLengths)
         % -------------------------------------------------
 
         videoFile = fullfile(animationFolder, ...
-            sprintf('Total_Density_Ly_%.2f_rho_initial_%.2f.avi',L,F));
-
-        video = VideoWriter(videoFile,'Motion JPEG AVI');
+            sprintf('Total_Density_Ly_%.2f_rho_initial_%.2f.avi', L, F));
+        video = VideoWriter(videoFile, 'Motion JPEG AVI');
         video.FrameRate = videoFPS;
         video.Quality = 90;
 
@@ -371,8 +375,14 @@ for l = 1:length(doorLengths)
             figure(figureAnimation);
             clf;
 
-            contourf(Density_Interior,20, ...
+            contourf(xCoord,yCoord,Density_Interior,20, ...
                 'LineColor','none');
+
+            % Show the full 15 m x 15 m domain
+            xlim([0 15]);
+            ylim([0 15]);
+            xticks(0:3:15);
+            yticks(0:3:15);
 
             % Jet colormap: dark blue through red
             colormap(figureAnimation,jet(256));
@@ -399,7 +409,11 @@ for l = 1:length(doorLengths)
                 'FontSize',13);
 
             % Axis formatting
-            axis equal tight;
+            axis equal;
+            xlim([0 15]);
+            ylim([0 15]);
+            xticks(0:3:15);
+            yticks(0:3:15);
 
             set(gca, ...
                 'FontName','Times New Roman', ...

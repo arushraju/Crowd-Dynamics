@@ -3,14 +3,20 @@
 %  POST-PROCESSING
 %  ---------------------------------------------------------
 %  Crowd A : enters at the BOTTOM, exits at the TOP    (moves in +y)
+%            passage width  Lx
 %  Crowd B : enters at the LEFT,   exits at the RIGHT  (moves in +x)
+%            passage width  Ly
+%  In this study Lx = Ly (the folders W_10 ... W_40 hold Lx = Ly = 10 ... 40 m)
 %
-%  Produces
-%   1. Outflow rate Q_A(t), Q_B(t)   (one figure per passage width)
-%   2. FFT amplitude + power spectrum (one figure per width & flux = 40)
+%  Produces (for every width, and every inflow flux)
+%   1. Outflow rate Q_A(t), Q_B(t)
+%   2. FFT amplitude + power spectrum
 %   3. Cross-correlation R_ab between Q_A and Q_B
-%   4. Congestion area (total density) vs time, thresholds 5 and 8
-%   5. AVI animation of the total density (one per width and flux)
+%   4. Congestion area in the junction square (total density)
+%   5. Total population in the junction square
+%   6. Spatio-temporal density plots along Xc, Yc and Cc
+%   7. AVI animation of the total density (black obstacles, contourf)
+%   8. Choking time vs inflow flux for all widths (one plot)
 % ==========================================================
 
 clear;
@@ -41,7 +47,7 @@ set(groot,'defaultAxesTickLabelInterpreter','latex');
 % 1. GENERAL PARAMETERS
 % ----------------------------------------------------------
 
-% Passage widths and the folders that contain the solver output
+% Passage widths (Lx = Ly) and the folders with the solver output
 widths      = [10 20 30 40];
 folderNames = {'W_10','W_20','W_30','W_40'};
 
@@ -55,18 +61,19 @@ Ny = 91 + 6;      % = 97
 % Grid spacing, h = Lx/(Nx-6-1) = 90/90 = 1 m
 Lx = 90;
 h  = Lx/(Nx-6-1);
-dx = h;
-dy = h;
 
 % Passage indices (same as makePathWidth in the solver)
 %            P1  P2
-P_values = [44  54;    % W = 10 m
-            39  59;    % W = 20 m
-            34  64;    % W = 30 m
-            29  69];   % W = 40 m
+P_values = [44  54;    % Lx = Ly = 10 m
+            39  59;    % Lx = Ly = 20 m
+            34  64;    % Lx = Ly = 30 m
+            29  69];   % Lx = Ly = 40 m
 
 % Density thresholds for the congestion area (total density)
 congestionThresholds = [5 8];
+
+% Choking criterion: total density anywhere in the domain exceeds this value
+chokingThreshold = 10;
 
 % ----- Spectral / correlation settings -----
 analysisStartTime = 0;      % s   Data before this time is ignored in the
@@ -76,15 +83,16 @@ applyHannWindow   = false;  % true -> Hann window before the FFT
 fMaxPlot          = 1.0;    % Hz  Upper frequency limit of the spectrum plots
 maxLag            = 100;    % s   Lag range shown in the correlation plots
 
-% Re-use previously extracted data (much faster on a second run)
-useCache = true;
-
 % ----- Total-density animation (AVI) -----
 makeAnimations     = true;  % false -> skip all videos
 animationFrameStep = 4;     % use every n-th saved frame (saved dt = 0.25 s,
                             % so 4 -> one video frame per 1 s of simulation)
 videoFPS           = 20;    % frames per second of the AVI
 densityColorLimit  = 10;    % colour-bar upper limit (rho_max)
+
+% Re-use previously extracted data (much faster on a second run)
+useCache     = true;
+cacheVersion = 3;
 
 % Colours: one colour per inflow flux (same colour for A and B)
 colors = jet(length(F_values));
@@ -102,15 +110,19 @@ if ~exist(correlationFolder,'dir')
     mkdir(correlationFolder);
 end
 
+% Storage for the choking time (all widths, all fluxes)
+ChokingTimes = NaN(length(widths),length(F_values));
+
 % Storage for the summary table (one row per width and flux)
 summaryHeader = { ...
-    'Width_m','Flux_ped_m_s', ...
+    'Lx_Ly_m','Flux_ped_m_s', ...
     'DominantFreq_A_Hz','DominantFreq_B_Hz', ...
     'DominantPeriod_A_s','DominantPeriod_B_s', ...
     'MeanQ_A_ped_s','MeanQ_B_ped_s', ...
     'MaxQ_A_ped_s','MaxQ_B_ped_s', ...
     'CorrNorm_ZeroLag','CorrNorm_Max','Lag_at_Max_s', ...
-    'CorrNorm_Min','Lag_at_Min_s'};
+    'CorrNorm_Min','Lag_at_Min_s', ...
+    'ChokingTime_s'};
 
 summaryData = NaN(length(widths)*length(F_values),length(summaryHeader));
 summaryRow  = 0;
@@ -128,14 +140,12 @@ for l = 1:length(widths)
     P1 = P_values(l,1);
     P2 = P_values(l,2);
 
-    % Exit cells, as used by the solver's outflow boundary condition
-    %   Crowd A : top   boundary, row    Ny-3, columns P1+1 ... P2-1
-    %   Crowd B : right boundary, column Nx-3, rows    P1+1 ... P2-1
-    exitIndices = (P1+1):(P2-1);
+    % Text used in every title:  Lx = Ly = W
+    lengthTitle = sprintf('$L_x=L_y=%d\\,\\mathrm{m}$',W);
 
     fprintf('\n');
     fprintf('============================================\n');
-    fprintf('PROCESSING PASSAGE WIDTH: %d m\n',W);
+    fprintf('PROCESSING Lx = Ly = %d m\n',W);
     fprintf('============================================\n');
 
     % -----------------------------------------------------
@@ -146,11 +156,14 @@ for l = 1:length(widths)
     flowFolder       = fullfile(resultFolder,'Outflow_Rate');
     fftFolder        = fullfile(resultFolder,'FFT');
     congestionFolder = fullfile(resultFolder,'Congestion');
+    populationFolder = fullfile(resultFolder,'Population');
+    spaceTimeFolder  = fullfile(resultFolder,'SpatioTemporal');
     dataFolder       = fullfile(resultFolder,'Data');
     animationFolder  = fullfile(resultFolder,'Animations');
 
     outputFolders = {resultFolder; flowFolder; fftFolder; ...
-                     congestionFolder; dataFolder; animationFolder};
+                     congestionFolder; populationFolder; ...
+                     spaceTimeFolder; dataFolder; animationFolder};
 
     for k = 1:length(outputFolders)
 
@@ -164,11 +177,7 @@ for l = 1:length(widths)
     % Storage for all inflow fluxes of this width
     % -----------------------------------------------------
 
-    Time_values = cell(length(F_values),1);
-    Q_A         = cell(length(F_values),1);
-    Q_B         = cell(length(F_values),1);
-
-    CongestionArea = cell(length(congestionThresholds),length(F_values));
+    CaseData = cell(length(F_values),1);   % one struct per flux
 
 
     %% =====================================================
@@ -179,42 +188,37 @@ for l = 1:length(widths)
 
         F = F_values(f);
 
-        fprintf('\nProcessing W = %d m, F = %.2f\n',W,F);
+        fprintf('\nProcessing Lx = Ly = %d m, F = %.2f\n',W,F);
 
         cacheFile = fullfile(dataFolder, ...
             sprintf('Cache_W_%d_F_%.2f.mat',W,F));
 
         % Video file of this simulation
         videoFile = fullfile(animationFolder, ...
-            sprintf('Total_Density_W_%d_F_%.2f.avi',W,F));
+            sprintf('Total_Density_Lx_Ly_%d_F_%.2f.avi',W,F));
 
         % The video needs the full density fields, so the data is only
         % taken from the cache when no video has to be made.
         needVideo = makeAnimations && ~isfile(videoFile);
 
-        loadedFromCache = false;
+        C = [];
 
         if useCache && ~needVideo && isfile(cacheFile)
 
             S = load(cacheFile);
 
-            if isfield(S,'congestionThresholds') && ...
+            if isfield(S,'cacheVersion') && S.cacheVersion == cacheVersion && ...
                isequal(S.congestionThresholds,congestionThresholds) && ...
                isequal(S.PP,[P1 P2])
 
-                tCase    = S.tCase;
-                QA_case  = S.QA_case;
-                QB_case  = S.QB_case;
-                areaCase = S.areaCase;
-
-                loadedFromCache = true;
+                C = S.C;
                 fprintf('  Loaded from cache.\n');
 
             end
 
         end
 
-        if ~loadedFromCache
+        if isempty(C)
 
             if needVideo
                 videoSettings = struct( ...
@@ -229,42 +233,42 @@ for l = 1:length(widths)
 
             try
 
-                [tCase,QA_case,QB_case,areaCase] = processCase( ...
-                    inputFolder,W,F,Nx,Ny,h,exitIndices, ...
+                C = processCase(inputFolder,W,F,Nx,Ny,h,P1,P2, ...
                     congestionThresholds,videoSettings);
 
             catch ME
 
-                warning('W=%d, F=%.2f skipped:\n%s',W,F,ME.message);
-
-                tCase = [];
-                QA_case = [];
-                QB_case = [];
-                areaCase = [];
+                warning('Lx=Ly=%d, F=%.2f skipped:\n%s',W,F,ME.message);
+                C = [];
 
             end
 
-            if ~isempty(tCase)
+            if ~isempty(C)
 
                 PP = [P1 P2]; %#ok<NASGU>
 
-                save(cacheFile,'tCase','QA_case','QB_case', ...
-                    'areaCase','congestionThresholds','PP');
+                save(cacheFile,'C','congestionThresholds','PP', ...
+                    'cacheVersion');
 
             end
 
         end
 
-        if isempty(tCase)
+        if isempty(C)
             continue;
         end
 
-        Time_values{f} = tCase;
-        Q_A{f}         = QA_case;
-        Q_B{f}         = QB_case;
+        CaseData{f} = C;
 
-        for c = 1:length(congestionThresholds)
-            CongestionArea{c,f} = areaCase(c,:)';
+        % -------------------------------------------------
+        % Choking time: first time the total density anywhere in the
+        % domain exceeds the choking threshold
+        % -------------------------------------------------
+
+        chokeIndex = find(C.maxRho > chokingThreshold,1,'first');
+
+        if ~isempty(chokeIndex)
+            ChokingTimes(l,f) = C.t(chokeIndex);
         end
 
         % -------------------------------------------------
@@ -272,23 +276,33 @@ for l = 1:length(widths)
         % -------------------------------------------------
 
         simulationTable = table( ...
-            tCase(:), ...
-            QA_case(:), ...
-            QB_case(:), ...
-            areaCase(1,:)', ...
-            areaCase(2,:)', ...
+            C.t(:), ...
+            C.QA(:), ...
+            C.QB(:), ...
+            C.pop(:), ...
+            C.area(1,:)', ...
+            C.area(2,:)', ...
+            C.maxRho(:), ...
             'VariableNames',{ ...
             'Time_s', ...
             'OutflowRate_A_pedestrians_s', ...
             'OutflowRate_B_pedestrians_s', ...
-            sprintf('Area_rho%g_m2',congestionThresholds(1)), ...
-            sprintf('Area_rho%g_m2',congestionThresholds(2))});
+            'JunctionPopulation_pedestrians', ...
+            sprintf('JunctionArea_rho%g_m2',congestionThresholds(1)), ...
+            sprintf('JunctionArea_rho%g_m2',congestionThresholds(2)), ...
+            'MaxTotalDensity_pedestrians_m2'});
 
         writetable(simulationTable,fullfile(dataFolder, ...
-            sprintf('Results_W_%d_F_%.2f.csv',W,F)));
+            sprintf('Results_Lx_Ly_%d_F_%.2f.csv',W,F)));
 
         fprintf('  Frames: %d | final time: %.3f s\n', ...
-            length(tCase),tCase(end));
+            length(C.t),C.t(end));
+
+        if isnan(ChokingTimes(l,f))
+            fprintf('  Status: NOT CHOKED\n');
+        else
+            fprintf('  Status: CHOKED at %.3f s\n',ChokingTimes(l,f));
+        end
 
     end
 
@@ -307,12 +321,12 @@ for l = 1:length(widths)
 
     for f = 1:length(F_values)
 
-        if isempty(Time_values{f})
+        if isempty(CaseData{f})
             continue;
         end
 
         % Crowd A : continuous line
-        plot(Time_values{f},Q_A{f}, ...
+        plot(CaseData{f}.t,CaseData{f}.QA, ...
             'Color',colors(f,:), ...
             'LineStyle','-', ...
             'LineWidth',1.4);
@@ -321,7 +335,7 @@ for l = 1:length(widths)
             '$\\mathrm{A},\\ F=%.1f$',F_values(f)); %#ok<SAGROW>
 
         % Crowd B : dotted line (same colour)
-        plot(Time_values{f},Q_B{f}, ...
+        plot(CaseData{f}.t,CaseData{f}.QB, ...
             'Color',colors(f,:), ...
             'LineStyle',':', ...
             'LineWidth',2.0);
@@ -334,8 +348,7 @@ for l = 1:length(widths)
     xlabel('$t\,(\mathrm{s})$');
     ylabel('$Q\,(\mathrm{pedestrians/s})$');
 
-    title(sprintf( ...
-        '$\\mathrm{OUTFLOW\\ RATE\\ vs\\ TIME}$ - $W=%d\\,\\mathrm{m}$',W), ...
+    title(['$\mathrm{OUTFLOW\ RATE\ vs\ TIME}$ - ' lengthTitle], ...
         'Interpreter','latex');
 
     if ~isempty(flowLegend)
@@ -348,13 +361,60 @@ for l = 1:length(widths)
     set(gca,'FontName','Times New Roman','FontSize',11);
 
     exportgraphics(figureFlow,fullfile(flowFolder, ...
-        sprintf('Outflow_Rate_W_%d.png',W)),'Resolution',300);
+        sprintf('Outflow_Rate_Lx_Ly_%d.png',W)),'Resolution',300);
 
     close(figureFlow);
 
 
     %% =====================================================
-    % 5. FIGURE 2 - FFT AND POWER SPECTRUM (ONE FIGURE PER FLUX)
+    % 5. FIGURE 2 - TOTAL POPULATION IN THE JUNCTION SQUARE
+    % ======================================================
+
+    figurePopulation = figure('Color','w','Visible','off', ...
+        'Position',[100 100 1000 600]);
+    hold on;
+    grid on;
+    box on;
+
+    populationLegend = {};
+
+    for f = 1:length(F_values)
+
+        if isempty(CaseData{f})
+            continue;
+        end
+
+        plot(CaseData{f}.t,CaseData{f}.pop, ...
+            'Color',colors(f,:), ...
+            'LineWidth',1.4);
+
+        populationLegend{end+1} = sprintf( ...
+            '$F=%.1f$',F_values(f)); %#ok<SAGROW>
+
+    end
+
+    xlabel('$t\,(\mathrm{s})$');
+    ylabel('$N_{\mathrm{junction}}\,(\mathrm{pedestrians})$');
+
+    title(['$\mathrm{JUNCTION\ POPULATION\ vs\ TIME}$ - ' lengthTitle], ...
+        'Interpreter','latex');
+
+    if ~isempty(populationLegend)
+        legend(populationLegend, ...
+            'Location','eastoutside', ...
+            'Interpreter','latex');
+    end
+
+    set(gca,'FontName','Times New Roman','FontSize',11);
+
+    exportgraphics(figurePopulation,fullfile(populationFolder, ...
+        sprintf('Junction_Population_Lx_Ly_%d.png',W)),'Resolution',300);
+
+    close(figurePopulation);
+
+
+    %% =====================================================
+    % 6. FIGURE 3 - FFT AND POWER SPECTRUM (ONE FIGURE PER FLUX)
     % ======================================================
 
     % Uniform time-step used for resampling (FFT needs uniform sampling)
@@ -362,11 +422,11 @@ for l = 1:length(widths)
 
     for f = 1:length(F_values)
 
-        if isempty(Time_values{f})
+        if isempty(CaseData{f})
             continue;
         end
 
-        t_f = Time_values{f};
+        t_f = CaseData{f}.t;
 
         % Time-step of the saved data
         dtU = median(diff(t_f));
@@ -375,13 +435,13 @@ for l = 1:length(widths)
         tU = (tStart:dtU:t_f(end))';
 
         if numel(tU) < 16
-            warning('W=%d, F=%.2f: too few samples after t = %.1f s.', ...
+            warning('Lx=Ly=%d, F=%.2f: too few samples after t = %.1f s.', ...
                 W,F_values(f),analysisStartTime);
             continue;
         end
 
-        QA_u = interp1(t_f,Q_A{f},tU,'linear');
-        QB_u = interp1(t_f,Q_B{f},tU,'linear');
+        QA_u = interp1(t_f,CaseData{f}.QA,tU,'linear');
+        QB_u = interp1(t_f,CaseData{f}.QB,tU,'linear');
 
         uniformData{f} = {tU,QA_u,QB_u,dtU};
 
@@ -450,13 +510,13 @@ for l = 1:length(widths)
         set(gca,'FontName','Times New Roman','FontSize',11);
 
         sgtitle(sprintf([ ...
-            '$W=%d\\,\\mathrm{m}$ - ' ...
+            '$L_x=L_y=%d\\,\\mathrm{m}$ - ' ...
             '$F=%.1f\\,\\mathrm{pedestrians/m/s}$'], ...
             W,F_values(f)), ...
             'Interpreter','latex');
 
         exportgraphics(figureFFT,fullfile(fftFolder, ...
-            sprintf('FFT_W_%d_F_%.2f.png',W,F_values(f))), ...
+            sprintf('FFT_Lx_Ly_%d_F_%.2f.png',W,F_values(f))), ...
             'Resolution',300);
 
         close(figureFFT);
@@ -473,13 +533,13 @@ for l = 1:length(widths)
             'Amplitude_B','PowerSpectrum_B'});
 
         writetable(spectrumTable,fullfile(dataFolder, ...
-            sprintf('Spectrum_W_%d_F_%.2f.csv',W,F_values(f))));
+            sprintf('Spectrum_Lx_Ly_%d_F_%.2f.csv',W,F_values(f))));
 
     end
 
 
     %% =====================================================
-    % 6. FIGURE 3 - CROSS-CORRELATION R_ab BETWEEN Q_A AND Q_B
+    % 7. FIGURE 4 - CROSS-CORRELATION R_ab BETWEEN Q_A AND Q_B
     % ======================================================
     %
     %   R_ab(lag) = integral Q_A(tau) * Q_B(tau - lag) d tau
@@ -506,7 +566,6 @@ for l = 1:length(widths)
             continue;
         end
 
-        tU   = uniformData{f}{1};
         QA_u = uniformData{f}{2};
         QB_u = uniformData{f}{3};
         dtU  = uniformData{f}{4};
@@ -527,7 +586,7 @@ for l = 1:length(widths)
             'VariableNames',{'Lag_s','R_ab_raw','R_ab_normalised'});
 
         writetable(corrTable,fullfile(correlationFolder, ...
-            sprintf('Correlation_W_%d_F_%.2f.csv',W,F_values(f))));
+            sprintf('Correlation_Lx_Ly_%d_F_%.2f.csv',W,F_values(f))));
 
         % ---- Summary values ----
         mask = abs(lags) <= maxLag;
@@ -552,25 +611,25 @@ for l = 1:length(widths)
             max(QA_u), max(QB_u), ...
             Rnorm(zeroIndex), ...
             corrMax, lags(iMax), ...
-            corrMin, lags(iMin)];
+            corrMin, lags(iMin), ...
+            ChokingTimes(l,f)];
 
     end
 
     % ---- Format the correlation figure ----
     xlabel(axRaw,'$\mathrm{lag}\,(\mathrm{s})$');
     ylabel(axRaw,'$R_{ab}\,(\mathrm{pedestrians^2/s})$');
-    title(axRaw,sprintf( ...
-        '$\\mathrm{CROSS\\ CORRELATION}$ - $W=%d\\,\\mathrm{m}$',W), ...
+    title(axRaw,['$\mathrm{CROSS\ CORRELATION}$ - ' lengthTitle], ...
         'Interpreter','latex');
     xlim(axRaw,[-maxLag maxLag]);
 
     xlabel(axNorm,'$\mathrm{lag}\,(\mathrm{s})$');
     ylabel(axNorm,'$R_{ab}^{\mathrm{norm}}\,(-)$');
-    title(axNorm,sprintf( ...
-        '$\\mathrm{NORMALISED\\ CROSS\\ CORRELATION}$ - $W=%d\\,\\mathrm{m}$',W), ...
+    title(axNorm,['$\mathrm{NORMALISED\ CROSS\ CORRELATION}$ - ' lengthTitle], ...
         'Interpreter','latex');
     xlim(axNorm,[-maxLag maxLag]);
     ylim(axNorm,[-1 1]);
+
     plot(axNorm,[-maxLag maxLag],[0 0],'k-', ...
         'LineWidth',0.8,'HandleVisibility','off');
 
@@ -592,13 +651,13 @@ for l = 1:length(widths)
     end
 
     exportgraphics(figureCorr,fullfile(correlationFolder, ...
-        sprintf('Cross_Correlation_W_%d.png',W)),'Resolution',300);
+        sprintf('Cross_Correlation_Lx_Ly_%d.png',W)),'Resolution',300);
 
     close(figureCorr);
 
 
     %% =====================================================
-    % 7. FIGURE 4 - CONGESTION AREA VS TIME (TOTAL DENSITY)
+    % 8. FIGURE 5 - CONGESTION AREA IN THE JUNCTION VS TIME
     % ======================================================
 
     for c = 1:length(congestionThresholds)
@@ -615,11 +674,11 @@ for l = 1:length(widths)
 
         for f = 1:length(F_values)
 
-            if isempty(Time_values{f})
+            if isempty(CaseData{f})
                 continue;
             end
 
-            plot(Time_values{f},CongestionArea{c,f}, ...
+            plot(CaseData{f}.t,CaseData{f}.area(c,:), ...
                 'Color',colors(f,:), ...
                 'LineWidth',1.4);
 
@@ -631,11 +690,12 @@ for l = 1:length(widths)
         xlabel('$t\,(\mathrm{s})$');
         ylabel('$A_{\mathrm{congestion}}\,(\mathrm{m}^2)$');
 
-        title(sprintf([ ...
-            '$\\mathrm{CONGESTION\\ AREA\\ vs\\ TIME}$ - ' ...
-            '$\\rho_{\\mathrm{total}}>%.1f\\,\\mathrm{pedestrians/m^2}$ - ' ...
-            '$W=%d\\,\\mathrm{m}$'], ...
-            threshold,W), ...
+        thresholdTitle = sprintf( ...
+            '$\\rho_{\\mathrm{total}}>%.1f\\,\\mathrm{pedestrians/m^2}$', ...
+            threshold);
+
+        title(['$\mathrm{JUNCTION\ CONGESTION\ AREA\ vs\ TIME}$ - ' ...
+            thresholdTitle ' - ' lengthTitle], ...
             'Interpreter','latex');
 
         if ~isempty(congestionLegend)
@@ -647,20 +707,99 @@ for l = 1:length(widths)
         set(gca,'FontName','Times New Roman','FontSize',11);
 
         exportgraphics(figureCongestion,fullfile(congestionFolder, ...
-            sprintf('Congestion_Area_Rho_%.1f_W_%d.png',threshold,W)), ...
+            sprintf('Congestion_Area_Rho_%.1f_Lx_Ly_%d.png',threshold,W)), ...
             'Resolution',300);
 
         close(figureCongestion);
 
     end
 
-    fprintf('\nFinished all analyses for W = %d m\n',W);
+
+    %% =====================================================
+    % 9. FIGURE 6 - SPATIO-TEMPORAL DENSITY (Xc, Yc, Cc)
+    % ======================================================
+
+    xCoord = (0:Nx-7)*h;                 % 0 ... 90 m  (along Xc)
+    yCoord = (0:Ny-7)*h;                 % 0 ... 90 m  (along Yc)
+    sCoord = (0:(P2-P1))*sqrt(2)*h;      % along the junction diagonal
+
+    for f = 1:length(F_values)
+
+        if isempty(CaseData{f})
+            continue;
+        end
+
+        saveSpatioTemporalFigure( ...
+            fullfile(spaceTimeFolder, ...
+            sprintf('SpatioTemporal_Lx_Ly_%d_F_%.2f.png',W,F_values(f))), ...
+            CaseData{f}.t, ...
+            xCoord,CaseData{f}.Xc, ...
+            yCoord,CaseData{f}.Yc, ...
+            sCoord,CaseData{f}.Cc, ...
+            W,F_values(f),densityColorLimit);
+
+    end
+
+    fprintf('\nFinished all analyses for Lx = Ly = %d m\n',W);
 
 end
 
 
 %% ---------------------------------------------------------
-% 8. SAVE SUMMARY TABLE (DOMINANT FREQUENCIES, CORRELATION)
+% 10. CHOKING TIME VS INFLOW FLUX (ALL WIDTHS IN ONE PLOT)
+% ----------------------------------------------------------
+
+figureChoking = figure('Color','w','Visible','off', ...
+    'Position',[100 100 900 600]);
+hold on;
+grid on;
+box on;
+
+widthColors = lines(length(widths));
+
+for l = 1:length(widths)
+
+    plot(F_values,ChokingTimes(l,:), ...
+        '-o', ...
+        'Color',widthColors(l,:), ...
+        'MarkerFaceColor',widthColors(l,:), ...
+        'LineWidth',1.6, ...
+        'MarkerSize',6);
+
+end
+
+xlabel('$F\,(\mathrm{pedestrians/m/s})$');
+ylabel('$t_{\mathrm{choking}}\,(\mathrm{s})$');
+
+title('$\mathrm{CHOKING\ TIME\ vs\ INFLOW\ FLUX}$', ...
+    'Interpreter','latex');
+
+legend(compose('$L_x=L_y=%d\\,\\mathrm{m}$',widths), ...
+    'Location','best', ...
+    'Interpreter','latex');
+
+set(gca,'FontName','Times New Roman','FontSize',11);
+
+exportgraphics(figureChoking,fullfile(mainResultsFolder, ...
+    'Choking_Time_Comparison.png'),'Resolution',300);
+
+close(figureChoking);
+
+chokingTable = array2table( ...
+    [F_values(:),ChokingTimes'], ...
+    'VariableNames',{ ...
+    'Flux_ped_m_s', ...
+    'Lx_Ly_10m', ...
+    'Lx_Ly_20m', ...
+    'Lx_Ly_30m', ...
+    'Lx_Ly_40m'});
+
+writetable(chokingTable,fullfile(mainResultsFolder, ...
+    'Choking_Time_Comparison.csv'));
+
+
+%% ---------------------------------------------------------
+% 11. SAVE SUMMARY TABLE (DOMINANT FREQUENCIES, CORRELATION)
 % ----------------------------------------------------------
 
 summaryData = summaryData(1:summaryRow,:);
@@ -673,7 +812,7 @@ writetable(summaryTable,fullfile(mainResultsFolder, ...
 
 
 %% ---------------------------------------------------------
-% 9. COMPLETION
+% 12. COMPLETION
 % ----------------------------------------------------------
 
 fprintf('\n');
@@ -688,18 +827,27 @@ fprintf('Results saved in: %s\n',mainResultsFolder);
 % FUNCTION: PROCESS ONE SIMULATION (ONE WIDTH, ONE FLUX)
 % ==========================================================
 %
-% Only four of the six solver files are needed:
-%   Density_A, Density_B  -> congestion area, exit densities
+% Files needed:
+%   Density_A, Density_B  -> total density, exit densities
 %   Y_Velocity_A          -> outflow of crowd A (top exit)
 %   X_Velocity_B          -> outflow of crowd B (right exit)
+%
+% Returns a struct C with the fields
+%   t       time                                   (nT x 1)
+%   QA, QB  outflow rates                          (nT x 1)
+%   pop     population in the junction square      (nT x 1)
+%   area    congestion area in the junction square (nThresholds x nT)
+%   maxRho  maximum total density in the domain    (nT x 1)
+%   Xc      density along the middle row           (91 x nT)
+%   Yc      density along the middle column        (91 x nT)
+%   Cc      density along the junction diagonal    (W+1 x nT)
 
-function [t,QA,QB,area] = processCase( ...
-    inputFolder,W,F,Nx,Ny,h,exitIndices,thresholds,videoSettings)
+function C = processCase(inputFolder,W,F,Nx,Ny,h,P1,P2, ...
+    thresholds,videoSettings)
 
-    t = [];
-    QA = [];
-    QB = [];
-    area = [];
+    C = [];
+
+    exitIndices = (P1+1):(P2-1);
 
     densityAFile = fullfile(inputFolder, ...
         sprintf('Density_A_Contour_L_%.2f_F_%.2f.csv',W,F));
@@ -738,31 +886,64 @@ function [t,QA,QB,area] = processCase( ...
 
     nFrames = min(length(tA),length(tB));
 
-    % ---- Congestion area (total density, interior 4:N-3) ----
-    interiorTotal = RA(4:Nx-3,4:Ny-3,1:nFrames) + ...
-                    RB(4:Nx-3,4:Ny-3,1:nFrames);
+    % ---- Total density on the full grid ----
+    RT = RA(:,:,1:nFrames) + RB(:,:,1:nFrames);
 
+    clear RA RB;
+
+    % ---- Maximum total density in the domain (interior 4:N-3) ----
+    maxRho = reshape(max(max(RT(4:Nx-3,4:Ny-3,:),[],1),[],2),[],1);
+
+    % ---- Junction square: nodes P1 ... P2 in x and y ----
+    junctionIdx = P1:P2;
+    nJ = numel(junctionIdx);
+
+    % Trapezoidal weights: edge nodes half, corner nodes a quarter,
+    % so the weights add up to exactly (W*h)^2
+    wJ = ones(nJ,1);
+    wJ([1 end]) = 0.5;
+    weightJ = (wJ*wJ')*h*h;
+
+    RJ = RT(junctionIdx,junctionIdx,:);
+
+    % Total population in the junction square
+    pop = reshape(sum(sum(RJ.*weightJ,1),2),[],1);
+
+    % Congestion area in the junction square
     area = zeros(length(thresholds),nFrames);
 
     for c = 1:length(thresholds)
 
-        numberOfCells = sum(sum(interiorTotal > thresholds(c),1),2);
-
-        area(c,:) = reshape(numberOfCells,1,[])*h*h;
+        area(c,:) = reshape( ...
+            sum(sum((RJ > thresholds(c)).*weightJ,1),2),1,[]);
 
     end
+
+    clear RJ;
+
+    % ---- Spatio-temporal profiles (total density) ----
+    jc = (Ny+1)/2;        % middle row    (y = 45 m)
+    ic = (Nx+1)/2;        % middle column (x = 45 m)
+
+    Xc = reshape(RT(4:Nx-3,jc,:),Nx-6,nFrames);
+    Yc = reshape(RT(ic,4:Ny-3,:),Ny-6,nFrames);
+
+    diagonalIdx = sub2ind([Nx Ny],junctionIdx,junctionIdx);
+    RT2 = reshape(RT,Nx*Ny,nFrames);
+    Cc  = RT2(diagonalIdx,:);
+
+    clear RT2;
 
     % ---- Total-density animation (AVI) ----
     if ~isempty(videoSettings)
 
         fprintf('  Writing animation: %s\n',videoSettings.file);
 
-        writeDensityVideo(videoSettings,interiorTotal,tA(1:nFrames), ...
-            W,F,h);
+        writeDensityVideo(videoSettings,RT,tA(1:nFrames),Nx,Ny,W,F,h);
 
     end
 
-    clear RA RB interiorTotal;
+    clear RT;
 
     % ---- Velocity of crowd A (top exit) ----
     [tVA,VA] = readCSVFrames(yVelocityAFile,Ny,Nx);
@@ -774,18 +955,15 @@ function [t,QA,QB,area] = processCase( ...
     uB_exit = VB(Nx-3,exitIndices,:);
     clear VB;
 
-    nFrames = min([nFrames,length(tVA),length(tVB)]);
+    nFinal = min([nFrames,length(tVA),length(tVB)]);
 
-    if any(abs(tA(1:nFrames)-tB(1:nFrames)) > 1e-9) || ...
-       any(abs(tA(1:nFrames)-tVA(1:nFrames)) > 1e-9) || ...
-       any(abs(tA(1:nFrames)-tVB(1:nFrames)) > 1e-9)
+    if any(abs(tA(1:nFinal)-tB(1:nFinal)) > 1e-9) || ...
+       any(abs(tA(1:nFinal)-tVA(1:nFinal)) > 1e-9) || ...
+       any(abs(tA(1:nFinal)-tVB(1:nFinal)) > 1e-9)
 
-        error('Time values do not match for W=%d, F=%.2f',W,F);
+        error('Time values do not match for Lx=Ly=%d, F=%.2f',W,F);
 
     end
-
-    t = tA(1:nFrames);
-    area = area(:,1:nFrames);
 
     % ---- Outflow rates  Q = sum(rho*v) * h  (pedestrians/s) ----
     %
@@ -794,13 +972,215 @@ function [t,QA,QB,area] = processCase( ...
     % no flux.
 
     % Crowd A: rhoA_exit is [nExit x 1 x nFrames] -> sum over dimension 1
-    QA = reshape(sum(rhoA_exit(:,:,1:nFrames).*vA_exit(:,:,1:nFrames),1), ...
+    QA = reshape(sum(rhoA_exit(:,:,1:nFinal).*vA_exit(:,:,1:nFinal),1), ...
         [],1)*h;
 
     % Crowd B: rhoB_exit is [1 x nExit x nFrames] -> sum over dimension 2
-
-    QB = reshape(sum(rhoB_exit(:,:,1:nFrames).*uB_exit(:,:,1:nFrames),2), ...
+    QB = reshape(sum(rhoB_exit(:,:,1:nFinal).*uB_exit(:,:,1:nFinal),2), ...
         [],1)*h;
+
+    % ---- Assemble the output (all trimmed to the same length) ----
+    C = struct();
+    C.t      = tA(1:nFinal);
+    C.QA     = QA;
+    C.QB     = QB;
+    C.pop    = pop(1:nFinal);
+    C.area   = area(:,1:nFinal);
+    C.maxRho = maxRho(1:nFinal);
+    C.Xc     = Xc(:,1:nFinal);
+    C.Yc     = Yc(:,1:nFinal);
+    C.Cc     = Cc(:,1:nFinal);
+
+end
+
+
+%% =========================================================
+% FUNCTION: SPATIO-TEMPORAL FIGURE (Xc, Yc, Cc)
+% ==========================================================
+%
+% x-axis : time
+% y-axis : position along the line
+% colour : total density
+
+function saveSpatioTemporalFigure(fileName,t,xC,Xc,yC,Yc,sC,Cc,W,F,colorLimit)
+
+    levels = linspace(0,colorLimit,41);
+
+    cmap = jet(256);
+
+    panels = {Xc,Yc,Cc};
+    coords = {xC,yC,sC};
+
+    yLabels = {'$x\,(\mathrm{m})$', ...
+               '$y\,(\mathrm{m})$', ...
+               '$s\,(\mathrm{m})$'};
+
+    panelTitles = { ...
+        '$\mathrm{MIDDLE\ ROW}\ (X_c,\ y=45\,\mathrm{m})$', ...
+        '$\mathrm{MIDDLE\ COLUMN}\ (Y_c,\ x=45\,\mathrm{m})$', ...
+        '$\mathrm{JUNCTION\ DIAGONAL}\ (C_c)$'};
+
+    figureST = figure('Color','w','Visible','off', ...
+        'Position',[100 100 1000 950]);
+
+    for p = 1:3
+
+        ax = subplot(3,1,p);
+
+        Z = min(max(panels{p},0),colorLimit);
+
+        contourf(ax,t,coords{p},Z,levels,'LineColor','none');
+
+        colormap(ax,cmap);
+
+        set(ax, ...
+            'CLim',[0 colorLimit], ...
+            'Color',cmap(1,:), ...
+            'FontName','Times New Roman', ...
+            'FontSize',11, ...
+            'Layer','top');
+
+        xlim(ax,[t(1) t(end)]);
+        ylim(ax,[coords{p}(1) coords{p}(end)]);
+
+        xlabel(ax,'$t\,(\mathrm{s})$');
+        ylabel(ax,yLabels{p});
+        title(ax,panelTitles{p},'Interpreter','latex');
+
+        cb = colorbar(ax);
+        cb.Label.String = '$\rho_{\mathrm{total}}\,(\mathrm{pedestrians/m^2})$';
+        cb.Label.Interpreter = 'latex';
+        cb.Label.FontSize = 11;
+        cb.TickLabelInterpreter = 'latex';
+
+    end
+
+    sgtitle(sprintf([ ...
+        '$L_x=L_y=%d\\,\\mathrm{m}$ - ' ...
+        '$F=%.1f\\,\\mathrm{pedestrians/m/s}$'], ...
+        W,F), ...
+        'Interpreter','latex');
+
+    exportgraphics(figureST,fileName,'Resolution',300);
+
+    close(figureST);
+
+end
+
+
+%% =========================================================
+% FUNCTION: WRITE THE TOTAL-DENSITY ANIMATION (AVI)
+% ==========================================================
+%
+% RT(i,j,k) : total density on the full 97 x 97 grid. Only the interior
+%             points 4:N-3 (91 x 91 points, 0 ... 90 m) are drawn.
+
+function writeDensityVideo(settings,RT,t,Nx,Ny,W,F,h)
+
+    nX = Nx - 6;
+    nY = Ny - 6;
+
+    xCoord = (0:nX-1)*h;
+    yCoord = (0:nY-1)*h;
+
+    % Obstacle corners (the four blocks of the plus-shaped domain)
+    a = (settings.P1 - 4)*h;     % lower edge of the passage
+    b = (settings.P2 - 4)*h;     % upper edge of the passage
+    L = (nX - 1)*h;              % domain length (90 m)
+
+    levels = linspace(0,settings.colorLimit,41);
+    cmap = jet(256);
+
+    video = VideoWriter(settings.file,'Motion JPEG AVI');
+    video.FrameRate = settings.fps;
+    video.Quality = 90;
+
+    open(video);
+
+    figureAnimation = figure( ...
+        'Visible','off', ...
+        'Color','w', ...
+        'Position',[100 100 800 700]);
+
+    ax = axes(figureAnimation);
+    hold(ax,'on');
+
+    colormap(ax,cmap);
+
+    % Axes background = lowest colour, so empty regions never look white
+    set(ax,'CLim',[0 settings.colorLimit],'Color',cmap(1,:));
+
+    axis(ax,'equal');
+    xlim(ax,[0 L]);
+    ylim(ax,[0 L]);
+    xticks(ax,0:15:L);
+    yticks(ax,0:15:L);
+
+    xlabel(ax,'$x\,(\mathrm{m})$','Interpreter','latex','FontSize',13);
+    ylabel(ax,'$y\,(\mathrm{m})$','Interpreter','latex','FontSize',13);
+
+    set(ax, ...
+        'FontName','Times New Roman', ...
+        'FontSize',12, ...
+        'LineWidth',1.0, ...
+        'TickLabelInterpreter','latex', ...
+        'Box','on', ...
+        'Layer','top');
+
+    cb = colorbar(ax);
+    cb.Label.String = '$\rho_{\mathrm{total}}\,(\mathrm{pedestrians/m^2})$';
+    cb.Label.Interpreter = 'latex';
+    cb.Label.FontSize = 12;
+    cb.TickLabelInterpreter = 'latex';
+    cb.FontName = 'Times New Roman';
+
+    hTitle = title(ax,'','Interpreter','latex','FontSize',13);
+
+    hContour   = [];
+    hObstacles = [];
+
+    nFrames = size(RT,3);
+
+    for k = 1:settings.frameStep:nFrames
+
+        % Remove the previous frame (the axes, colour bar and labels stay)
+        if ~isempty(hContour)
+            delete(hContour);
+            delete(hObstacles);
+        end
+
+        % Interior density, rows = y, columns = x
+        Dk = RT(4:Nx-3,4:Ny-3,k)';
+        Dk = min(max(Dk,0),settings.colorLimit);
+
+        [~,hContour] = contourf(ax,xCoord,yCoord,Dk,levels, ...
+            'LineColor','none');
+
+        % Black obstacle blocks (drawn on top of the contour)
+        hObstacles = gobjects(4,1);
+
+        hObstacles(1) = patch(ax,[0 a a 0],[0 0 a a],'k', ...
+            'EdgeColor','k');                                  % bottom left
+        hObstacles(2) = patch(ax,[b L L b],[0 0 a a],'k', ...
+            'EdgeColor','k');                                  % bottom right
+        hObstacles(3) = patch(ax,[0 a a 0],[b b L L],'k', ...
+            'EdgeColor','k');                                  % top left
+        hObstacles(4) = patch(ax,[b L L b],[b b L L],'k', ...
+            'EdgeColor','k');                                  % top right
+
+        set(hTitle,'String',sprintf([ ...
+            '$\\mathrm{TOTAL\\ DENSITY}$ - $L_x=L_y=%d\\,\\mathrm{m}$ - ' ...
+            '$F=%.1f\\,\\mathrm{pedestrians/m/s}$ - ' ...
+            '$t=%.2f\\,\\mathrm{s}$'], ...
+            W,F,t(k)));
+
+        frame = getframe(figureAnimation);
+        writeVideo(video,frame);
+
+    end
+
+    close(video);
+    close(figureAnimation);
 
 end
 
@@ -879,104 +1259,6 @@ function [lags,Rraw,Rnorm] = crossCorrelation(Qa,Qb,dt)
     else
         Rnorm = NaN(size(lags));
     end
-
-end
-
-
-%% =========================================================
-% FUNCTION: WRITE THE TOTAL-DENSITY ANIMATION (AVI)
-% ==========================================================
-%
-% interiorTotal(i,j,k) : total density on the interior points 4:N-3
-%                        (91 x 91 points, 0 ... 90 m)
-
-function writeDensityVideo(settings,interiorTotal,t,W,F,h)
-
-    nX = size(interiorTotal,1);
-    nY = size(interiorTotal,2);
-
-    xCoord = (0:nX-1)*h;
-    yCoord = (0:nY-1)*h;
-
-    % Obstacle corners (the four blocks of the plus-shaped domain)
-    a = (settings.P1 - 4)*h;     % lower edge of the passage
-    b = (settings.P2 - 4)*h;     % upper edge of the passage
-    L = (nX - 1)*h;              % domain length (90 m)
-
-    video = VideoWriter(settings.file,'Motion JPEG AVI');
-    video.FrameRate = settings.fps;
-    video.Quality = 90;
-
-    open(video);
-
-    figureAnimation = figure( ...
-        'Visible','off', ...
-        'Color','w', ...
-        'Position',[100 100 800 700]);
-
-    % First frame (also creates the graphics objects)
-    D = interiorTotal(:,:,1)';           % transpose: rows = y, columns = x
-
-    hImage = imagesc(xCoord,yCoord,D);
-    set(gca,'YDir','normal');
-
-    hold on;
-
-    % Grey obstacle blocks
-    obstacleColor = [0.55 0.55 0.55];
-
-    patch([0 a a 0],[0 0 a a],obstacleColor,'EdgeColor','k');   % bottom left
-    patch([b L L b],[0 0 a a],obstacleColor,'EdgeColor','k');   % bottom right
-    patch([0 a a 0],[b b L L],obstacleColor,'EdgeColor','k');   % top left
-    patch([b L L b],[b b L L],obstacleColor,'EdgeColor','k');   % top right
-
-    colormap(figureAnimation,jet(256));
-    set(gca,'CLim',[0 settings.colorLimit]);
-
-    axis equal;
-    xlim([0 L]);
-    ylim([0 L]);
-    xticks(0:15:L);
-    yticks(0:15:L);
-
-    xlabel('$x\,(\mathrm{m})$','Interpreter','latex','FontSize',13);
-    ylabel('$y\,(\mathrm{m})$','Interpreter','latex','FontSize',13);
-
-    set(gca, ...
-        'FontName','Times New Roman', ...
-        'FontSize',12, ...
-        'LineWidth',1.0, ...
-        'TickLabelInterpreter','latex', ...
-        'Layer','top');
-
-    cb = colorbar;
-    cb.Label.String = '$\rho_{\mathrm{total}}\,(\mathrm{pedestrians/m^2})$';
-    cb.Label.Interpreter = 'latex';
-    cb.Label.FontSize = 12;
-    cb.TickLabelInterpreter = 'latex';
-    cb.FontName = 'Times New Roman';
-
-    hTitle = title('','Interpreter','latex','FontSize',13);
-
-    frameIndices = 1:settings.frameStep:size(interiorTotal,3);
-
-    for k = frameIndices
-
-        set(hImage,'CData',interiorTotal(:,:,k)');
-
-        set(hTitle,'String',sprintf([ ...
-            '$\\mathrm{TOTAL\\ DENSITY}$ - $W=%d\\,\\mathrm{m}$ - ' ...
-            '$F=%.1f\\,\\mathrm{pedestrians/m/s}$ - ' ...
-            '$t=%.2f\\,\\mathrm{s}$'], ...
-            W,F,t(k)));
-
-        frame = getframe(figureAnimation);
-        writeVideo(video,frame);
-
-    end
-
-    close(video);
-    close(figureAnimation);
 
 end
 

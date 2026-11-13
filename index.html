@@ -9355,7 +9355,7 @@ alpha = max(x_velocity(:)) * 1.0; % $gt--- To this
                                             <section class="intro-card"  style="background-color: rgb(214, 255, 255);">
                                                 <p>
                                                     The work flow to generate result for this case is given below:
-                                                    <center><img src="./Meeting_23/Case_B/Case_B_Workflow.png" style="width: 100%; max-width: 500px;"></center><br>
+                                                    <center><img src="./Meeting_23/Case_B/Case_B_Workflow.png" style="width: 100%; max-width: 600px;"></center><br>
                                                     The intermediate CSV data that is generated is given below. In here there are files for Density of A and B and Total Density, and Potential of A and B and X and Y velocity at A and B crowd, at each time step. But these are just for W = 10 and 20. Due to memory issue, I have not included the total density and the potential for the case W = 30 and 40. (Github releases supports file size no more than 2GB, hence for the case W = 40, i have stored it in a online google drive)<br>
                                                     <center>
                                                         <table border="1">
@@ -9587,7 +9587,7 @@ alpha = max(x_velocity(:)) * 1.0; % $gt--- To this
                                             <summary>Fix for Case C</summary>
                                             <section style="background-color: rgb(214, 255, 219);" class="intro-card">
                                                 And as the previous two cases, I have changed the workflow of the code. And it is given below:<br>
-                                                <center><img src="./Meeting_23/Case_C/Case_C_Workflow.jpg" style="width: 100%; min-width: 300px; max-width: 500px;"></center>
+                                                <center><img src="./Meeting_23/Case_C/Case_C_Workflow.png" style="width: 100%; max-width: 600px;"></center>
                                                 <br>
                                                 First there is the main solver that actually solves for the density by computation. After which the Density, Potential and Velocity datas are generated in the CSV format. Then a seperate code for results uses these generated data to generate the result. It takes much less time now to generate all the videos and plots. Which allows us to change the tiny details in the plot, without thinking about the additional time it would take.
 
@@ -9634,26 +9634,28 @@ alpha = max(x_velocity(:)) * 1.0; % $gt--- To this
                                                             <b>Explanation:</b> This is just the video showing the density contour evolution with time.<br>
 
                                                             <b>Results:</b><br>
-                                                            <table border="1">
-                                                                <tbody>
-                                                                    <tr>
-                                                                        <td>Case-C; D = <i>2m</i></td>
-                                                                        <td><a href="https://github.com/arushraju/Crowd-Dynamics/releases/download/v1.1_Results/Case_C_D_2_Animation.zip">Download (45.7 MB)</a></td>
-                                                                    </tr>
-                                                                    <tr>
-                                                                        <td>Case-C; D = <i>3m</i></td>
-                                                                        <td><a href="https://github.com/arushraju/Crowd-Dynamics/releases/download/v1.1_Results/Case_C_D_3_Animation.zip">Download (57.4 MB)</a></td>
-                                                                    </tr>
-                                                                    <tr>
-                                                                        <td>Case-C; D = <i>4m</i></td>
-                                                                        <td><a href="https://github.com/arushraju/Crowd-Dynamics/releases/download/v1.1_Results/Case_C_D_4_Animation.zip">Download (66.1 MB)</a></td>
-                                                                    </tr>
-                                                                    <tr>
-                                                                        <td>Case-C; D = <i>5m</i></td>
-                                                                        <td><a href="https://github.com/arushraju/Crowd-Dynamics/releases/download/v1.1_Results/Case_C_D_5_Animation.zip">Download (77.5 MB)</a></td>
-                                                                    </tr>
-                                                                </tbody>
-                                                            </table>
+                                                            <center>
+                                                                <table border="1">
+                                                                    <tbody>
+                                                                        <tr>
+                                                                            <td>Case-C; D = <i>2m</i></td>
+                                                                            <td><a href="https://github.com/arushraju/Crowd-Dynamics/releases/download/v1.1_Results/Case_C_D_2_Animation.zip">Download (45.7 MB)</a></td>
+                                                                        </tr>
+                                                                        <tr>
+                                                                            <td>Case-C; D = <i>3m</i></td>
+                                                                            <td><a href="https://github.com/arushraju/Crowd-Dynamics/releases/download/v1.1_Results/Case_C_D_3_Animation.zip">Download (57.4 MB)</a></td>
+                                                                        </tr>
+                                                                        <tr>
+                                                                            <td>Case-C; D = <i>4m</i></td>
+                                                                            <td><a href="https://github.com/arushraju/Crowd-Dynamics/releases/download/v1.1_Results/Case_C_D_4_Animation.zip">Download (66.1 MB)</a></td>
+                                                                        </tr>
+                                                                        <tr>
+                                                                            <td>Case-C; D = <i>5m</i></td>
+                                                                            <td><a href="https://github.com/arushraju/Crowd-Dynamics/releases/download/v1.1_Results/Case_C_D_5_Animation.zip">Download (77.5 MB)</a></td>
+                                                                        </tr>
+                                                                    </tbody>
+                                                                </table>
+                                                            </center>
                                                             <br>
                                                             <b>Observations:</b> These are the videos of the density contour and it is no different from the results geenrated previously in meeting 22.
                                                         </li>

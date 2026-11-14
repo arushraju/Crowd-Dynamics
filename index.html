@@ -9221,37 +9221,26 @@ alpha = max(x_velocity(:)) * 1.0; % $gt--- To this
                                     <li style="background-color: rgb(255, 180, 195);">
                                         <p>In Case A, I was suggested to change the solver such that the obstacle is placed at the center in the X-axis and Y-axis. I have reset the indices such that I have the obstacle at the center. The problem I was facing earlier was that since I want to solve for cases L = 10, L = 20, L = 30, and L = 40, we cannot have these obstacles at the center if the entire domain has an even number of points (say, 50). The thing is that we need 51 points to have 50 line segments forming the width, which would mean having 50 units of dimension. But then the space interval has to be set accordingly to make it what we want it to be (like h = L/(N-1), because N = 50 + 1 and L = 50).</p>
 
-                                        <p>After making the changes, I would solve Case A for four situations: the symmetric case, the case where the obstacle is placed entirely at the top, and two more intermediate cases between these two. So, there will be four cases in total. I have explained the exact cases I will be solving for Case A.</p>
-
                                         <p>
-                                            I will be solving for this case A and that too for just one size of the obstacle. Which is equal to 30m. It is known that the last inflow flux where choking dosen't happen is 2.0 ped/m/s. And hence the flow will be studied till the flux reaches 2.0 ped/m/s.
-                                            <table border="1">
-                                                <thead>
-                                                    <th>Station A Length</th>
-                                                    <th>Flux Cases</th>
-                                                </thead>
-                                                <tbody>
-                                                    <tr>
-                                                        <td>0 (Asymmetric)</td>
-                                                        <td>[0.5, 1.0, 1.5, 1.75, 2.0, 2.25, 2.5]</td>
-                                                    </tr>
-                                                    <tr>
-                                                        <td>3</td>
-                                                        <td>[0.5, 1.0, 1.5, 1.75, 2.0, 2.25, 2.5]</td>
-                                                    </tr>
-                                                    <tr>
-                                                        <td>7</td>
-                                                        <td>[0.5, 1.0, 1.5, 1.75, 2.0, 2.25, 2.5]</td>
-                                                    </tr>
-                                                    <tr>
-                                                        <td>10 (Symmetric)</td>
-                                                        <td>[0.5, 1.0, 1.5, 1.75, 2.0, 2.25, 2.5]</td>
-                                                    </tr>
-                                                </tbody>
-                                            </table>
-                                        </p>
+                                            Another problem with the solver was that my solution where expereincing a asymmetricity in the flow. I though that it was due to the obstacle being situated at the position what is asymmetric. After a few investigation, I got to know that the problem was in the following code code-snippet<br>
+                                            <div style="overflow-x: scroll; width: 100%; background-color: black; font-family: 'Courier New', Courier, monospace;">
+                                                <pre><code>
+    <span style="color: rgb(50, 255, 47);">% In the WENO function (make RHS)</span>
+    <span style="color: rgb(50, 255, 47);; ">% Left Boundary</span>
+    <span style="color: rgb(0, 68, 255);">if</span><span style="color: white;">(i == 4)</span> 
+        <span style="color: rgb(50, 255, 47);">% This is the X-flux that has to be specifed at the entrance</span>
+        <span style="color: white;">fx_negative_half = </span><span style="color: rgb(0, 208, 255);">inflow_flux</span><span style="color: white;">;</span>
+        <span style="color: rgb(50, 255, 47);">% This is the Y flux that I is not needed at the entrance and hence commented out</span>
+        <span style="color: rgb(50, 255, 47);">% fy_negative_half = 0;</span>
 
-                                        <p>I noticed one blunder is assigning the exit condition on the outflow. I hav efixed it and now I am expecting to not see such unsymmetric flow dynamics in case L = 40 and L = 30.</p>
+    <span style="color: rgb(0, 68, 255);">end</span>
+                                                </code></pre>
+                                            </div>
+                                            <br>
+                                            <center><img src="Meeting_23/Case_A/Case_A_Blunder.jpg" width="80%"></center>
+                                            <br>
+                                            Actually the resoan why this was wrong is because I was correctly assigning the <b>fx_negative_half = inflow flux</b> at the entrance, but the algorithm doesnt allow me to assign y dircetion flux at the right boundary which is the entrance. Rather it allow me to assing y_flux at j = 4 which is half a space interval right of the actual boundary. What i was doing instead was assigning the <b>fy_negative_half = 0</b> when i = 4, and did not realise that this is actually setting the zero y flux not at the entrance but at the first grid point which is half a distance inside the actual entrance. I could have also set the fy_positive_half to be equal to zero at i = 4. And that would have solved the asymmetricity problem, but assiging the y_flux at i = 4 is entriely wrong according to algorithm. And hence I have not set any boundary conditon on the y_flux at i = 7/2.
+                                        </p>
                                     </li>
                                     <li style="background-color: rgb(255, 180, 195);">
                                         Given below is what i have done to fix the CASE A.<br>

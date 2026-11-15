@@ -9211,540 +9211,560 @@ alpha = max(x_velocity(:)) * 1.0; % $gt--- To this
                         <section class="intro-card">
                             <div class="card">
                                 In the last meeting, I was said to do the following tasks:<br>
-                                <ul>
-                                    <li>
-                                        Firstly I was asked to have the numerical results of the cases we are studying and not just their simulation video. So for that reason, I changed the workflow of the entire software. Given below shows how my solver works, after I made changes in it.
-                                    </li>
+                                <p>
+                                    I have chnaged the workflow of the solver. Earlier I was having a single monolithic code, that produced all he result in the form of videos and plots. But now I have divided the program into two, one that geenrates the raw data of density and velocities, and depending on the problem, I make my own post-processign code and plot different kind of results.
+                                </p>
+                                <p>
+                                    I have three section each for each case. I have first decsribed the problem, and then explained the problem I was facing with that case, and with that result, and then fianlly I have explained my worflow for that problem, along with the kind of result I am plotting for that case. And then i have finally shown the result and their observation.
+                                </p>
 
-                                    <!--Case A-->
-                                    <h4>Case A: Crowd Flow around an Obstacle</h4>
-                                    <li style="background-color: rgb(255, 180, 195);">
-                                        <p>In Case A, I was suggested to change the solver such that the obstacle is placed at the center in the X-axis and Y-axis. I have reset the indices such that I have the obstacle at the center. The problem I was facing earlier was that since I want to solve for cases L = 10, L = 20, L = 30, and L = 40, we cannot have these obstacles at the center if the entire domain has an even number of points (say, 50). The thing is that we need 51 points to have 50 line segments forming the width, which would mean having 50 units of dimension. But then the space interval has to be set accordingly to make it what we want it to be (like h = L/(N-1), because N = 50 + 1 and L = 50).</p>
+                                <!--Case A-->
+                                <h4>Case A: Crowd Flow around an Obstacle</h4>
+                                <div style="background-color: rgb(255, 180, 195);">
+                                    <p>
+                                        In Case A, I was suggested to change the solver such that the obstacle is placed at the center in the X-axis and Y-axis. I have reset the indices such that I have the obstacle at the center. The problem I was facing earlier was that since I want to solve for cases L = 10, L = 20, L = 30, and L = 40, we cannot have these obstacles at the center if the entire domain has an even number of points (say, 50). The thing is that we need 51 points to have 50 line segments forming the width, which would mean having 50 units of dimension. But then the space interval has to be set accordingly to make it what we want it to be (like h = L/(N-1), because N = 50 + 1 and L = 50).
+                                    </p>
 
-                                        <p>
-                                            Another problem with the solver was that my solution where expereincing a asymmetricity in the flow. I though that it was due to the obstacle being situated at the position what is asymmetric. After a few investigation, I got to know that the problem was in the following code code-snippet<br>
-                                            <div style="overflow-x: scroll; width: 100%; background-color: black; font-family: 'Courier New', Courier, monospace;">
-                                                <pre><code>
-    <span style="color: rgb(50, 255, 47);">% In the WENO function (make RHS)</span>
-    <span style="color: rgb(50, 255, 47);; ">% Left Boundary</span>
-    <span style="color: rgb(0, 68, 255);">if</span><span style="color: white;">(i == 4)</span> 
-        <span style="color: rgb(50, 255, 47);">% This is the X-flux that has to be specifed at the entrance</span>
-        <span style="color: white;">fx_negative_half = </span><span style="color: rgb(0, 208, 255);">inflow_flux</span><span style="color: white;">;</span>
-        <span style="color: rgb(50, 255, 47);">% This is the Y flux that I is not needed at the entrance and hence commented out</span>
-        <span style="color: rgb(50, 255, 47);">% fy_negative_half = 0;</span>
+                                    <p>
+                                        Another problem with the solver was that my solution where expereincing a asymmetricity in the flow. I though that it was due to the obstacle being situated at the position what is asymmetric. After a few investigation, I got to know that the problem was in the following code code-snippet<br>
+                                        <div style="overflow-x: scroll; width: 100%; background-color: black; font-family: 'Courier New', Courier, monospace;">
+                                            <pre><code>
+<span style="color: rgb(50, 255, 47);">% In the WENO function (make RHS)</span>
+<span style="color: rgb(50, 255, 47);; ">% Left Boundary</span>
+<span style="color: rgb(0, 68, 255);">if</span><span style="color: white;">(i == 4)</span> 
+    <span style="color: rgb(50, 255, 47);">% This is the X-flux that has to be specifed at the entrance</span>
+    <span style="color: white;">fx_negative_half = </span><span style="color: rgb(0, 208, 255);">inflow_flux</span><span style="color: white;">;</span>
+    <span style="color: rgb(50, 255, 47);">% This is the Y flux that I is not needed at the entrance and hence commented out</span>
+    <span style="color: rgb(50, 255, 47);">% fy_negative_half = 0;</span>
 
-    <span style="color: rgb(0, 68, 255);">end</span>
-                                                </code></pre>
-                                            </div>
+<span style="color: rgb(0, 68, 255);">end</span>
+                                            </code></pre>
+                                        </div>
+                                        <p>I have actually checked the CSV data and found that the obstacle is placed exactly at the center. This is strange because, with the obstacle at the center, I would expect the flow not to favour just one side of the obstacle. I think this might be due to the algorithm. When processing the B-grid points, I was iterating from i = 1 to i = Nx and similarly, from j = 1 to j = Ny. What I think is that if I change the sequence from j = 1:Ny to Ny:1, this could result in different results. I will try it and see if it makes the result opposite.</p>
+                                        
+                                    </p>
+                                </div>
+                                <div style="background-color: rgb(255, 180, 195);">
+                                    Given below is what i have done to fix the CASE A.<br>
+                                    <details>
+                                        <summary>Fix for CASE - A</summary>
+                                        <section class="intro-card"  style="background-color: rgb(255, 180, 195);">
                                             <br>
-                                            <center><img src="Meeting_23/Case_A/Case_A_Blunder.jpg" width="80%"></center>
+                                            <center><img src="Meeting_23/Case_A/Case_A_Blunder.jpg" style="width: 100%; max-width: 500px;"></center>
                                             <br>
-                                            Actually the resoan why this was wrong is because I was correctly assigning the <b>fx_negative_half = inflow flux</b> at the entrance, but the algorithm doesnt allow me to assign y dircetion flux at the right boundary which is the entrance. Rather it allow me to assing y_flux at j = 4 which is half a space interval right of the actual boundary. What i was doing instead was assigning the <b>fy_negative_half = 0</b> when i = 4, and did not realise that this is actually setting the zero y flux not at the entrance but at the first grid point which is half a distance inside the actual entrance. I could have also set the fy_positive_half to be equal to zero at i = 4. And that would have solved the asymmetricity problem, but assiging the y_flux at i = 4 is entriely wrong according to algorithm. And hence I have not set any boundary conditon on the y_flux at i = 7/2.
-                                        </p>
-                                    </li>
-                                    <li style="background-color: rgb(255, 180, 195);">
-                                        Given below is what i have done to fix the CASE A.<br>
-                                        <details>
-                                            <summary>Fix for CASE - A</summary>
-                                            <section class="intro-card"  style="background-color: rgb(255, 180, 195);">
-                                                I have actually checked the csv data and found that the obstacle is actually placed exactly at the center. Which is strange, because having the obstacle at center, i would expect for the flow to not be flowing to just one side of the obstacle. Strange. I think this is just becuase of the algorithm. When processing the bgrid points, i was goign from i = 1 to i = Nx and similarly, j = 1 to j = Ny. And what i think is that if I change the sequence from j = 1:Ny to Ny:1, this could result in different results. I will try it and see if it makes the result opposite.
-
+                                            <p>Actually, the reason why this was wrong is that I was correctly assigning the <b>fx_negative_half = inflow flux</b> at the entrance, but the algorithm doesn't allow me to assign the y-direction flux at the right boundary, which is the entrance. Rather, it allows me to assign the y_flux at j = 4, which is half a space interval to the right of the actual boundary. What I was doing instead was assigning the <b>fy_negative_half = 0</b> when i = 4, and I did not realise that this was actually setting the zero y-flux not at the entrance, but at the first grid point, which is half a distance inside the actual entrance (i = 4). I could have also set fy_positive_half to be equal to zero at i = 4, and that would have solved the asymmetry problem. However, assigning the y_flux at i = 4 is entirely wrong according to the algorithm. Hence, I have not set any boundary condition on the y_flux at i = 7/2. And it has finally solved the asymmetry problem.</p>
+                                            
+                                            
+                                            <p>
+                                                Discussed below is how I have changed my workflow.<br>
+                                                Given below are the CSV data that have been generated and used to plot the results. I have also provided the code that was used to generate these results.<br>
+                                                <!--CSV Data-->
+                                                <center>
+                                                    <table border="1">
+                                                        <tbody>
+                                                            <tr>
+                                                                <td><b>Code - Case_A.m</b></td>
+                                                                <td><a href="https://github.com/arushraju/Crowd-Dynamics/releases/download/v1.1/Case_A.m">Link to Download (29.2 KB)</a></td>
+                                                            </tr>
+                                                            <tr>
+                                                                <td><b>Data for 10m Obstacle - L_10.zip</b></td>
+                                                                <td><a href="https://github.com/arushraju/Crowd-Dynamics/releases/download/v1.1/L_10.zip">Link to Download (1.4 GB)</a></td>
+                                                            </tr>
+                                                            <tr>
+                                                                <td><b>Data for 20m Obstacle - L_20.zip</b></td>
+                                                                <td><a href="https://github.com/arushraju/Crowd-Dynamics/releases/download/v1.1/L_20.zip">Link to Download (1.15 GB)</a></td>
+                                                            </tr>
+                                                            <tr>
+                                                                <td><b>Data for 30m Obstacle - L_30.zip</b></td>
+                                                                <td><a href="https://github.com/arushraju/Crowd-Dynamics/releases/download/v1.1/L_30.zip">Link to Download (420 MB)</a></td>
+                                                            </tr>
+                                                            <tr>
+                                                                <td><b>Data for 40m Obstacle - L_40.zip</b></td>
+                                                                <td><a href="https://github.com/arushraju/Crowd-Dynamics/releases/download/v1.1/L_40.zip">Link to Download (244 MB)</a></td>
+                                                            </tr>
+                                                        </tbody>
+                                                    </table>
+                                                </center>
                                                 
-                                                <p>
-                                                    Discussed below is how I have changed my workflow.<br>
-                                                    Given below are the CSV data that have been generated and used to plot the results. I have also provided the code that was used to generate these results.<br>
-                                                    <!--CSV Data-->
-                                                    <center>
+                                                Using the data, I have plotted the results given below.<br>
+                                                <ol>
+                                                    <li>
+                                                        <!--Density Contour-->
+                                                        <h3 style="display: flex; justify-content: start;"><u>A.1. Density Contour (Animation)</u></h3>
+                                                        <b>Explanation:</b> This is just the video showing the density contour evolution with time.<br>
+                                                        <b>Results:</b><br>
+                                                        <b>Observations:</b>
+                                                    </li>
+                                                    <li>
+                                                        <h3 style="display: flex; justify-content: start;"><u>A.2. Inflow Flux V.S. Density at the Entrance</u></h3>
+                                                        <b>Explanation:</b> As suggested by the professor, I am plotting the density at the entrance (x = 0m) and the inflow flux. For each time step, I will take the average density at x = 0, and then I will take the time average of the density at each time step. This density will then be plotted for that flux and obstacle. What one would expect is to get a parabolic curve. This result will be used to ensure that the density and flux are related to each other in the same way as we are expecting. The exact derivation of the relation is given below.<br>
+                                                        <b>Results:</b><br>
+                                                        <b>Observations:</b><br>
+                                                    </li>
+                                                    <li>
+                                                        <h3 style="display: flex; justify-content: start;"><u>A.3. Inflow Rate V.S. Outflow Rate</u></h3>
+                                                        <b>Explanation:</b> Another thing that could be plotted is inflow flux vs. outflow flux. They must be the same until choking takes place. After choking, the outflow must reach some maximum value, while the inflow must be more than the outflow. Another thing that could be plotted is the number of pedestrians present in the domain with time. This will help in knowing, during choking, at what rate the density accumulates.<br>
+                                                        <b>Results:</b><br>
+                                                        <b>Observations:</b><br>
+                                                    </li>
+                                                    <li>
+                                                        <h3 style="display: flex; justify-content: start;"><u>A.4. Time of Choking V.S. Inflow Flux</u></h3>
+                                                        <b>Explanation:</b> And then the plot of the time of choking with the inflow flux for all obstacle lengths could be plotted. The results about the accumulation of density with time, along with this, could be used to know if this time could be estimated. In that case, this will be just a plot to validate and not to investigate.<br>
+                                                        <b>Results:</b><br>
+                                                        <b>Observations:</b><br>
+                                                    </li>
+                                                    <li>
+                                                        <h3 style="display: flex; justify-content: start;"><u>A.5. Flow rate at Station A and B V.S. Time</u></h3>
+                                                        <b>Explanation:</b> Another thing that is captured is the flow rate at Station A and Station B, and these values are then plotted with time. This is where the oscillation is studied. With the data about the oscillation in flow rate, we could plot the FFT graph and then the power spectral density to further study the frequency and amplitude of the oscillation and how they are related to obstacle length and inflow flux.<br>
+                                                        <b>Reults:</b><br>
+                                                        <b>Observations:</b><br>
+                                                    </li>
+                                                    <li>
+                                                        <h3 style="display: flex; justify-content: start;"><u>A.6. Phase Space Representation of flowrate at station A and B</u></h3>
+                                                        <b>Explanation</b> Another plot that could be captured is the flow rate on both sides of the obstacle, followed by plotting the phase-space representation. This is a new figure that may help.<br>
+                                                        <b>Results:</b><br>
+                                                        <b>Observations:</b><br>
+                                                    </li>
+                                                </ol>
+                                            </p>
+                                            <p>
+                                                Code that has been used to plot the above: <a href="">Link to Download</a><br><br>
+                                                Given below are the actual results.
+                                            </p>
+                                        </section>
+                                    </details>
+                                </div>
+                                <hr>
+
+                                <!--Case B-->
+                                <h4>Case B: Two Crowds intersecting Perpendicularly</h4>
+                                <div style="background-color: rgb(214, 255, 255);">
+                                    <p>In Case B, we found out that the passage width I was using was actually 2 meters short. Earlier, when I observed the reduced flow rate, I thought the problem might be with the outflow flux, or, in other words, I thought it was a problem with the solver. But it turns out that I was going wrong in setting up the length.</p>
+
+                                    <p>For that reason, I am now taking 91 points in total and scaling the 90 m dimension to these grid points. This will allow me to position the passage at the center with the correct dimensions.</p>
+                                </div>
+                                <div>
+                                    <details  style="background-color: rgb(214, 255, 255);">
+                                        <summary>Fix For Case - B</summary>
+                                        <section class="intro-card"  style="background-color: rgb(214, 255, 255);">
+                                            <p>
+                                                The work flow to generate result for this case is given below:
+                                                <center><img src="./Meeting_23/Case_B/Case_B_Workflow.png" style="width: 100%; max-width: 600px;"></center><br>
+                                                <p>The intermediate CSV data generated are provided below. These include files containing the density of Crowds A and B, the total density, the potential of Crowds A and B, and the X- and Y-velocity components of both crowds at each time step. However, these files are available only for W = 10 and 20. Due to memory constraints, I have not included the total density and potential files for the cases W = 30 and 40. GitHub Releases supports files of up to 2 GB; hence, for the case W = 40, I have stored the files on Google Drive.</p>
+                                                <center>
+                                                    <table border="1">
+                                                        <tbody>
+                                                            <tr>
+                                                                <td><b>Code - <i>Case_B.m</i></b></td>
+                                                                <td><a href="https://github.com/arushraju/Crowd-Dynamics/releases/download/v1.1/Case_C.m">Link to Download (40 KB)</a></td>
+                                                            </tr>
+                                                            <tr>
+                                                                <td><b>Passage Width 10m - W_10.zip</b></td>
+                                                                <td><a href="https://github.com/arushraju/Crowd-Dynamics/releases/download/v1.1/W_10.zip">Link to Download (1.23 GB)</a></td>
+                                                            </tr>
+                                                            <tr>
+                                                                <td><b>Passage Width 20m - W_20.zip</b></td>
+                                                                <td><a href="https://github.com/arushraju/Crowd-Dynamics/releases/download/v1.1/W_20.zip">Link to Download (1.96 GB)</a></td>
+                                                            </tr>
+                                                            <tr>
+                                                                <td><b>Passage Width 30m - W_30.zip</b></td>
+                                                                <td><a href="https://github.com/arushraju/Crowd-Dynamics/releases/download/v1.1/W_30.zip">Link to Download (1.78 GB)</a></td>
+                                                            </tr>
+                                                            <tr>
+                                                                <td><b>Passage Width 40m - W_40.zip</b></td>
+                                                                <td><a href="https://drive.google.com/file/d/1WN69qmOGGVjerK8Y1xAmcMm4LD93N0pj/view?usp=drive_link">Link to Download (2.10 GB)</a></td>
+                                                            </tr>
+                                                        </tbody>
+                                                    </table>
+                                                </center>
+                                            </p>
+                                            <p>
+                                                <p>Using the above data, I have plotted some results that I thought would be suitable for this problem. Given below are the explanations of the results, the results themselves, and the observations drawn from them.</p>
+                                                <ul>
+                                                    <li>
+                                                        <!--Density Contour-->
+                                                        <h3 style="display: flex; justify-content: start;"><u>B.1. Density Contour (Animation)</u></h3>
+
+                                                        <b>Explanation:</b> This is just a video showing the evolution of the density contour with time.<br>
+
+                                                        <b>Results:</b><br>
+                                                        Given below is the link to download the ZIP file containing all the videos of the results. The reason I have not included the videos for online viewing is that some of them are larger than 25 MB. Please let me know if this arrangement works.
                                                         <table border="1">
+                                                            <thead>
+                                                                <th>File Name</th>
+                                                                <th>Download Link</th>
+                                                            </thead>
                                                             <tbody>
                                                                 <tr>
-                                                                    <td><b>Code - Case_A.m</b></td>
-                                                                    <td><a href="https://github.com/arushraju/Crowd-Dynamics/releases/download/v1.1/Case_A.m">Link to Download (29.2 KB)</a></td>
+                                                                    <td>Case-B; W = <i>10m</i></td>
+                                                                    <td><a href="https://github.com//arushraju/Crowd-Dynamics/releases/download/v1.1_Result/Case_B_W_10_Animation.zip">Download (137 MB)</a></td>
                                                                 </tr>
                                                                 <tr>
-                                                                    <td><b>Data for 10m Obstacle - L_10.zip</b></td>
-                                                                    <td><a href="https://github.com/arushraju/Crowd-Dynamics/releases/download/v1.1/L_10.zip">Link to Download (1.4 GB)</a></td>
+                                                                    <td>Case-B; W = <i>20m</i></td>
+                                                                    <td><a href="https://github.com//arushraju/Crowd-Dynamics/releases/download/v1.1_Result/Case_B_W_20_Animation.zip">Download (133 MB)</a></td>
                                                                 </tr>
                                                                 <tr>
-                                                                    <td><b>Data for 20m Obstacle - L_20.zip</b></td>
-                                                                    <td><a href="https://github.com/arushraju/Crowd-Dynamics/releases/download/v1.1/L_20.zip">Link to Download (1.15 GB)</a></td>
+                                                                    <td>Case-B; W = <i>30m</i></td>
+                                                                    <td><a href="https://github.com//arushraju/Crowd-Dynamics/releases/download/v1.1_Result/Case_B_W_30_Animation.zip">Download (150 MB)</a></td>
                                                                 </tr>
                                                                 <tr>
-                                                                    <td><b>Data for 30m Obstacle - L_30.zip</b></td>
-                                                                    <td><a href="https://github.com/arushraju/Crowd-Dynamics/releases/download/v1.1/L_30.zip">Link to Download (420 MB)</a></td>
-                                                                </tr>
-                                                                <tr>
-                                                                    <td><b>Data for 40m Obstacle - L_40.zip</b></td>
-                                                                    <td><a href="https://github.com/arushraju/Crowd-Dynamics/releases/download/v1.1/L_40.zip">Link to Download (244 MB)</a></td>
+                                                                    <td>Case-B; W = <i>40m</i></td>
+                                                                    <td><a href="https://github.com//arushraju/Crowd-Dynamics/releases/download/v1.1_Result/Case_B_W_40_Animation.zip">Download (153 MB)</a></td>
                                                                 </tr>
                                                             </tbody>
-                                                        </table>
-                                                    </center>
-                                                    
-                                                    Using the data, I have plotted the results given below.<br>
-                                                    <ol>
-                                                        <li>
-                                                            <!--Density Contour-->
-                                                            <h3 style="display: flex; justify-content: start;"><u>A.1. Density Contour (Animation)</u></h3>
-                                                            <b>Explanation:</b> This is just the video showing the density contour evolution with time.<br>
-                                                            <b>Results:</b><br>
-                                                            <b>Observations:</b>
-                                                        </li>
-                                                        <li>
-                                                            <h3 style="display: flex; justify-content: start;"><u>A.2. Inflow Flux V.S. Density at the Entrance</u></h3>
-                                                            <b>Explanation:</b> As suggested by the professor, I am plotting the density at the entrance (x = 0m) and the inflow flux. For each time step, I will take the average density at x = 0, and then I will take the time average of the density at each time step. This density will then be plotted for that flux and obstacle. What one would expect is to get a parabolic curve. This result will be used to ensure that the density and flux are related to each other in the same way as we are expecting. The exact derivation of the relation is given below.<br>
-                                                            <b>Results:</b><br>
-                                                            <b>Observations:</b><br>
-                                                        </li>
-                                                        <li>
-                                                            <h3 style="display: flex; justify-content: start;"><u>A.3. Inflow Rate V.S. Outflow Rate</u></h3>
-                                                            <b>Explanation:</b> Another thing that could be plotted is inflow flux vs. outflow flux. They must be the same until choking takes place. After choking, the outflow must reach some maximum value, while the inflow must be more than the outflow. Another thing that could be plotted is the number of pedestrians present in the domain with time. This will help in knowing, during choking, at what rate the density accumulates.<br>
-                                                            <b>Results:</b><br>
-                                                            <b>Observations:</b><br>
-                                                        </li>
-                                                        <li>
-                                                            <h3 style="display: flex; justify-content: start;"><u>A.4. Time of Choking V.S. Inflow Flux</u></h3>
-                                                            <b>Explanation:</b> And then the plot of the time of choking with the inflow flux for all obstacle lengths could be plotted. The results about the accumulation of density with time, along with this, could be used to know if this time could be estimated. In that case, this will be just a plot to validate and not to investigate.<br>
-                                                            <b>Results:</b><br>
-                                                            <b>Observations:</b><br>
-                                                        </li>
-                                                        <li>
-                                                            <h3 style="display: flex; justify-content: start;"><u>A.5. Flow rate at Station A and B V.S. Time</u></h3>
-                                                            <b>Explanation:</b> Another thing that is captured is the flow rate at Station A and Station B, and these values are then plotted with time. This is where the oscillation is studied. With the data about the oscillation in flow rate, we could plot the FFT graph and then the power spectral density to further study the frequency and amplitude of the oscillation and how they are related to obstacle length and inflow flux.<br>
-                                                            <b>Reults:</b><br>
-                                                            <b>Observations:</b><br>
-                                                        </li>
-                                                        <li>
-                                                            <h3 style="display: flex; justify-content: start;"><u>A.6. Phase Space Representation of flowrate at station A and B</u></h3>
-                                                            <b>Explanation</b> Another plot that could be captured is the flow rate on both sides of the obstacle, followed by plotting the phase-space representation. This is a new figure that may help.<br>
-                                                            <b>Results:</b><br>
-                                                            <b>Observations:</b><br>
-                                                        </li>
-                                                    </ol>
-                                                </p>
-                                                <p>
-                                                    Code that has been used to plot the above: <a href="">Link to Download</a><br><br>
-                                                    Given below are the actual results.
-                                                </p>
-                                            </section>
-                                        </details>
-                                    </li>
-                                    <hr>
+                                                        </table><br>
+                                                        <b>Observations:</b>
+                                                    </li>
+                                                    <!--Outflow Rate vs time-->
+                                                    <li>
+                                                        <h3 style="display: flex; justify-content: start;"><u>B.2. Flow Rate at Exits (Crowds A and B) vs. Time</u></h3>
 
-                                    <!--Case B-->
-                                    <h4>Case B: Two Crowds intersecting Perpendicularly</h4>
-                                    <li style="background-color: rgb(214, 255, 255);">
-                                        <p>In case B, we found out that the passage width that I was having was actually 2 meters short. Earlier when I saw the reduced flowrate, I thought maybe the problem is with the outflow flux, or in other word, I thought it's the solver's problem. But it turns out that I was going wrong in setting up the length.</p>
+                                                        <b>Explanation:</b> Here, I have selected a section at the exit and captured the flow rate of each crowd at the exit over time for all cases, and plotted it. Due to the oscillations, I went a step further and also plotted the Fourier and power spectra of the outflow. This will help identify the dominant frequency. I have also plotted the time-averaged flow rate for all cases.
+                                                        <br>
+                                                        <b>Results:</b><br>
+                                                        <img src="./Meeting_23/Case_B/W_10/Outflow_Rate/Outflow_Rate_Lx_Ly_10.png" style="width: 49%; min-width: 200px;">
+                                                        <img src="./Meeting_23/Case_B/W_20/Outflow_Rate/Outflow_Rate_Lx_Ly_20.png" style="width: 49%; min-width: 200px;">
+                                                        <img src="./Meeting_23/Case_B/W_30/Outflow_Rate/Outflow_Rate_Lx_Ly_30.png" style="width: 49%; min-width: 200px;">
+                                                        <img src="./Meeting_23/Case_B/W_40/Outflow_Rate/Outflow_Rate_Lx_Ly_40.png" style="width: 49%; min-width: 200px;"><br>
+                                                        <b>Observation:</b><br>
+                                                    </li>
+                                                    <!--Cross Correlation-->
+                                                    <li>
+                                                        <h3 style="display: flex; justify-content: start;"><u>B.3. Cross-Correlation Between the Two Crowd Outflows</u></h3>
 
-                                        <p>For that reason now I am taking 91 points in total and will scale the dimension of 90m to these grid points. And now I will be able to situate the passage at the center with the right dimension.</p>
-                                    </li>
-                                    <li>
-                                        <details  style="background-color: rgb(214, 255, 255);">
-                                            <summary>Fix For Case - B</summary>
-                                            <section class="intro-card"  style="background-color: rgb(214, 255, 255);">
-                                                <p>
-                                                    The work flow to generate result for this case is given below:
-                                                    <center><img src="./Meeting_23/Case_B/Case_B_Workflow.png" style="width: 100%; max-width: 600px;"></center><br>
-                                                    The intermediate CSV data that is generated is given below. In here there are files for Density of A and B and Total Density, and Potential of A and B and X and Y velocity at A and B crowd, at each time step. But these are just for W = 10 and 20. Due to memory issue, I have not included the total density and the potential for the case W = 30 and 40. (Github releases supports file size no more than 2GB, hence for the case W = 40, i have stored it in a online google drive)<br>
-                                                    <center>
-                                                        <table border="1">
-                                                            <tbody>
-                                                                <tr>
-                                                                    <td><b>Code - <i>Case_B.m</i></b></td>
-                                                                    <td><a href="https://github.com/arushraju/Crowd-Dynamics/releases/download/v1.1/Case_C.m">Link to Download (40 KB)</a></td>
-                                                                </tr>
-                                                                <tr>
-                                                                    <td><b>Passage Width 10m - W_10.zip</b></td>
-                                                                    <td><a href="https://github.com/arushraju/Crowd-Dynamics/releases/download/v1.1/W_10.zip">Link to Download (1.23 GB)</a></td>
-                                                                </tr>
-                                                                <tr>
-                                                                    <td><b>Passage Width 20m - W_20.zip</b></td>
-                                                                    <td><a href="https://github.com/arushraju/Crowd-Dynamics/releases/download/v1.1/W_20.zip">Link to Download (1.96 GB)</a></td>
-                                                                </tr>
-                                                                <tr>
-                                                                    <td><b>Passage Width 30m - W_30.zip</b></td>
-                                                                    <td><a href="https://github.com/arushraju/Crowd-Dynamics/releases/download/v1.1/W_30.zip">Link to Download (1.78 GB)</a></td>
-                                                                </tr>
-                                                                <tr>
-                                                                    <td><b>Passage Width 40m - W_40.zip</b></td>
-                                                                    <td><a href="https://drive.google.com/file/d/1WN69qmOGGVjerK8Y1xAmcMm4LD93N0pj/view?usp=drive_link">Link to Download (2.10 GB)</a></td>
-                                                                </tr>
-                                                            </tbody>
-                                                        </table>
-                                                    </center>
-                                                </p>
-                                                <p>
-                                                    Using the abive data I have ploted some results, which I though would suit this problem. Given below are the explanation of results, the results itself and the observations from them.<br>
-                                                    <ul>
-                                                        <li>
-                                                            <!--Density Contour-->
-                                                            <h3 style="display: flex; justify-content: start;"><u>B.1. Density Contour (Animation)</u></h3>
-                                                            <b>Explanation:</b> This is just the video showing the density contour evolution with time.<br>
-                                                            <b>Results:</b><br>
-                                                            Given below is the link to install the zip file that contians all the videos of the results. The reason why I have not included the video to be viewed online is becasue some of them hve size more than 25MB. Please let me know if this arrangement works.<br>
+                                                        <b>Explanation:</b> Using the flow rates obtained for both crowds, I have plotted their cross-correlation to understand whether the two crowds move in phase with each other.<br>
+
+                                                        <b>Results:</b><br>
+                                                        <img src="./Meeting_23/Case_B/Correlation/Cross_Correlation_Lx_Ly_10.png" style="width: 49%; min-width: 200px;">
+                                                        <img src="./Meeting_23/Case_B/Correlation/Cross_Correlation_Lx_Ly_20.png" style="width: 49%; min-width: 200px;">
+                                                        <img src="./Meeting_23/Case_B/Correlation/Cross_Correlation_Lx_Ly_30.png" style="width: 49%; min-width: 200px;">
+                                                        <img src="./Meeting_23/Case_B/Correlation/Cross_Correlation_Lx_Ly_40.png" style="width: 49%; min-width: 200px;"><br>
+                                                        <b>Observations:</b><br>
+                                                    </li>
+                                                    <!--Spacio Temporal Density-->
+                                                    <li>
+                                                        <h3 style="display: flex; justify-content: start;"><u>B.4. Spatio-Temporal Density Diagram</u></h3>
+
+                                                        <b>Explanation:</b> I have taken the horizontal and vertical centerlines and plotted the density along these cross-sections over time. This was done to understand the interaction between the two crowds. I have also considered a diagonal line passing through the junction, along which the density is recorded over time. For more details, I have provided a diagram below:
+
+                                                        <center><img src="./Meeting_23/Case_B/Cross_Sections.jpg" style="width: 100%; min-width: 250px; max-width: 500px;"></center>
+
+                                                        <br>
+                                                        <b>Results:</b><br>
+                                                        <div style="overflow-x: scroll;">
                                                             <table border="1">
                                                                 <thead>
-                                                                    <th>File Name</th>
-                                                                    <th>Download Link</th>
+                                                                    <th></th>
+                                                                    <th>F = 0.5</th>
+                                                                    <th>F = 1.0</th>
+                                                                    <th>F = 1.5</th>
+                                                                    <th>F = 2.0</th>
+                                                                    <th>F = 2.5</th>
+                                                                    <th>F = 3.0</th>
+                                                                    <th>F = 3.5</th>
+                                                                    <th>F = 4.0</th>
+                                                                    <th>F = 4.5</th>
+                                                                    <th>F = 5.0</th>
                                                                 </thead>
                                                                 <tbody>
+                                                                    <!--L = 10-->
                                                                     <tr>
-                                                                        <td>Case-B; W = <i>10m</i></td>
-                                                                        <td><a href="https://github.com//arushraju/Crowd-Dynamics/releases/download/v1.1_Result/Case_B_W_10_Animation.zip">Download (137 MB)</a></td>
+                                                                        <td style="white-space: nowrap;"><b>Lx = Ly = 10</b></td>
+                                                                        <td><img src="./Meeting_23/Case_B/W_10/SpatioTemporal/SpatioTemporal_Lx_Ly_10_F_0.50.png" style="width: 200px;"></td>
+                                                                        <td><img src="./Meeting_23/Case_B/W_10/SpatioTemporal/SpatioTemporal_Lx_Ly_10_F_1.00.png" style="width: 200px;"></td>
+                                                                        <td><img src="./Meeting_23/Case_B/W_10/SpatioTemporal/SpatioTemporal_Lx_Ly_10_F_1.50.png" style="width: 200px;"></td>
+                                                                        <td><img src="./Meeting_23/Case_B/W_10/SpatioTemporal/SpatioTemporal_Lx_Ly_10_F_2.00.png" style="width: 200px;"></td>
+                                                                        <td><img src="./Meeting_23/Case_B/W_10/SpatioTemporal/SpatioTemporal_Lx_Ly_10_F_2.50.png" style="width: 200px;"></td>
+                                                                        <td><img src="./Meeting_23/Case_B/W_10/SpatioTemporal/SpatioTemporal_Lx_Ly_10_F_3.00.png" style="width: 200px;"></td>
+                                                                        <td><img src="./Meeting_23/Case_B/W_10/SpatioTemporal/SpatioTemporal_Lx_Ly_10_F_3.50.png" style="width: 200px;"></td>
+                                                                        <td><img src="./Meeting_23/Case_B/W_10/SpatioTemporal/SpatioTemporal_Lx_Ly_10_F_4.00.png" style="width: 200px;"></td>
+                                                                        <td><img src="./Meeting_23/Case_B/W_10/SpatioTemporal/SpatioTemporal_Lx_Ly_10_F_4.50.png" style="width: 200px;"></td>
+                                                                        <td><img src="./Meeting_23/Case_B/W_10/SpatioTemporal/SpatioTemporal_Lx_Ly_10_F_5.00.png" style="width: 200px;"></td>
                                                                     </tr>
+                                                                    <!--L = 20-->
                                                                     <tr>
-                                                                        <td>Case-B; W = <i>20m</i></td>
-                                                                        <td><a href="https://github.com//arushraju/Crowd-Dynamics/releases/download/v1.1_Result/Case_B_W_20_Animation.zip">Download (133 MB)</a></td>
+                                                                        <td style="white-space: nowrap;"><b>Lx = Ly = 20</b></td>
+                                                                        <td><img src="./Meeting_23/Case_B/W_20/SpatioTemporal/SpatioTemporal_Lx_Ly_20_F_0.50.png" style="width: 200px;"></td>
+                                                                        <td><img src="./Meeting_23/Case_B/W_20/SpatioTemporal/SpatioTemporal_Lx_Ly_20_F_1.00.png" style="width: 200px;"></td>
+                                                                        <td><img src="./Meeting_23/Case_B/W_20/SpatioTemporal/SpatioTemporal_Lx_Ly_20_F_1.50.png" style="width: 200px;"></td>
+                                                                        <td><img src="./Meeting_23/Case_B/W_20/SpatioTemporal/SpatioTemporal_Lx_Ly_20_F_2.00.png" style="width: 200px;"></td>
+                                                                        <td><img src="./Meeting_23/Case_B/W_20/SpatioTemporal/SpatioTemporal_Lx_Ly_20_F_2.50.png" style="width: 200px;"></td>
+                                                                        <td><img src="./Meeting_23/Case_B/W_20/SpatioTemporal/SpatioTemporal_Lx_Ly_20_F_3.00.png" style="width: 200px;"></td>
+                                                                        <td><img src="./Meeting_23/Case_B/W_20/SpatioTemporal/SpatioTemporal_Lx_Ly_20_F_3.50.png" style="width: 200px;"></td>
+                                                                        <td><img src="./Meeting_23/Case_B/W_20/SpatioTemporal/SpatioTemporal_Lx_Ly_20_F_4.00.png" style="width: 200px;"></td>
+                                                                        <td><img src="./Meeting_23/Case_B/W_20/SpatioTemporal/SpatioTemporal_Lx_Ly_20_F_4.50.png" style="width: 200px;"></td>
+                                                                        <td><img src="./Meeting_23/Case_B/W_20/SpatioTemporal/SpatioTemporal_Lx_Ly_20_F_5.00.png" style="width: 200px;"></td>
                                                                     </tr>
+                                                                    <!--L = 30-->
                                                                     <tr>
-                                                                        <td>Case-B; W = <i>30m</i></td>
-                                                                        <td><a href="https://github.com//arushraju/Crowd-Dynamics/releases/download/v1.1_Result/Case_B_W_30_Animation.zip">Download (150 MB)</a></td>
+                                                                        <td style="white-space: nowrap;"><b>Lx = Ly = 30</b></td>
+                                                                        <td><img src="./Meeting_23/Case_B/W_30/SpatioTemporal/SpatioTemporal_Lx_Ly_30_F_0.50.png" style="width: 200px;"></td>
+                                                                        <td><img src="./Meeting_23/Case_B/W_30/SpatioTemporal/SpatioTemporal_Lx_Ly_30_F_1.00.png" style="width: 200px;"></td>
+                                                                        <td><img src="./Meeting_23/Case_B/W_30/SpatioTemporal/SpatioTemporal_Lx_Ly_30_F_1.50.png" style="width: 200px;"></td>
+                                                                        <td><img src="./Meeting_23/Case_B/W_30/SpatioTemporal/SpatioTemporal_Lx_Ly_30_F_2.00.png" style="width: 200px;"></td>
+                                                                        <td><img src="./Meeting_23/Case_B/W_30/SpatioTemporal/SpatioTemporal_Lx_Ly_30_F_2.50.png" style="width: 200px;"></td>
+                                                                        <td><img src="./Meeting_23/Case_B/W_30/SpatioTemporal/SpatioTemporal_Lx_Ly_30_F_3.00.png" style="width: 200px;"></td>
+                                                                        <td><img src="./Meeting_23/Case_B/W_30/SpatioTemporal/SpatioTemporal_Lx_Ly_30_F_3.50.png" style="width: 200px;"></td>
+                                                                        <td><img src="./Meeting_23/Case_B/W_30/SpatioTemporal/SpatioTemporal_Lx_Ly_30_F_4.00.png" style="width: 200px;"></td>
+                                                                        <td><img src="./Meeting_23/Case_B/W_30/SpatioTemporal/SpatioTemporal_Lx_Ly_30_F_4.50.png" style="width: 200px;"></td>
+                                                                        <td><img src="./Meeting_23/Case_B/W_30/SpatioTemporal/SpatioTemporal_Lx_Ly_30_F_5.00.png" style="width: 200px;"></td>
                                                                     </tr>
+                                                                    <!--L = 40-->
                                                                     <tr>
-                                                                        <td>Case-B; W = <i>40m</i></td>
-                                                                        <td><a href="https://github.com//arushraju/Crowd-Dynamics/releases/download/v1.1_Result/Case_B_W_40_Animation.zip">Download (153 MB)</a></td>
+                                                                        <td style="white-space: nowrap;"><b>Lx = Ly = 40</b></td>
+                                                                        <td><img src="./Meeting_23/Case_B/W_40/SpatioTemporal/SpatioTemporal_Lx_Ly_40_F_0.50.png" style="width: 200px;"></td>
+                                                                        <td><img src="./Meeting_23/Case_B/W_40/SpatioTemporal/SpatioTemporal_Lx_Ly_40_F_1.00.png" style="width: 200px;"></td>
+                                                                        <td><img src="./Meeting_23/Case_B/W_40/SpatioTemporal/SpatioTemporal_Lx_Ly_40_F_1.50.png" style="width: 200px;"></td>
+                                                                        <td><img src="./Meeting_23/Case_B/W_40/SpatioTemporal/SpatioTemporal_Lx_Ly_40_F_2.00.png" style="width: 200px;"></td>
+                                                                        <td><img src="./Meeting_23/Case_B/W_40/SpatioTemporal/SpatioTemporal_Lx_Ly_40_F_2.50.png" style="width: 200px;"></td>
+                                                                        <td><img src="./Meeting_23/Case_B/W_40/SpatioTemporal/SpatioTemporal_Lx_Ly_40_F_3.00.png" style="width: 200px;"></td>
+                                                                        <td><img src="./Meeting_23/Case_B/W_40/SpatioTemporal/SpatioTemporal_Lx_Ly_40_F_3.50.png" style="width: 200px;"></td>
+                                                                        <td><img src="./Meeting_23/Case_B/W_40/SpatioTemporal/SpatioTemporal_Lx_Ly_40_F_4.00.png" style="width: 200px;"></td>
+                                                                        <td><img src="./Meeting_23/Case_B/W_40/SpatioTemporal/SpatioTemporal_Lx_Ly_40_F_4.50.png" style="width: 200px;"></td>
+                                                                        <td><img src="./Meeting_23/Case_B/W_40/SpatioTemporal/SpatioTemporal_Lx_Ly_40_F_5.00.png" style="width: 200px;"></td>
                                                                     </tr>
                                                                 </tbody>
                                                             </table><br>
-                                                            <b>Observations:</b>
-                                                        </li>
-                                                        <!--Outflow Rate vs time-->
-                                                        <li>
-                                                            <h3 style="display: flex; justify-content: start;"><u>B.2. Flow rate at Exits (Crowd A and B) V.S. Time</u></h3>
-                                                            <b>Explanation:</b> Here i ahve selected a section at the exit and have captured the flowrate of each crowd at the exit at all time for all cases, and plotted it. Dues to oscillations, I went a step further and also plotted Fourier and Power Spectrum of the outflow. This will help in finding the dominant frequency. I have also plotted the time averaged flowrate for all the cases.<br>
-                                                            <b>Results:</b><br>
-                                                            <img src="./Meeting_23/Case_B/W_10/Outflow_Rate/Outflow_Rate_Lx_Ly_10.png" style="width: 49%; min-width: 200px;">
-                                                            <img src="./Meeting_23/Case_B/W_20/Outflow_Rate/Outflow_Rate_Lx_Ly_20.png" style="width: 49%; min-width: 200px;">
-                                                            <img src="./Meeting_23/Case_B/W_30/Outflow_Rate/Outflow_Rate_Lx_Ly_30.png" style="width: 49%; min-width: 200px;">
-                                                            <img src="./Meeting_23/Case_B/W_40/Outflow_Rate/Outflow_Rate_Lx_Ly_40.png" style="width: 49%; min-width: 200px;"><br>
-                                                            <b>Observation:</b><br>
-                                                        </li>
-                                                        <!--Cross Correlation-->
-                                                        <li>
-                                                            <h3 style="display: flex; justify-content: start;"><u>B.3. Cross-Corelation between the two crowd outflow</u></h3>
-                                                            <b>Explanation:</b> From the flow rate that are obtanied for both the crowd to understand if the crowd move in phase or not, I have plotted the co-relation of both the crowd.<br>
-                                                            <b>Results:</b><br>
-                                                            <img src="./Meeting_23/Case_B/Correlation/Cross_Correlation_Lx_Ly_10.png" style="width: 49%; min-width: 200px;">
-                                                            <img src="./Meeting_23/Case_B/Correlation/Cross_Correlation_Lx_Ly_20.png" style="width: 49%; min-width: 200px;">
-                                                            <img src="./Meeting_23/Case_B/Correlation/Cross_Correlation_Lx_Ly_30.png" style="width: 49%; min-width: 200px;">
-                                                            <img src="./Meeting_23/Case_B/Correlation/Cross_Correlation_Lx_Ly_40.png" style="width: 49%; min-width: 200px;"><br>
-                                                            <b>Observations:</b><br>
-                                                        </li>
-                                                        <!--Spacio Temporal Density-->
-                                                        <li>
-                                                            <h3 style="display: flex; justify-content: start;"><u>B.4. Spacio-Temporal Density Diagram</u></h3>
-                                                            <b>Explanation:</b> I have taken a horizontal and vertical centerline and have plotted the density at these cross-section at all time. This was done to unerstand the interaction of both the crowd. There is also the line passing diagonally to the junction where the density with time will be recorded. For more details I have provided a diagram below:
-                                                            <center><img src="./Meeting_23/Case_B/Cross_Sections.jpg" style="width: 100%; min-width: 250px; max-width: 500px;"></center>
-                                                            <br>
-                                                            <b>Results:</b><br>
-                                                            <div style="overflow-x: scroll;">
-                                                                <table border="1">
-                                                                    <thead>
-                                                                        <th></th>
-                                                                        <th>F = 0.5</th>
-                                                                        <th>F = 1.0</th>
-                                                                        <th>F = 1.5</th>
-                                                                        <th>F = 2.0</th>
-                                                                        <th>F = 2.5</th>
-                                                                        <th>F = 3.0</th>
-                                                                        <th>F = 3.5</th>
-                                                                        <th>F = 4.0</th>
-                                                                        <th>F = 4.5</th>
-                                                                        <th>F = 5.0</th>
-                                                                    </thead>
-                                                                    <tbody>
-                                                                        <!--L = 10-->
-                                                                        <tr>
-                                                                            <td style="white-space: nowrap;"><b>Lx = Ly = 10</b></td>
-                                                                            <td><img src="./Meeting_23/Case_B/W_10/SpatioTemporal/SpatioTemporal_Lx_Ly_10_F_0.50.png" style="width: 200px;"></td>
-                                                                            <td><img src="./Meeting_23/Case_B/W_10/SpatioTemporal/SpatioTemporal_Lx_Ly_10_F_1.00.png" style="width: 200px;"></td>
-                                                                            <td><img src="./Meeting_23/Case_B/W_10/SpatioTemporal/SpatioTemporal_Lx_Ly_10_F_1.50.png" style="width: 200px;"></td>
-                                                                            <td><img src="./Meeting_23/Case_B/W_10/SpatioTemporal/SpatioTemporal_Lx_Ly_10_F_2.00.png" style="width: 200px;"></td>
-                                                                            <td><img src="./Meeting_23/Case_B/W_10/SpatioTemporal/SpatioTemporal_Lx_Ly_10_F_2.50.png" style="width: 200px;"></td>
-                                                                            <td><img src="./Meeting_23/Case_B/W_10/SpatioTemporal/SpatioTemporal_Lx_Ly_10_F_3.00.png" style="width: 200px;"></td>
-                                                                            <td><img src="./Meeting_23/Case_B/W_10/SpatioTemporal/SpatioTemporal_Lx_Ly_10_F_3.50.png" style="width: 200px;"></td>
-                                                                            <td><img src="./Meeting_23/Case_B/W_10/SpatioTemporal/SpatioTemporal_Lx_Ly_10_F_4.00.png" style="width: 200px;"></td>
-                                                                            <td><img src="./Meeting_23/Case_B/W_10/SpatioTemporal/SpatioTemporal_Lx_Ly_10_F_4.50.png" style="width: 200px;"></td>
-                                                                            <td><img src="./Meeting_23/Case_B/W_10/SpatioTemporal/SpatioTemporal_Lx_Ly_10_F_5.00.png" style="width: 200px;"></td>
-                                                                        </tr>
-                                                                        <!--L = 20-->
-                                                                        <tr>
-                                                                            <td style="white-space: nowrap;"><b>Lx = Ly = 20</b></td>
-                                                                            <td><img src="./Meeting_23/Case_B/W_20/SpatioTemporal/SpatioTemporal_Lx_Ly_20_F_0.50.png" style="width: 200px;"></td>
-                                                                            <td><img src="./Meeting_23/Case_B/W_20/SpatioTemporal/SpatioTemporal_Lx_Ly_20_F_1.00.png" style="width: 200px;"></td>
-                                                                            <td><img src="./Meeting_23/Case_B/W_20/SpatioTemporal/SpatioTemporal_Lx_Ly_20_F_1.50.png" style="width: 200px;"></td>
-                                                                            <td><img src="./Meeting_23/Case_B/W_20/SpatioTemporal/SpatioTemporal_Lx_Ly_20_F_2.00.png" style="width: 200px;"></td>
-                                                                            <td><img src="./Meeting_23/Case_B/W_20/SpatioTemporal/SpatioTemporal_Lx_Ly_20_F_2.50.png" style="width: 200px;"></td>
-                                                                            <td><img src="./Meeting_23/Case_B/W_20/SpatioTemporal/SpatioTemporal_Lx_Ly_20_F_3.00.png" style="width: 200px;"></td>
-                                                                            <td><img src="./Meeting_23/Case_B/W_20/SpatioTemporal/SpatioTemporal_Lx_Ly_20_F_3.50.png" style="width: 200px;"></td>
-                                                                            <td><img src="./Meeting_23/Case_B/W_20/SpatioTemporal/SpatioTemporal_Lx_Ly_20_F_4.00.png" style="width: 200px;"></td>
-                                                                            <td><img src="./Meeting_23/Case_B/W_20/SpatioTemporal/SpatioTemporal_Lx_Ly_20_F_4.50.png" style="width: 200px;"></td>
-                                                                            <td><img src="./Meeting_23/Case_B/W_20/SpatioTemporal/SpatioTemporal_Lx_Ly_20_F_5.00.png" style="width: 200px;"></td>
-                                                                        </tr>
-                                                                        <!--L = 30-->
-                                                                        <tr>
-                                                                            <td style="white-space: nowrap;"><b>Lx = Ly = 30</b></td>
-                                                                            <td><img src="./Meeting_23/Case_B/W_30/SpatioTemporal/SpatioTemporal_Lx_Ly_30_F_0.50.png" style="width: 200px;"></td>
-                                                                            <td><img src="./Meeting_23/Case_B/W_30/SpatioTemporal/SpatioTemporal_Lx_Ly_30_F_1.00.png" style="width: 200px;"></td>
-                                                                            <td><img src="./Meeting_23/Case_B/W_30/SpatioTemporal/SpatioTemporal_Lx_Ly_30_F_1.50.png" style="width: 200px;"></td>
-                                                                            <td><img src="./Meeting_23/Case_B/W_30/SpatioTemporal/SpatioTemporal_Lx_Ly_30_F_2.00.png" style="width: 200px;"></td>
-                                                                            <td><img src="./Meeting_23/Case_B/W_30/SpatioTemporal/SpatioTemporal_Lx_Ly_30_F_2.50.png" style="width: 200px;"></td>
-                                                                            <td><img src="./Meeting_23/Case_B/W_30/SpatioTemporal/SpatioTemporal_Lx_Ly_30_F_3.00.png" style="width: 200px;"></td>
-                                                                            <td><img src="./Meeting_23/Case_B/W_30/SpatioTemporal/SpatioTemporal_Lx_Ly_30_F_3.50.png" style="width: 200px;"></td>
-                                                                            <td><img src="./Meeting_23/Case_B/W_30/SpatioTemporal/SpatioTemporal_Lx_Ly_30_F_4.00.png" style="width: 200px;"></td>
-                                                                            <td><img src="./Meeting_23/Case_B/W_30/SpatioTemporal/SpatioTemporal_Lx_Ly_30_F_4.50.png" style="width: 200px;"></td>
-                                                                            <td><img src="./Meeting_23/Case_B/W_30/SpatioTemporal/SpatioTemporal_Lx_Ly_30_F_5.00.png" style="width: 200px;"></td>
-                                                                        </tr>
-                                                                        <!--L = 40-->
-                                                                        <tr>
-                                                                            <td style="white-space: nowrap;"><b>Lx = Ly = 40</b></td>
-                                                                            <td><img src="./Meeting_23/Case_B/W_40/SpatioTemporal/SpatioTemporal_Lx_Ly_40_F_0.50.png" style="width: 200px;"></td>
-                                                                            <td><img src="./Meeting_23/Case_B/W_40/SpatioTemporal/SpatioTemporal_Lx_Ly_40_F_1.00.png" style="width: 200px;"></td>
-                                                                            <td><img src="./Meeting_23/Case_B/W_40/SpatioTemporal/SpatioTemporal_Lx_Ly_40_F_1.50.png" style="width: 200px;"></td>
-                                                                            <td><img src="./Meeting_23/Case_B/W_40/SpatioTemporal/SpatioTemporal_Lx_Ly_40_F_2.00.png" style="width: 200px;"></td>
-                                                                            <td><img src="./Meeting_23/Case_B/W_40/SpatioTemporal/SpatioTemporal_Lx_Ly_40_F_2.50.png" style="width: 200px;"></td>
-                                                                            <td><img src="./Meeting_23/Case_B/W_40/SpatioTemporal/SpatioTemporal_Lx_Ly_40_F_3.00.png" style="width: 200px;"></td>
-                                                                            <td><img src="./Meeting_23/Case_B/W_40/SpatioTemporal/SpatioTemporal_Lx_Ly_40_F_3.50.png" style="width: 200px;"></td>
-                                                                            <td><img src="./Meeting_23/Case_B/W_40/SpatioTemporal/SpatioTemporal_Lx_Ly_40_F_4.00.png" style="width: 200px;"></td>
-                                                                            <td><img src="./Meeting_23/Case_B/W_40/SpatioTemporal/SpatioTemporal_Lx_Ly_40_F_4.50.png" style="width: 200px;"></td>
-                                                                            <td><img src="./Meeting_23/Case_B/W_40/SpatioTemporal/SpatioTemporal_Lx_Ly_40_F_5.00.png" style="width: 200px;"></td>
-                                                                        </tr>
-                                                                    </tbody>
-                                                                </table><br>
-                                                                Link to download the domuinanat frequnecy data and correlation: <a href="./Meeting_23/Case_B/Summary_Dominant_Frequency_and_Correlation.csv">Download Link</a>
-                                                            </div>
-                                                            <b>Observations:</b><br>
-                                                        </li>
-                                                        <!--Congestion Area-->
-                                                        <li>
-                                                            <h3 style="display: flex; justify-content: start;"><u>B.5. Congestion Area V.S. Time</u></h3>
-                                                            <b>Explanation:</b> This plot would help to understand how does the area of density more than certain threshold density increase or decrease. This could help to understand the sevearity of the crowd at the junction. The picture given below shows the region where the congestion is calculated<br>
-                                                            <center><img src="./Meeting_23/Case_B/Area_of_Interest.jpg" width="200px"></center><br>
-                                                            <b>Results:</b><br>
-                                                            <img src="./Meeting_23/Case_B/W_10/Congestion/Congestion_Area_Rho_5.0_Lx_Ly_10.png" style="width: 49%; min-width: 200px;">
-                                                            <img src="./Meeting_23/Case_B/W_10/Congestion/Congestion_Area_Rho_8.0_Lx_Ly_10.png" style="width: 49%; min-width: 200px;">
-                                                            <img src="./Meeting_23/Case_B/W_20/Congestion/Congestion_Area_Rho_5.0_Lx_Ly_20.png" style="width: 49%; min-width: 200px;">
-                                                            <img src="./Meeting_23/Case_B/W_20/Congestion/Congestion_Area_Rho_8.0_Lx_Ly_20.png" style="width: 49%; min-width: 200px;">
-                                                            <img src="./Meeting_23/Case_B/W_30/Congestion/Congestion_Area_Rho_5.0_Lx_Ly_30.png" style="width: 49%; min-width: 200px;">
-                                                            <img src="./Meeting_23/Case_B/W_30/Congestion/Congestion_Area_Rho_8.0_Lx_Ly_30.png" style="width: 49%; min-width: 200px;">
-                                                            <img src="./Meeting_23/Case_B/W_40/Congestion/Congestion_Area_Rho_5.0_Lx_Ly_40.png" style="width: 49%; min-width: 200px;">
-                                                            <img src="./Meeting_23/Case_B/W_40/Congestion/Congestion_Area_Rho_8.0_Lx_Ly_40.png" style="width: 49%; min-width: 200px;">
-                                                            <br>
-                                                            <b>Observations:</b><br>
-                                                        </li>
-                                                        <!--Total Population-->
-                                                        <li>
-                                                            <h3 style="display: flex; justify-content: start;"><u>B.6. Total population at the junction with time</u></h3>
-                                                            <b>Explanation:</b> This plot will help to understand how does the crowd accumulates at the time of choking. What coud be studied is rate at which the crowd accumulates and also to find if there is a specific number of pedestrain for all cases at which choking occurs. This too is studied at the junction only.<br>
-                                                            <b>Results:</b><br>
-                                                            <img src="./Meeting_23/Case_B/W_10/Population/Junction_Population_Lx_Ly_10.png" style="width: 49%; min-width: 200px;">
-                                                            <img src="./Meeting_23/Case_B/W_20/Population/Junction_Population_Lx_Ly_20.png" style="width: 49%; min-width: 200px;">
-                                                            <img src="./Meeting_23/Case_B/W_30/Population/Junction_Population_Lx_Ly_30.png" style="width: 49%; min-width: 200px;">
-                                                            <img src="./Meeting_23/Case_B/W_40/Population/Junction_Population_Lx_Ly_40.png" style="width: 49%; min-width: 200px;"><br>
-                                                            <b>Observations:</b><br>
-                                                        </li>
-                                                        <!--Time of Choking-->
-                                                        <li>
-                                                            <h3 style="display: flex; justify-content: start;">B.7. Time of Chocking V.S. Inflow Flux</h3>
-                                                            <b>Explanation:</b> Given an inflow flux that is greater than Critical flux, when increased will make the process of Choking faster. So intuitively increasing the inflow flux will reduce the tiem of choking. And the same is plotted.<br>
-                                                            <b>Results:</b><br>
-                                                            <center><img src="./Meeting_23/Case_B/Choking_Time_Comparison.png" style="width: 100%; max-width: 500px;"></center><br>
-                                                            Here is the link to download the CSV data: <a href="./Meeting_23/Case_B/Choking_Time_Comparison.png">Download Link</a><br>
-                                                            <b>Observations:</b><br>
-                                                        </li>
-                                                    </ul>
-                                                </p>
-                                                <p>
-                                                    Following is the link to code that was used to plot the above results: <a href="./Meeting_23/Case_B/Result_B.m">Link to Download</a>
-                                                </p>
-                                            </section>
-                                        </details>
-                                    </li>
-                                    <hr>
+                                                            Link to download the domuinanat frequnecy data and correlation: <a href="./Meeting_23/Case_B/Summary_Dominant_Frequency_and_Correlation.csv">Download Link</a>
+                                                        </div>
+                                                        <b>Observations:</b><br>
+                                                    </li>
+                                                    <!--Congestion Area-->
+                                                    <li>
+                                                        <h3 style="display: flex; justify-content: start;"><u>B.5. Congestion Area vs. Time</u></h3>
 
-                                    <!--Case C-->
-                                    <h4>Case C: Two Crowd exchanging from same door</h4>
-                                    <li style="background-color: rgb(214, 255, 219);">
-                                        <p>Here the problem was that I was stopping the simulation as soon as the density reaches more than Jam Density at any point in the domain. And it is because of this, I get choking time to be very unstable. What I could do is keep the simulation going even after the crowd is jammed at some point in the domain. But I have done that in the past and found that the results blew up. So I will have to come up with some way to model situation, where even after Jam Density is reached, the simulation handles that situation without blowing up and continue producing sensible results.</p>
+                                                        <b>Explanation:</b> This plot would help us understand how the area with a density greater than a certain threshold density increases or decreases over time. This could help us understand the severity of congestion at the junction. The picture given below shows the region over which the congestion is calculated.<br>
 
-                                        <p>
-                                            This problem was inspired by crowd exchanging through local trains. Sir, also said that there are infact possiblity of crowd getting crammed into small space at some region and the rest are still able to move and exchange through the doors.
-                                        </p>
-                                    </li>
-                                    <li>
-                                        <details style="background-color: rgb(214, 255, 219);">
-                                            <summary>Fix for Case C</summary>
-                                            <section style="background-color: rgb(214, 255, 219);" class="intro-card">
-                                                And as the previous two cases, I have changed the workflow of the code. And it is given below:<br>
-                                                <center><img src="./Meeting_23/Case_C/Case_C_Workflow.png" style="width: 100%; max-width: 600px;"></center>
+                                                        <center><img src="./Meeting_23/Case_B/Area_of_Interest.jpg" width="200px"></center><br>
+
+                                                        <b>Results:</b><br>
+                                                        <img src="./Meeting_23/Case_B/W_10/Congestion/Congestion_Area_Rho_5.0_Lx_Ly_10.png" style="width: 49%; min-width: 200px;">
+                                                        <img src="./Meeting_23/Case_B/W_10/Congestion/Congestion_Area_Rho_8.0_Lx_Ly_10.png" style="width: 49%; min-width: 200px;">
+                                                        <img src="./Meeting_23/Case_B/W_20/Congestion/Congestion_Area_Rho_5.0_Lx_Ly_20.png" style="width: 49%; min-width: 200px;">
+                                                        <img src="./Meeting_23/Case_B/W_20/Congestion/Congestion_Area_Rho_8.0_Lx_Ly_20.png" style="width: 49%; min-width: 200px;">
+                                                        <img src="./Meeting_23/Case_B/W_30/Congestion/Congestion_Area_Rho_5.0_Lx_Ly_30.png" style="width: 49%; min-width: 200px;">
+                                                        <img src="./Meeting_23/Case_B/W_30/Congestion/Congestion_Area_Rho_8.0_Lx_Ly_30.png" style="width: 49%; min-width: 200px;">
+                                                        <img src="./Meeting_23/Case_B/W_40/Congestion/Congestion_Area_Rho_5.0_Lx_Ly_40.png" style="width: 49%; min-width: 200px;">
+                                                        <img src="./Meeting_23/Case_B/W_40/Congestion/Congestion_Area_Rho_8.0_Lx_Ly_40.png" style="width: 49%; min-width: 200px;">
+                                                        <br>
+                                                        <b>Observations:</b><br>
+                                                    </li>
+                                                    <!--Total Population-->
+                                                    <li>
+                                                        <h3 style="display: flex; justify-content: start;"><u>B.6. Total Population at the Junction vs. Time</u></h3>
+
+                                                        <b>Explanation:</b> This plot will help us understand how the crowd accumulates during choking. What could be studied is the rate at which the crowd accumulates and whether there is a specific number of pedestrians at which choking occurs for all cases. This is also studied only at the junction.<br>
+
+                                                        <b>Results:</b><br>
+                                                        <img src="./Meeting_23/Case_B/W_10/Population/Junction_Population_Lx_Ly_10.png" style="width: 49%; min-width: 200px;">
+                                                        <img src="./Meeting_23/Case_B/W_20/Population/Junction_Population_Lx_Ly_20.png" style="width: 49%; min-width: 200px;">
+                                                        <img src="./Meeting_23/Case_B/W_30/Population/Junction_Population_Lx_Ly_30.png" style="width: 49%; min-width: 200px;">
+                                                        <img src="./Meeting_23/Case_B/W_40/Population/Junction_Population_Lx_Ly_40.png" style="width: 49%; min-width: 200px;"><br>
+                                                        <b>Observations:</b><br>
+                                                    </li>
+                                                    <!--Time of Choking-->
+                                                    <li>
+                                                        <h3 style="display: flex; justify-content: start;">B.7. Time of Choking vs. Inflow Flux</h3>
+
+                                                        <b>Explanation:</b> Given an inflow flux greater than the critical flux, increasing it further will make the choking process occur faster. Therefore, intuitively, increasing the inflow flux should reduce the time to choking. The same is plotted below.<br>
+
+                                                        <b>Results:</b><br>
+                                                        <center><img src="./Meeting_23/Case_B/Choking_Time_Comparison.png" style="width: 100%; max-width: 500px;"></center><br>
+                                                        Here is the link to download the CSV data: <a href="./Meeting_23/Case_B/Choking_Time_Comparison.png">Download Link</a><br>
+                                                        <b>Observations:</b><br>
+                                                    </li>
+                                                </ul>
+                                            </p>
+                                            <p>
+                                                Following is the link to code that was used to plot the above results: <a href="./Meeting_23/Case_B/Result_B.m">Link to Download</a>
+                                            </p>
+                                        </section>
+                                    </details>
+                                </div>
+                                <hr>
+
+                                <!--Case C-->
+                                <h4>Case C: Two Crowd exchanging from same door</h4>
+                                <div style="background-color: rgb(214, 255, 219);">
+                                    <p>Here the problem was that I was stopping the simulation as soon as the density reaches more than Jam Density at any point in the domain. And it is because of this, I get choking time to be very unstable. What I could do is keep the simulation going even after the crowd is jammed at some point in the domain. But I have done that in the past and found that the results blew up. So I will have to come up with some way to model situation, where even after Jam Density is reached, the simulation handles that situation without blowing up and continue producing sensible results.</p>
+
+                                    <p>
+                                        This problem was inspired by crowd exchanging through local trains. Sir, also said that there are infact possiblity of crowd getting crammed into small space at some region and the rest are still able to move and exchange through the doors.
+                                    </p>
+                                </div>
+                                <div>
+                                    <details style="background-color: rgb(214, 255, 219);">
+                                        <summary>Fix for Case C</summary>
+                                        <section style="background-color: rgb(214, 255, 219);" class="intro-card">
+                                            And as the previous two cases, I have changed the workflow of the code. And it is given below:<br>
+                                            <center><img src="./Meeting_23/Case_C/Case_C_Workflow.png" style="width: 100%; max-width: 600px;"></center>
+                                            <br>
+                                            First there is the main solver that actually solves for the density by computation. After which the Density, Potential and Velocity datas are generated in the CSV format. Then a seperate code for results uses these generated data to generate the result. It takes much less time now to generate all the videos and plots. Which allows us to change the tiny details in the plot, without thinking about the additional time it would take.
+
+                                            <p>
+                                                The initermediate CSV file that are generated are given below. I have captured the inidividual densities (Density A and B) at each time, total density at each time, x_velocities, y_velocities, and finally potentials at each time for this problem. I have different folders for different Door Length:
                                                 <br>
-                                                First there is the main solver that actually solves for the density by computation. After which the Density, Potential and Velocity datas are generated in the CSV format. Then a seperate code for results uses these generated data to generate the result. It takes much less time now to generate all the videos and plots. Which allows us to change the tiny details in the plot, without thinking about the additional time it would take.
 
-                                                <p>
-                                                    The initermediate CSV file that are generated are given below. I have captured the inidividual densities (Density A and B) at each time, total density at each time, x_velocities, y_velocities, and finally potentials at each time for this problem. I have different folders for different Door Length:
-                                                    <br>
+                                                <!--CSV Data to Download-->
+                                                <center>
+                                                    <table border="1">
+                                                        <tbody>
+                                                            <tr>
+                                                                <td>Code - Case_C.m</td>
+                                                                <td><a href="https://github.com/arushraju/Crowd-Dynamics/releases/download/v1.1/Case_B.m">Link to Download (40 KB)</a></td>
+                                                            </tr>
+                                                            <tr>
+                                                                <td>Door Lenght 2m - D_2.zip</td>
+                                                                <td><a href="https://github.com/arushraju/Crowd-Dynamics/releases/download/v1.1/D_2.zip">Link to Download (248 MB)</a></td>
+                                                            </tr>
+                                                            <tr>
+                                                                <td>Door Length 3m - D_3.zip</td>
+                                                                <td><a href="https://github.com/arushraju/Crowd-Dynamics/releases/download/v1.1/D_3.zip">Link to Download (283 MB)</a></td>
+                                                            </tr>
+                                                            <tr>
+                                                                <td>Door Length 4m - D_4.zip</td>
+                                                                <td><a href="https://github.com/arushraju/Crowd-Dynamics/releases/download/v1.1/D_4.zip">LInk to Download (381 MB)</a></td>
+                                                            </tr>
+                                                            <tr>
+                                                                <td>Door Length 5m - D_5.zip</td>
+                                                                <td><a href="https://github.com/arushraju/Crowd-Dynamics/releases/download/v1.1/D_5.zip">Link o Download (382 MB)</a></td>
+                                                            </tr>
+                                                        </tbody>
+                                                    </table>
+                                                </center>
+                                            </p>
 
-                                                    <!--CSV Data to Download-->
-                                                    <center>
-                                                        <table border="1">
-                                                            <tbody>
-                                                                <tr>
-                                                                    <td>Code - Case_C.m</td>
-                                                                    <td><a href="https://github.com/arushraju/Crowd-Dynamics/releases/download/v1.1/Case_B.m">Link to Download (40 KB)</a></td>
-                                                                </tr>
-                                                                <tr>
-                                                                    <td>Door Lenght 2m - D_2.zip</td>
-                                                                    <td><a href="https://github.com/arushraju/Crowd-Dynamics/releases/download/v1.1/D_2.zip">Link to Download (248 MB)</a></td>
-                                                                </tr>
-                                                                <tr>
-                                                                    <td>Door Length 3m - D_3.zip</td>
-                                                                    <td><a href="https://github.com/arushraju/Crowd-Dynamics/releases/download/v1.1/D_3.zip">Link to Download (283 MB)</a></td>
-                                                                </tr>
-                                                                <tr>
-                                                                    <td>Door Length 4m - D_4.zip</td>
-                                                                    <td><a href="https://github.com/arushraju/Crowd-Dynamics/releases/download/v1.1/D_4.zip">LInk to Download (381 MB)</a></td>
-                                                                </tr>
-                                                                <tr>
-                                                                    <td>Door Length 5m - D_5.zip</td>
-                                                                    <td><a href="https://github.com/arushraju/Crowd-Dynamics/releases/download/v1.1/D_5.zip">Link o Download (382 MB)</a></td>
-                                                                </tr>
-                                                            </tbody>
-                                                        </table>
-                                                    </center>
-                                                </p>
+                                            <p>
+                                                Given below are the results that are generated. I have explain the kind of result I am  plotting and then showed the result. Finally listed my observations from the results.
+                                                <br>
+                                                <ul>
+                                                    <li>
+                                                        <!--Density Contour-->
+                                                        <h3 style="display: flex; justify-content: start;"><u>C.1. Density Contour (Animation)</u></h3>
+                                                        <b>Explanation:</b> This is just the video showing the density contour evolution with time.<br>
 
-                                                <p>
-                                                    Given below are the results that are generated. I have explain the kind of result I am  plotting and then showed the result. Finally listed my observations from the results.
-                                                    <br>
-                                                    <ul>
-                                                        <li>
-                                                            <!--Density Contour-->
-                                                            <h3 style="display: flex; justify-content: start;"><u>C.1. Density Contour (Animation)</u></h3>
-                                                            <b>Explanation:</b> This is just the video showing the density contour evolution with time.<br>
+                                                        <b>Results:</b><br>
+                                                        <center>
+                                                            <table border="1">
+                                                                <tbody>
+                                                                    <tr>
+                                                                        <td>Case-C; D = <i>2m</i></td>
+                                                                        <td><a href="https://github.com/arushraju/Crowd-Dynamics/releases/download/v1.1_Results/Case_C_D_2_Animation.zip">Download (45.7 MB)</a></td>
+                                                                    </tr>
+                                                                    <tr>
+                                                                        <td>Case-C; D = <i>3m</i></td>
+                                                                        <td><a href="https://github.com/arushraju/Crowd-Dynamics/releases/download/v1.1_Results/Case_C_D_3_Animation.zip">Download (57.4 MB)</a></td>
+                                                                    </tr>
+                                                                    <tr>
+                                                                        <td>Case-C; D = <i>4m</i></td>
+                                                                        <td><a href="https://github.com/arushraju/Crowd-Dynamics/releases/download/v1.1_Results/Case_C_D_4_Animation.zip">Download (66.1 MB)</a></td>
+                                                                    </tr>
+                                                                    <tr>
+                                                                        <td>Case-C; D = <i>5m</i></td>
+                                                                        <td><a href="https://github.com/arushraju/Crowd-Dynamics/releases/download/v1.1_Results/Case_C_D_5_Animation.zip">Download (77.5 MB)</a></td>
+                                                                    </tr>
+                                                                </tbody>
+                                                            </table>
+                                                        </center>
+                                                        <br>
+                                                        <b>Observations:</b> These are the videos of the density contour and it is no different from the results geenrated previously in meeting 22.
+                                                    </li>
+                                                    <li>
+                                                        <!--Number of Pedestrains inside the Domain V.S. Time-->
+                                                        <h3 style="display: flex; justify-content: start;"><u>C.2. Number of Pedestrians inside the domain V.S. Time</u></h3>
+                                                        <b>Explanation:</b> Density inside the domain is integrated over the area to obtain the number of pedestrain int he domain at a given time. And the same is repeated for each timestep and plotted. This plot tell us the instanteneous population of criwd insde the domain, which will help us to find the evacuation time at each case. Due to lots of density I have picked five density to be plotted for this graph.<br>
+                                                        <b>Results:</b><br>
+                                                        <img src="./Meeting_23/Case_C/D_2/Population/Total_Population_Ly_2.00.png" style="width: 49%; min-width: 250px;">
+                                                        <img src="./Meeting_23/Case_C/D_3/Population/Total_Population_Ly_3.00.png" style="width: 49%; min-width: 250px;">
+                                                        <img src="./Meeting_23/Case_C/D_4/Population/Total_Population_Ly_4.00.png" style="width: 49%; min-width: 250px;">
+                                                        <img src="./Meeting_23/Case_C/D_5/Population/Total_Population_Ly_5.00.png" style="width: 49%; min-width: 250px;"><br><br>
+                                                        <b>Observations:</b><br>
+                                                        <ol>
+                                                            <li>Problems with initial density equal to 3, 5, 7, 9, are all leading to choking, amd hence there graph doesnt reach the end of tiem domain. And one observation is that in the case of choking no pedestrains escapes the crowd. Which means choking occurs before any pedestrain gets a chance to escape the domain.</li>
+                                                            <li>The period of time when the pedestrain starts to decrease and reaches to zero is largest when the door legnht is smallest. And this region is smallest when the door lenght is smallest. And this is understandable since smaller door length would mean that the pedestrains are escaping slowly, and the rate at which pedestrains will be leaving the domian will be smaller, or more gradual.</li>
+                                                            <li>The point in time at which pedestrains starts to decrease is almost the same in all the door lenght (maybe at 4 sec), but when they are fully evacuated, largly differs (ANd this could be seen in the evacuation graph). It is understandable that smaller door will make it difficult for the crowd to exchange and thus inrease the evaucation time, but for all the dor length the crowd will start to decrease at the same time is non-trivial finding.</li>
+                                                        </ol>
+                                                    </li>
+                                                    <li>
+                                                        <!--Total Evacuation Time V.S. Initial Density-->
+                                                        <h3 style="display: flex; justify-content: start;"><u>C.3. Total Evacuation Time V.S. Initial Density</u></h3>
+                                                        <b>Explanation:</b> From the data obtained above, I have plotted the evacuation time for all the flux cases for all door lengths.<br>
+                                                        <b>Results:</b><br>
+                                                        <img src="./Meeting_23/Case_C/Evacuation_Time_Comparison.png" style="width: 100%; min-width: 250px; max-width: 500px;"><br><br>
+                                                        <b>Observations:</b><br>
+                                                        <ol>
+                                                            <li>It is also understandable that more the number of pedestrians invovled, larger will be evacualtion time. But what is interesting to note is non linearity on the curve. As it could be seen, increase in the evac time is far less from rho = 0.5 to 1.0 than from rho = 2 to rho = 2.5 in the case door len ght equal to 5.0 m</li>
+                                                            <li>It is also understandable with larger the door lenght, it will be easier for a given amount of crowd to exchange. Thus for the equal initial density or equal number of people, larger doors will have lower evacuation time. Which is also seen in the graph.</li>
+                                                        </ol>
+                                                    </li>
+                                                    <li>
+                                                        <!--Area of Congestion V.S. Time-->
+                                                        <h3 style="display: flex; justify-content: start;"><u>C.4. Area of Congestion V.S. Time</u></h3>
+                                                        <b>Explanation:</b> I picked some threshold density, let say rho, and then at each time step I have caculated the area where density reaches more than rho. Instanteneous areas, where density exceeds this threshold density is plotted with time. The threshold density is picked to be 5 ped/m2 - Minor Congestion region, 8 ped/m2 - Severe Congestion Region. This is plotted for all the flux of a given door lenght on the same plot.<br>
 
-                                                            <b>Results:</b><br>
-                                                            <center>
-                                                                <table border="1">
-                                                                    <tbody>
-                                                                        <tr>
-                                                                            <td>Case-C; D = <i>2m</i></td>
-                                                                            <td><a href="https://github.com/arushraju/Crowd-Dynamics/releases/download/v1.1_Results/Case_C_D_2_Animation.zip">Download (45.7 MB)</a></td>
-                                                                        </tr>
-                                                                        <tr>
-                                                                            <td>Case-C; D = <i>3m</i></td>
-                                                                            <td><a href="https://github.com/arushraju/Crowd-Dynamics/releases/download/v1.1_Results/Case_C_D_3_Animation.zip">Download (57.4 MB)</a></td>
-                                                                        </tr>
-                                                                        <tr>
-                                                                            <td>Case-C; D = <i>4m</i></td>
-                                                                            <td><a href="https://github.com/arushraju/Crowd-Dynamics/releases/download/v1.1_Results/Case_C_D_4_Animation.zip">Download (66.1 MB)</a></td>
-                                                                        </tr>
-                                                                        <tr>
-                                                                            <td>Case-C; D = <i>5m</i></td>
-                                                                            <td><a href="https://github.com/arushraju/Crowd-Dynamics/releases/download/v1.1_Results/Case_C_D_5_Animation.zip">Download (77.5 MB)</a></td>
-                                                                        </tr>
-                                                                    </tbody>
-                                                                </table>
-                                                            </center>
-                                                            <br>
-                                                            <b>Observations:</b> These are the videos of the density contour and it is no different from the results geenrated previously in meeting 22.
-                                                        </li>
-                                                        <li>
-                                                            <!--Number of Pedestrains inside the Domain V.S. Time-->
-                                                            <h3 style="display: flex; justify-content: start;"><u>C.2. Number of Pedestrians inside the domain V.S. Time</u></h3>
-                                                            <b>Explanation:</b> Density inside the domain is integrated over the area to obtain the number of pedestrain int he domain at a given time. And the same is repeated for each timestep and plotted. This plot tell us the instanteneous population of criwd insde the domain, which will help us to find the evacuation time at each case. Due to lots of density I have picked five density to be plotted for this graph.<br>
-                                                            <b>Results:</b><br>
-                                                            <img src="./Meeting_23/Case_C/D_2/Population/Total_Population_Ly_2.00.png" style="width: 49%; min-width: 250px;">
-                                                            <img src="./Meeting_23/Case_C/D_3/Population/Total_Population_Ly_3.00.png" style="width: 49%; min-width: 250px;">
-                                                            <img src="./Meeting_23/Case_C/D_4/Population/Total_Population_Ly_4.00.png" style="width: 49%; min-width: 250px;">
-                                                            <img src="./Meeting_23/Case_C/D_5/Population/Total_Population_Ly_5.00.png" style="width: 49%; min-width: 250px;"><br><br>
-                                                            <b>Observations:</b><br>
-                                                            <ol>
-                                                                <li>Problems with initial density equal to 3, 5, 7, 9, are all leading to choking, amd hence there graph doesnt reach the end of tiem domain. And one observation is that in the case of choking no pedestrains escapes the crowd. Which means choking occurs before any pedestrain gets a chance to escape the domain.</li>
-                                                                <li>The period of time when the pedestrain starts to decrease and reaches to zero is largest when the door legnht is smallest. And this region is smallest when the door lenght is smallest. And this is understandable since smaller door length would mean that the pedestrains are escaping slowly, and the rate at which pedestrains will be leaving the domian will be smaller, or more gradual.</li>
-                                                                <li>The point in time at which pedestrains starts to decrease is almost the same in all the door lenght (maybe at 4 sec), but when they are fully evacuated, largly differs (ANd this could be seen in the evacuation graph). It is understandable that smaller door will make it difficult for the crowd to exchange and thus inrease the evaucation time, but for all the dor length the crowd will start to decrease at the same time is non-trivial finding.</li>
-                                                            </ol>
-                                                        </li>
-                                                        <li>
-                                                            <!--Total Evacuation Time V.S. Initial Density-->
-                                                            <h3 style="display: flex; justify-content: start;"><u>C.3. Total Evacuation Time V.S. Initial Density</u></h3>
-                                                            <b>Explanation:</b> From the data obtained above, I have plotted the evacuation time for all the flux cases for all door lengths.<br>
-                                                            <b>Results:</b><br>
-                                                            <img src="./Meeting_23/Case_C/Evacuation_Time_Comparison.png" style="width: 100%; min-width: 250px; max-width: 500px;"><br><br>
-                                                            <b>Observations:</b><br>
-                                                            <ol>
-                                                                <li>It is also understandable that more the number of pedestrians invovled, larger will be evacualtion time. But what is interesting to note is non linearity on the curve. As it could be seen, increase in the evac time is far less from rho = 0.5 to 1.0 than from rho = 2 to rho = 2.5 in the case door len ght equal to 5.0 m</li>
-                                                                <li>It is also understandable with larger the door lenght, it will be easier for a given amount of crowd to exchange. Thus for the equal initial density or equal number of people, larger doors will have lower evacuation time. Which is also seen in the graph.</li>
-                                                            </ol>
-                                                        </li>
-                                                        <li>
-                                                            <!--Area of Congestion V.S. Time-->
-                                                            <h3 style="display: flex; justify-content: start;"><u>C.4. Area of Congestion V.S. Time</u></h3>
-                                                            <b>Explanation:</b> I picked some threshold density, let say rho, and then at each time step I have caculated the area where density reaches more than rho. Instanteneous areas, where density exceeds this threshold density is plotted with time. The threshold density is picked to be 5 ped/m2 - Minor Congestion region, 8 ped/m2 - Severe Congestion Region. This is plotted for all the flux of a given door lenght on the same plot.<br>
+                                                        <b>Results:</b><br>
+                                                        <h5>Door Length: 2.00 m</h5>
+                                                        <img src="./Meeting_23/Case_C/D_2/Congestion/Congestion_Area_Rho_5.0_Ly_2.00.png" width="33%">
+                                                        <img src="./Meeting_23/Case_C/D_2/Congestion/Congestion_Area_Rho_8.0_Ly_2.00.png" width="33%">
+                                                        <img src="./Meeting_23/Case_C/D_2/Congestion/Congestion_Area_Rho_9.9_Ly_2.00.png" width="33%"><br>
+                                                        <h5>Door Length: 3.00 m</h5>
+                                                        <img src="./Meeting_23/Case_C/D_3/Congestion/Congestion_Area_Rho_5.0_Ly_3.00.png" width="33%">
+                                                        <img src="./Meeting_23/Case_C/D_3/Congestion/Congestion_Area_Rho_8.0_Ly_3.00.png" width="33%">
+                                                        <img src="./Meeting_23/Case_C/D_3/Congestion/Congestion_Area_Rho_9.9_Ly_3.00.png" width="33%">
+                                                        <h5>Door Length: 4.00 m</h5>
+                                                        <img src="./Meeting_23/Case_C/D_4/Congestion/Congestion_Area_Rho_5.0_Ly_4.00.png" width="33%">
+                                                        <img src="./Meeting_23/Case_C/D_4/Congestion/Congestion_Area_Rho_8.0_Ly_4.00.png" width="33%">
+                                                        <img src="./Meeting_23/Case_C/D_4/Congestion/Congestion_Area_Rho_9.9_Ly_4.00.png" width="33%">
+                                                        <h5>Door Length: 5.00 m</h5>
+                                                        <img src="./Meeting_23/Case_C/D_5/Congestion/Congestion_Area_Rho_5.0_Ly_5.00.png" width="33%">
+                                                        <img src="./Meeting_23/Case_C/D_5/Congestion/Congestion_Area_Rho_8.0_Ly_5.00.png" width="33%">
+                                                        <img src="./Meeting_23/Case_C/D_5/Congestion/Congestion_Area_Rho_9.9_Ly_5.00.png" width="33%"><br><br>
 
-                                                            <b>Results:</b><br>
-                                                            <h5>Door Length: 2.00 m</h5>
-                                                            <img src="./Meeting_23/Case_C/D_2/Congestion/Congestion_Area_Rho_5.0_Ly_2.00.png" width="33%">
-                                                            <img src="./Meeting_23/Case_C/D_2/Congestion/Congestion_Area_Rho_8.0_Ly_2.00.png" width="33%">
-                                                            <img src="./Meeting_23/Case_C/D_2/Congestion/Congestion_Area_Rho_9.9_Ly_2.00.png" width="33%"><br>
-                                                            <h5>Door Length: 3.00 m</h5>
-                                                            <img src="./Meeting_23/Case_C/D_3/Congestion/Congestion_Area_Rho_5.0_Ly_3.00.png" width="33%">
-                                                            <img src="./Meeting_23/Case_C/D_3/Congestion/Congestion_Area_Rho_8.0_Ly_3.00.png" width="33%">
-                                                            <img src="./Meeting_23/Case_C/D_3/Congestion/Congestion_Area_Rho_9.9_Ly_3.00.png" width="33%">
-                                                            <h5>Door Length: 4.00 m</h5>
-                                                            <img src="./Meeting_23/Case_C/D_4/Congestion/Congestion_Area_Rho_5.0_Ly_4.00.png" width="33%">
-                                                            <img src="./Meeting_23/Case_C/D_4/Congestion/Congestion_Area_Rho_8.0_Ly_4.00.png" width="33%">
-                                                            <img src="./Meeting_23/Case_C/D_4/Congestion/Congestion_Area_Rho_9.9_Ly_4.00.png" width="33%">
-                                                            <h5>Door Length: 5.00 m</h5>
-                                                            <img src="./Meeting_23/Case_C/D_5/Congestion/Congestion_Area_Rho_5.0_Ly_5.00.png" width="33%">
-                                                            <img src="./Meeting_23/Case_C/D_5/Congestion/Congestion_Area_Rho_8.0_Ly_5.00.png" width="33%">
-                                                            <img src="./Meeting_23/Case_C/D_5/Congestion/Congestion_Area_Rho_9.9_Ly_5.00.png" width="33%"><br><br>
+                                                        <b>Observations:</b><br>
+                                                        <ol>
+                                                            <li>
+                                                                If we go with the strating poitn of the curve, we see that for all the door dimension, for the threshold density more than or equal to 5 ped/m2, rho = 1, 3 starts from zero, since at t = 0, there is no region in the domain where density rises more than 5. And for rho = 7.0 and 9.0, all the pedestrains have the density more than 5 hence the graph sarts from area of the initial crowd. Fro rho = 5 however, since it is equal to thrshold, initially the graph must start from the saem point as rho = 7.0, 9.0, but then must almost suddenly fall because immediately after than some areas will have density more than 5 and some with that less than 5. And hence the graph seems to start from some value between total area and zero. And the same is ture in all the cases when threshold density is equal to 5 ped/m2, irrespective of door lenght.
+                                                            </li>
+                                                            <li>
+                                                                Now lets look at all the graphs of all the door lenghts where threshold density is equal to 5 ped/m2. We see that for initial density equal to 1.0, the region where the desnities grow more than 5 ped/m2 is highest in the smallet door lenght case. And this is understandable since smaller door would mean that regions with higher congestion will remian for larger duration of time.
+                                                            </li>
+                                                        </ol>
+                                                    </li>
+                                                    <li>
+                                                        <!--Flow rate of Crowd A and B through each Doors V.S. Time-->
+                                                        <h3 style="display: flex; justify-content: start;"><u>C.5. Flow rate of Crowd A and B through each doors V.S. Time</u></h3>
+                                                        <b>Explanation:</b> I calculated the flow rate through each doors (for crowd A only), and plotted them. This would help to understand if the problem is progressing symmetrically or not. Since we know the maximum flow rate possible from both the doors, this result will also help us to compare how efficiently is the flow rate of Crowds through the door. For the case L = 2.00m the maximum flow rate for each gate is equal to 10 ped/s<br>
 
-                                                            <b>Observations:</b><br>
-                                                            <ol>
-                                                                <li>
-                                                                    If we go with the strating poitn of the curve, we see that for all the door dimension, for the threshold density more than or equal to 5 ped/m2, rho = 1, 3 starts from zero, since at t = 0, there is no region in the domain where density rises more than 5. And for rho = 7.0 and 9.0, all the pedestrains have the density more than 5 hence the graph sarts from area of the initial crowd. Fro rho = 5 however, since it is equal to thrshold, initially the graph must start from the saem point as rho = 7.0, 9.0, but then must almost suddenly fall because immediately after than some areas will have density more than 5 and some with that less than 5. And hence the graph seems to start from some value between total area and zero. And the same is ture in all the cases when threshold density is equal to 5 ped/m2, irrespective of door lenght.
-                                                                </li>
-                                                                <li>
-                                                                    Now lets look at all the graphs of all the door lenghts where threshold density is equal to 5 ped/m2. We see that for initial density equal to 1.0, the region where the desnities grow more than 5 ped/m2 is highest in the smallet door lenght case. And this is understandable since smaller door would mean that regions with higher congestion will remian for larger duration of time.
-                                                                </li>
-                                                            </ol>
-                                                        </li>
-                                                        <li>
-                                                            <!--Flow rate of Crowd A and B through each Doors V.S. Time-->
-                                                            <h3 style="display: flex; justify-content: start;"><u>C.5. Flow rate of Crowd A and B through each doors V.S. Time</u></h3>
-                                                            <b>Explanation:</b> I calculated the flow rate through each doors (for crowd A only), and plotted them. This would help to understand if the problem is progressing symmetrically or not. Since we know the maximum flow rate possible from both the doors, this result will also help us to compare how efficiently is the flow rate of Crowds through the door. For the case L = 2.00m the maximum flow rate for each gate is equal to 10 ped/s<br>
+                                                        <b>Results:</b><br>
+                                                        <img src="./Meeting_23/Case_C/D_2/Door_Flow/Crowd_A_Door_Flow_Ly_2.00.png" style="width: 49%; min-width: 250px;">
+                                                        <img src="./Meeting_23/Case_C/D_3/Door_Flow/Crowd_A_Door_Flow_Ly_3.00.png" style="width: 49%; min-width: 250px;">
+                                                        <img src="./Meeting_23/Case_C/D_4/Door_Flow/Crowd_A_Door_Flow_Ly_4.00.png" style="width: 49%; min-width: 250px;">
+                                                        <img src="./Meeting_23/Case_C/D_5/Door_Flow/Crowd_A_Door_Flow_Ly_5.00.png" style="width: 49%; min-width: 250px;"><br><br>
 
-                                                            <b>Results:</b><br>
-                                                            <img src="./Meeting_23/Case_C/D_2/Door_Flow/Crowd_A_Door_Flow_Ly_2.00.png" style="width: 49%; min-width: 250px;">
-                                                            <img src="./Meeting_23/Case_C/D_3/Door_Flow/Crowd_A_Door_Flow_Ly_3.00.png" style="width: 49%; min-width: 250px;">
-                                                            <img src="./Meeting_23/Case_C/D_4/Door_Flow/Crowd_A_Door_Flow_Ly_4.00.png" style="width: 49%; min-width: 250px;">
-                                                            <img src="./Meeting_23/Case_C/D_5/Door_Flow/Crowd_A_Door_Flow_Ly_5.00.png" style="width: 49%; min-width: 250px;"><br><br>
+                                                        <b>Observations:</b><br>
+                                                        <ol>
+                                                            <li>
 
-                                                            <b>Observations:</b><br>
-                                                            <ol>
-                                                                <li>
+                                                            </li>
+                                                        </ol>
+                                                    </li>
+                                                    <li>
+                                                        <!--Time of Choking V.S. Initial Density-->
+                                                        <h3 style="display: flex; justify-content: start;"><u>C.6. Time of Chocking V.S. Initial Density</u></h3>
+                                                        <b>Explanation:</b> This as usual is the time at which choking will occur plotted against intial density. It is understood that choking will occur early in cases with larger population. But the trend of the graph and by what amount, could be understood with this graph.<br>
+                                                        <b>Results:</b><br>
+                                                        <img src="./Meeting_23/Case_C/Choking_Time_Comparison.png" style="width: 100%; min-width: 250px; max-width: 500px;"><br><br>
+                                                        <b>Observations:</b>
+                                                    </li>
+                                                </ul>   
+                                            </p>
 
-                                                                </li>
-                                                            </ol>
-                                                        </li>
-                                                        <li>
-                                                            <!--Time of Choking V.S. Initial Density-->
-                                                            <h3 style="display: flex; justify-content: start;"><u>C.6. Time of Chocking V.S. Initial Density</u></h3>
-                                                            <b>Explanation:</b> This as usual is the time at which choking will occur plotted against intial density. It is understood that choking will occur early in cases with larger population. But the trend of the graph and by what amount, could be understood with this graph.<br>
-                                                            <b>Results:</b><br>
-                                                            <img src="./Meeting_23/Case_C/Choking_Time_Comparison.png" style="width: 100%; min-width: 250px; max-width: 500px;"><br><br>
-                                                            <b>Observations:</b>
-                                                        </li>
-                                                    </ul>   
-                                                </p>
-
-                                                <p>
-                                                    Following is the link to download the code to generate the above results: <a href="./Meeting_23/Case_C/Result_C.m">Link to Download</a>
-                                                </p>
-                                            </section>
-                                        </details>
-                                    </li>
-                                </ul>
+                                            <p>
+                                                Following is the link to download the code to generate the above results: <a href="./Meeting_23/Case_C/Result_C.m">Link to Download</a>
+                                            </p>
+                                        </section>
+                                    </details>
+                                </div>
                             </div>
                         </section>
                     </details>

@@ -77,6 +77,7 @@
         }
         details{
             margin-top: 5px;
+            transition-duration: 1s;
         }
         
         summary{
@@ -9222,6 +9223,7 @@ alpha = max(x_velocity(:)) * 1.0; % $gt--- To this
                                 <h4>Case A: Crowd Flow around an Obstacle</h4>
                                 <div style="background-color: rgb(255, 180, 195);">
                                     <p>
+                                        <h4>Introducing Case A</h4>
                                         <p>
                                             The motivation behind designing this problem for research is it's occurance. It is common for obtacles to be on the way to the crowd. In the buildings it could be the pillar, on the road it could be the column supporting the bridge, or in the public gathering, or railway station it could be a vendor. And hence the below problem is an idealisation of all such arrangement.
                                         </p>
@@ -9235,9 +9237,11 @@ alpha = max(x_velocity(:)) * 1.0; % $gt--- To this
                                             Here St.A is Station A and similarly St.B. And this is the boundary where the flowrate is captured contineously, and will be plotted with time.
                                         </p>
                                     </p>
+                                    <h4>Problem I was facing</h4>
                                     <p>
-                                        I actually checked the CSV data and found that the obstacle was placed exactly at the centre. This is strange because, with the obstacle at the centre, I would expect the flow not to favour one side over the other. I think this might be due to the algorithm. When processing, the code is iterating from i = 1 to i = Nx and, similarly, from j = 1 to j = Ny. I think that changing the iteration sequence from j = 1:Ny to j = Ny:-1:1 could produce different results. I will try this and see whether it makes the flow pattern favour the opposite side.
+                                        The problem I was expereincing was that the flow appeared to be asymmetric, even though the problem was symmetric. And for reference, please have a look at this result for L = 40m, and F = 0.5 peed/m/s. ( <a href="./Meeting_22/Case_A/L_40/Density_Contour_F_0.50.mp4" target="_blank">Watch online</a> )
                                     </p>
+                                    
                                 </div>
                                 <div style="background-color: rgb(255, 180, 195);">
                                     Given below is what i have done to fix the CASE A.<br>
@@ -9246,10 +9250,15 @@ alpha = max(x_velocity(:)) * 1.0; % $gt--- To this
                                         <section class="intro-card"  style="background-color: rgb(255, 180, 195);">
                                             <br>
                                             <p>
-                                                The problem with the solver was that my solutions were experiencing asymmetry in the flow. I initially thought this was because the obstacle was positioned asymmetrically. However, after a few investigations, I found that the problem was actually in the following code snippet:
+                                                So, I initially suspected that the obstacle was not placed at the centre. However, I checked the CSV data and found that the obstacle was indeed placed exactly at the centre. This was strange because, with the obstacle at the centre, I would expect the flow not to favour one side over the other. I thought this might be due to the algorithm. When processing the grid points, the code iterates from i = 1 to i = Nx and, similarly, from j = 1 to j = Ny. I thought that changing the iteration sequence from j = 1:Ny to j = Ny:-1:1 could produce different results.
+                                            </p>
+                                            <p>
+                                                On further investigation, I found that the boundary condition for the potential at the exit was being applied incorrectly. I was applying the exit boundary condition at two openings on the right boundary, as in the benchmark problem. However, my intention was to have the exit extend across the entire right boundary. I corrected this and hoped that the solver would now work correctly. However, I still obtained asymmetric flow.
+                                            </p>
+                                            <p>
+                                                On further investigation, I found that the problem was actually in the following code snippet:
                                                 <br>
-
-                                                <!--Code Snippet-->
+                                                <!-- Code Snippet -->
                                                 <div style="overflow-x: scroll; width: 100%; background-color: black; font-family: 'Courier New', Courier, monospace;">
                                                     <pre><code>
     <span style="color: rgb(50, 255, 47);">% In the WENO function (make RHS)</span>
@@ -9264,9 +9273,13 @@ alpha = max(x_velocity(:)) * 1.0; % $gt--- To this
                                                     </code></pre>
                                                 </div>
                                             </p>
+
                                             <center><img src="Meeting_23/Case_A/Case_A_Blunder.jpg" style="width: 100%; max-width: 500px;"></center>
                                             <br>
-                                            <p>Actually, the reason why this was wrong is that I was correctly assigning the <b>fx_negative_half = inflow flux</b> at the entrance, but the algorithm doesn't allow me to assign the y-direction flux at the entrance. Rather, it allows me to assign the y_flux at i = 4, which is half a space interval to the right of the actual boundary (i = 7/2). Earlier I was assigning the <b>fy_negative_half = 0</b> at i = 4, and I did not realise that this was actually setting the zero y-flux not at the entrance, but at the first grid point, which is half a distance inside the actual entrance (i = 4). I could have also set fy_positive_half to be equal to zero at i = 4 as well, and that would have solved the asymmetry problem. However, assigning the y_flux at i = 4 which is not the physical entrance is entirely wrong according to the algorithm. Hence, I have not set any boundary condition on the y_flux at the entrance i.e.i = 7/2. And this has finally solved the problem of asymmetric flow.</p>
+                                            <p>
+                                                Actually, the reason this was wrong is that I was correctly assigning <b>fx_negative_half = inflow_flux</b> at the entrance, but the algorithm does not allow me to assign the y-direction flux directly at the entrance. Instead, it allows me to assign the y-flux at i = 4, which is half a spatial interval to the right of the actual boundary (i = 7/2). Earlier, I was assigning <b>fy_negative_half = 0</b> at i = 4, without realising that this was setting the zero y-flux not at the entrance, but at the first grid point, which is half a spatial interval inside the actual entrance (i = 4). I could also have set fy_positive_half to zero at i = 4, which would have resolved the asymmetry problem. However, assigning the y-flux at i = 4, which is not the physical entrance, would be entirely incorrect according to the algorithm. Hence, I have not imposed any boundary condition on the y-flux at the entrance (i.e., i = 7/2). This has finally resolved the problem of asymmetric flow.<br><br>
+                                                This turned out to be a critical fix. I was hoping that this would also fix the solution when testing the solver against the benchmark problem.
+                                            </p>
 
                                             
                                             <p>
@@ -9316,19 +9329,19 @@ alpha = max(x_velocity(:)) * 1.0; % $gt--- To this
                                                                     <tbody>
                                                                         <tr>
                                                                             <td><b>Case-A; L = <i>10m</i></b></td>
-                                                                            <td><a href="">Download Link (~350 MB)</a></td>
+                                                                            <td><a href="https://github.com/arushraju/Crowd-Dynamics/releases/download/v1.1_Results/Case_A_L_10_Density_Contour.zip">Download Link (~350 MB)</a></td>
                                                                         </tr>
                                                                         <tr>
                                                                             <td><b>Case-A; L = <i>20m</i></b></td>
-                                                                            <td><a href="">Download Link (~350 MB)</a></td>
+                                                                            <td><a href="https://github.com/arushraju/Crowd-Dynamics/releases/download/v1.1_Results/Case_A_L_20_Density_Contour.zip">Download Link (~350 MB)</a></td>
                                                                         </tr>
                                                                         <tr>
                                                                             <td><b>Case-A; L = <i>30m</i></b></td>
-                                                                            <td><a href="">Download Link (~350 MB)</a></td>
+                                                                            <td><a href="https://github.com/arushraju/Crowd-Dynamics/releases/download/v1.1_Results/Case_A_L_30_Density_Contour.zip">Download Link (~350 MB)</a></td>
                                                                         </tr>
                                                                         <tr>
                                                                             <td><b>Case-A; L = <i>40m</i></b></td>
-                                                                            <td><a href="">Download Link (~350 MB)</a></td>
+                                                                            <td><a href="https://github.com/arushraju/Crowd-Dynamics/releases/download/v1.1_Results/Case_A_L_10_Density_Contour.zip">Download Link (~350 MB)</a></td>
                                                                         </tr>
                                                                     </tbody>
                                                                 </table>
@@ -9341,19 +9354,19 @@ alpha = max(x_velocity(:)) * 1.0; % $gt--- To this
                                                                     <tbody>
                                                                         <tr>
                                                                             <td><b>Case-A; L = <i>10m</i></b></td>
-                                                                            <td><a href="">Download Link (~350 MB)</a></td>
+                                                                            <td><a href="https://github.com/arushraju/Crowd-Dynamics/releases/download/v1.1_Results/Case_A_L_10_Shock_Contour.zip">Download Link (~350 MB)</a></td>
                                                                         </tr>
                                                                         <tr>
                                                                             <td><b>Case-A; L = <i>20m</i></b></td>
-                                                                            <td><a href="">Download Link (~350 MB)</a></td>
+                                                                            <td><a href="https://github.com/arushraju/Crowd-Dynamics/releases/download/v1.1_Results/Case_A_L_20_Shock_Contour.zi">Download Link (~296 MB)</a></td>
                                                                         </tr>
                                                                         <tr>
                                                                             <td><b>Case-A; L = <i>30m</i></b></td>
-                                                                            <td><a href="">Download Link (~350 MB)</a></td>
+                                                                            <td><a href="https://github.com/arushraju/Crowd-Dynamics/releases/download/v1.1_Results/Case_A_L_30_Shock_Contour.zi">Download Link (~350 MB)</a></td>
                                                                         </tr>
                                                                         <tr>
                                                                             <td><b>Case-A; L = <i>40m</i></b></td>
-                                                                            <td><a href="">Download Link (~350 MB)</a></td>
+                                                                            <td><a href="https://github.com/arushraju/Crowd-Dynamics/releases/download/v1.1_Results/Case_A_L_40_Shock_Contour.zi">Download Link (~350 MB)</a></td>
                                                                         </tr>
                                                                     </tbody>
                                                                 </table>
@@ -9414,7 +9427,7 @@ alpha = max(x_velocity(:)) * 1.0; % $gt--- To this
                                                 </div>
                                             </p>
                                             <p>
-                                                Code that has been used to plot the above: <a href="">Link to Download</a><br><br>
+                                                Code that has been used to plot the above: <a href="https://github.com/arushraju/Crowd-Dynamics/blob/main/Meeting_23/Case_A/Result_A.m">Link to Download</a><br><br>
                                                 Given below are the actual results.
                                             </p>
                                         </section>

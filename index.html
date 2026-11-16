@@ -9212,36 +9212,31 @@ alpha = max(x_velocity(:)) * 1.0; % $gt--- To this
                             <div class="card">
                                 In the last meeting, I was said to do the following tasks:<br>
                                 <p>
-                                    I have chnaged the workflow of the solver. Earlier I was having a single monolithic code, that produced all he result in the form of videos and plots. But now I have divided the program into two, one that geenrates the raw data of density and velocities, and depending on the problem, I make my own post-processign code and plot different kind of results.
+                                    I have changed the workflow of the solver. Earlier, I had a single monolithic code that produced all the results in the form of videos and plots. However, I have now divided the program into two parts: one that generates the raw density and velocity data, and another where, depending on the problem, I write my own post-processing code to plot different kinds of results. This will save time when generating new types of results or modifying existing ones, as I no longer have to rerun the entire solver and generate the same data just to plot something different.
                                 </p>
                                 <p>
-                                    I have three section each for each case. I have first decsribed the problem, and then explained the problem I was facing with that case, and with that result, and then fianlly I have explained my worflow for that problem, along with the kind of result I am plotting for that case. And then i have finally shown the result and their observation.
+                                    I have three sections, one for each case. I have first described the problem, followed by the challenges I faced with that particular case. I have then explained my workflow for solving each problem, along with the types of results I am plotting. Finally, I have presented the results and discussed my observations.
                                 </p>
 
                                 <!--Case A-->
                                 <h4>Case A: Crowd Flow around an Obstacle</h4>
                                 <div style="background-color: rgb(255, 180, 195);">
                                     <p>
-                                        In Case A, I was suggested to change the solver such that the obstacle is placed at the center in the X-axis and Y-axis. I have reset the indices such that I have the obstacle at the center. The problem I was facing earlier was that since I want to solve for cases L = 10, L = 20, L = 30, and L = 40, we cannot have these obstacles at the center if the entire domain has an even number of points (say, 50). The thing is that we need 51 points to have 50 line segments forming the width, which would mean having 50 units of dimension. But then the space interval has to be set accordingly to make it what we want it to be (like h = L/(N-1), because N = 50 + 1 and L = 50).
+                                        <p>
+                                            The motivation behind designing this problem for research is it's occurance. It is common for obtacles to be on the way to the crowd. In the buildings it could be the pillar, on the road it could be the column supporting the bridge, or in the public gathering, or railway station it could be a vendor. And hence the below problem is an idealisation of all such arrangement.
+                                        </p>
+                                        <p>
+                                            The domain is taken to be a rectangle with the dimension 50 m in Y and 100 m in X direction. The space interval is equal to 1, hence the grid size of 51 * 101. And the total simulation time is 400s. There is a squared shaped obstacle situated excalty at the center of the domain. The length of the obstacle Lx = Ly = L is chnaged from 10m, to 20m, to 30m, to 40m. The left boundary of the domain is the entrance and the right boundary is the outflow. The boundary condition on the wall is that normal flux through them is zero. And on the inflow is specified. On outflow boundary there is no boundary conditons. The inflow boundary condition is that X-Flux is equal to F and Y-FLux is equal to zero. The B.C is uniform in space and constant in time through out the simulation. For each size of obstacle the influx is chnaged from 0.5 to 5.0 with increment of 0.5 ped/m/s.
+                                        </p>
+                                        <p>
+                                            Given below is the diagram that explains the domain.<br>
+                                            <center><img src="./Meeting_23/Case_A/Case_A_Problem_Description.png" style="width: 100%; max-width: 600px;"></center>
+                                            <br>
+                                            Here St.A is Station A and similarly St.B. And this is the boundary where the flowrate is captured contineously, and will be plotted with time.
+                                        </p>
                                     </p>
-
                                     <p>
-                                        Another problem with the solver was that my solution where expereincing a asymmetricity in the flow. I though that it was due to the obstacle being situated at the position what is asymmetric. After a few investigation, I got to know that the problem was in the following code code-snippet<br>
-                                        <div style="overflow-x: scroll; width: 100%; background-color: black; font-family: 'Courier New', Courier, monospace;">
-                                            <pre><code>
-<span style="color: rgb(50, 255, 47);">% In the WENO function (make RHS)</span>
-<span style="color: rgb(50, 255, 47);; ">% Left Boundary</span>
-<span style="color: rgb(0, 68, 255);">if</span><span style="color: white;">(i == 4)</span> 
-    <span style="color: rgb(50, 255, 47);">% This is the X-flux that has to be specifed at the entrance</span>
-    <span style="color: white;">fx_negative_half = </span><span style="color: rgb(0, 208, 255);">inflow_flux</span><span style="color: white;">;</span>
-    <span style="color: rgb(50, 255, 47);">% This is the Y flux that I is not needed at the entrance and hence commented out</span>
-    <span style="color: rgb(50, 255, 47);">% fy_negative_half = 0;</span>
-
-<span style="color: rgb(0, 68, 255);">end</span>
-                                            </code></pre>
-                                        </div>
-                                        <p>I have actually checked the CSV data and found that the obstacle is placed exactly at the center. This is strange because, with the obstacle at the center, I would expect the flow not to favour just one side of the obstacle. I think this might be due to the algorithm. When processing the B-grid points, I was iterating from i = 1 to i = Nx and similarly, from j = 1 to j = Ny. What I think is that if I change the sequence from j = 1:Ny to Ny:1, this could result in different results. I will try it and see if it makes the result opposite.</p>
-                                        
+                                        I actually checked the CSV data and found that the obstacle was placed exactly at the centre. This is strange because, with the obstacle at the centre, I would expect the flow not to favour one side over the other. I think this might be due to the algorithm. When processing, the code is iterating from i = 1 to i = Nx and, similarly, from j = 1 to j = Ny. I think that changing the iteration sequence from j = 1:Ny to j = Ny:-1:1 could produce different results. I will try this and see whether it makes the flow pattern favour the opposite side.
                                     </p>
                                 </div>
                                 <div style="background-color: rgb(255, 180, 195);">
@@ -9250,9 +9245,28 @@ alpha = max(x_velocity(:)) * 1.0; % $gt--- To this
                                         <summary>Fix for CASE - A</summary>
                                         <section class="intro-card"  style="background-color: rgb(255, 180, 195);">
                                             <br>
+                                            <p>
+                                                The problem with the solver was that my solutions were experiencing asymmetry in the flow. I initially thought this was because the obstacle was positioned asymmetrically. However, after a few investigations, I found that the problem was actually in the following code snippet:
+                                                <br>
+
+                                                <!--Code Snippet-->
+                                                <div style="overflow-x: scroll; width: 100%; background-color: black; font-family: 'Courier New', Courier, monospace;">
+                                                    <pre><code>
+    <span style="color: rgb(50, 255, 47);">% In the WENO function (make RHS)</span>
+    <span style="color: rgb(50, 255, 47);">% Left Boundary</span>
+    <span style="color: rgb(0, 68, 255);">if</span><span style="color: white;">(i == 4)</span>
+        <span style="color: rgb(50, 255, 47);">% This is the X-flux that has to be specified at the entrance</span>
+        <span style="color: white;">fx_negative_half = </span><span style="color: rgb(0, 208, 255);">inflow_flux</span><span style="color: white;">;</span>
+        <span style="color: rgb(50, 255, 47);">% This is the Y-flux, which is not needed at the entrance and is therefore commented out</span>
+        <span style="color: rgb(50, 255, 47);">% fy_negative_half = 0;</span>
+
+    <span style="color: rgb(0, 68, 255);">end</span>
+                                                    </code></pre>
+                                                </div>
+                                            </p>
                                             <center><img src="Meeting_23/Case_A/Case_A_Blunder.jpg" style="width: 100%; max-width: 500px;"></center>
                                             <br>
-                                            <p>Actually, the reason why this was wrong is that I was correctly assigning the <b>fx_negative_half = inflow flux</b> at the entrance, but the algorithm doesn't allow me to assign the y-direction flux at the right boundary, which is the entrance. Rather, it allows me to assign the y_flux at j = 4, which is half a space interval to the right of the actual boundary. What I was doing instead was assigning the <b>fy_negative_half = 0</b> when i = 4, and I did not realise that this was actually setting the zero y-flux not at the entrance, but at the first grid point, which is half a distance inside the actual entrance (i = 4). I could have also set fy_positive_half to be equal to zero at i = 4, and that would have solved the asymmetry problem. However, assigning the y_flux at i = 4 is entirely wrong according to the algorithm. Hence, I have not set any boundary condition on the y_flux at i = 7/2. And it has finally solved the asymmetry problem.</p>
+                                            <p>Actually, the reason why this was wrong is that I was correctly assigning the <b>fx_negative_half = inflow flux</b> at the entrance, but the algorithm doesn't allow me to assign the y-direction flux at the entrance. Rather, it allows me to assign the y_flux at i = 4, which is half a space interval to the right of the actual boundary (i = 7/2). Earlier I was assigning the <b>fy_negative_half = 0</b> at i = 4, and I did not realise that this was actually setting the zero y-flux not at the entrance, but at the first grid point, which is half a distance inside the actual entrance (i = 4). I could have also set fy_positive_half to be equal to zero at i = 4 as well, and that would have solved the asymmetry problem. However, assigning the y_flux at i = 4 which is not the physical entrance is entirely wrong according to the algorithm. Hence, I have not set any boundary condition on the y_flux at the entrance i.e.i = 7/2. And this has finally solved the problem of asymmetric flow.</p>
 
                                             
                                             <p>
@@ -9265,68 +9279,139 @@ alpha = max(x_velocity(:)) * 1.0; % $gt--- To this
                                                         <tbody>
                                                             <tr>
                                                                 <td><b>Code - Case_A.m</b></td>
-                                                                <td><a href="https://github.com/arushraju/Crowd-Dynamics/releases/download/v1.1/Case_A.m">Link to Download (29.2 KB)</a></td>
+                                                                <td><a href="https://github.com/arushraju/Crowd-Dynamics/releases/download/v1.1/Case_A.m">Link to Download (29.1 KB)</a></td>
                                                             </tr>
                                                             <tr>
                                                                 <td><b>Data for 10m Obstacle - L_10.zip</b></td>
-                                                                <td><a href="https://github.com/arushraju/Crowd-Dynamics/releases/download/v1.1/L_10.zip">Link to Download (1.4 GB)</a></td>
+                                                                <td><a href="https://github.com/arushraju/Crowd-Dynamics/releases/download/v1.1/L_10.zip">Link to Download (705 MB)</a></td>
                                                             </tr>
                                                             <tr>
                                                                 <td><b>Data for 20m Obstacle - L_20.zip</b></td>
-                                                                <td><a href="https://github.com/arushraju/Crowd-Dynamics/releases/download/v1.1/L_20.zip">Link to Download (1.15 GB)</a></td>
+                                                                <td><a href="https://github.com/arushraju/Crowd-Dynamics/releases/download/v1.1/L_20.zip">Link to Download (509 MB)</a></td>
                                                             </tr>
                                                             <tr>
                                                                 <td><b>Data for 30m Obstacle - L_30.zip</b></td>
-                                                                <td><a href="https://github.com/arushraju/Crowd-Dynamics/releases/download/v1.1/L_30.zip">Link to Download (420 MB)</a></td>
+                                                                <td><a href="https://github.com/arushraju/Crowd-Dynamics/releases/download/v1.1/L_30.zip">Link to Download (429 MB)</a></td>
                                                             </tr>
                                                             <tr>
                                                                 <td><b>Data for 40m Obstacle - L_40.zip</b></td>
-                                                                <td><a href="https://github.com/arushraju/Crowd-Dynamics/releases/download/v1.1/L_40.zip">Link to Download (244 MB)</a></td>
+                                                                <td><a href="https://github.com/arushraju/Crowd-Dynamics/releases/download/v1.1/L_40.zip">Link to Download (255 MB)</a></td>
                                                             </tr>
                                                         </tbody>
                                                     </table>
                                                 </center>
                                                 
                                                 Using the data, I have plotted the results given below.<br>
-                                                <ol>
-                                                    <li>
-                                                        <!--Density Contour-->
-                                                        <h3 style="display: flex; justify-content: start;"><u>A.1. Density Contour (Animation)</u></h3>
-                                                        <b>Explanation:</b> This is just the video showing the density contour evolution with time.<br>
-                                                        <b>Results:</b><br>
-                                                        <b>Observations:</b>
-                                                    </li>
-                                                    <li>
-                                                        <h3 style="display: flex; justify-content: start;"><u>A.2. Inflow Flux V.S. Density at the Entrance</u></h3>
-                                                        <b>Explanation:</b> As suggested by the professor, I am plotting the density at the entrance (x = 0m) and the inflow flux. For each time step, I will take the average density at x = 0, and then I will take the time average of the density at each time step. This density will then be plotted for that flux and obstacle. What one would expect is to get a parabolic curve. This result will be used to ensure that the density and flux are related to each other in the same way as we are expecting. The exact derivation of the relation is given below.<br>
-                                                        <b>Results:</b><br>
-                                                        <b>Observations:</b><br>
-                                                    </li>
-                                                    <li>
-                                                        <h3 style="display: flex; justify-content: start;"><u>A.3. Inflow Rate V.S. Outflow Rate</u></h3>
-                                                        <b>Explanation:</b> Another thing that could be plotted is inflow flux vs. outflow flux. They must be the same until choking takes place. After choking, the outflow must reach some maximum value, while the inflow must be more than the outflow. Another thing that could be plotted is the number of pedestrians present in the domain with time. This will help in knowing, during choking, at what rate the density accumulates.<br>
-                                                        <b>Results:</b><br>
-                                                        <b>Observations:</b><br>
-                                                    </li>
-                                                    <li>
-                                                        <h3 style="display: flex; justify-content: start;"><u>A.4. Time of Choking V.S. Inflow Flux</u></h3>
-                                                        <b>Explanation:</b> And then the plot of the time of choking with the inflow flux for all obstacle lengths could be plotted. The results about the accumulation of density with time, along with this, could be used to know if this time could be estimated. In that case, this will be just a plot to validate and not to investigate.<br>
-                                                        <b>Results:</b><br>
-                                                        <b>Observations:</b><br>
-                                                    </li>
-                                                    <li>
-                                                        <h3 style="display: flex; justify-content: start;"><u>A.5. Flow rate at Station A and B V.S. Time</u></h3>
-                                                        <b>Explanation:</b> Another thing that is captured is the flow rate at Station A and Station B, and these values are then plotted with time. This is where the oscillation is studied. With the data about the oscillation in flow rate, we could plot the FFT graph and then the power spectral density to further study the frequency and amplitude of the oscillation and how they are related to obstacle length and inflow flux.<br>
-                                                        <b>Reults:</b><br>
-                                                        <b>Observations:</b><br>
-                                                    </li>
-                                                    <li>
-                                                        <h3 style="display: flex; justify-content: start;"><u>A.6. Phase Space Representation of flowrate at station A and B</u></h3>
-                                                        <b>Explanation</b> Another plot that could be captured is the flow rate on both sides of the obstacle, followed by plotting the phase-space representation. This is a new figure that may help.<br>
-                                                        <b>Results:</b><br>
-                                                        <b>Observations:</b><br>
-                                                    </li>
-                                                </ol>
+                                                <!-- Density and Shock Contour -->
+                                                <div>
+                                                    <h3 style="display: flex; justify-content: start;"><u>A.1. Density and Shock Contour (Animation)</u></h3>
+                                                    <b>Explanation:</b> This is simply a video showing the evolution of the density contour over time. And the other table is where I have plotted the shock term which is defined as given below:<br>
+                                                    <center><img src="./Meeting_22/Density_Gradient_Expression.png" style="width: 80%; max-width: 500px; border: 1px solid black;"></center>
+                                                    <br>
+                                                    <b>Results:</b><br>
+                                                    <div style="width: 100%; display: flex; flex-direction: row;">
+                                                        <div style="flex: 1;">
+                                                            <figure>
+                                                                <table border="1">
+                                                                    <tbody>
+                                                                        <tr>
+                                                                            <td><b>Case-A; L = <i>10m</i></b></td>
+                                                                            <td><a href="">Download Link (~350 MB)</a></td>
+                                                                        </tr>
+                                                                        <tr>
+                                                                            <td><b>Case-A; L = <i>20m</i></b></td>
+                                                                            <td><a href="">Download Link (~350 MB)</a></td>
+                                                                        </tr>
+                                                                        <tr>
+                                                                            <td><b>Case-A; L = <i>30m</i></b></td>
+                                                                            <td><a href="">Download Link (~350 MB)</a></td>
+                                                                        </tr>
+                                                                        <tr>
+                                                                            <td><b>Case-A; L = <i>40m</i></b></td>
+                                                                            <td><a href="">Download Link (~350 MB)</a></td>
+                                                                        </tr>
+                                                                    </tbody>
+                                                                </table>
+                                                                <figcaption>Density Contour</figcaption>
+                                                            </figure>
+                                                        </div>
+                                                        <div style="flex: 1;">
+                                                            <figure>
+                                                                <table border="1">
+                                                                    <tbody>
+                                                                        <tr>
+                                                                            <td><b>Case-A; L = <i>10m</i></b></td>
+                                                                            <td><a href="">Download Link (~350 MB)</a></td>
+                                                                        </tr>
+                                                                        <tr>
+                                                                            <td><b>Case-A; L = <i>20m</i></b></td>
+                                                                            <td><a href="">Download Link (~350 MB)</a></td>
+                                                                        </tr>
+                                                                        <tr>
+                                                                            <td><b>Case-A; L = <i>30m</i></b></td>
+                                                                            <td><a href="">Download Link (~350 MB)</a></td>
+                                                                        </tr>
+                                                                        <tr>
+                                                                            <td><b>Case-A; L = <i>40m</i></b></td>
+                                                                            <td><a href="">Download Link (~350 MB)</a></td>
+                                                                        </tr>
+                                                                    </tbody>
+                                                                </table>
+                                                                <figcaption>Shock Contour</figcaption>
+                                                            </figure>
+                                                        </div>
+                                                    </div>
+                                                    <b>Observations:</b>
+                                                </div>
+                                                <!--Inflow FLux V.S. Density at the Entrance-->
+                                                <div>
+                                                    <h3 style="display: flex; justify-content: start;"><u>A.2. Inflow Flux V.S. Density at the Entrance</u></h3>
+                                                    <b>Explanation:</b> As suggested by the professor, I am plotting the density at the entrance (x = 0 m) against the inflow flux. For each time step, I will calculate the average density at x = 0, and then take the time average of these density values. This average density will then be plotted against the corresponding flux for each obstacle length. What we would expect is a parabolic curve. This result will help ensure that the density and flux are related to each other in the expected manner. The exact derivation of this relationship is given below.<br>
+                                                    <b>Results:</b><br>
+                                                    <b>Observations:</b><br>
+                                                </div>
+                                                <!--Inflow Rate VS Outflow Rate-->
+                                                <div>
+                                                    <h3 style="display: flex; justify-content: start;"><u>A.3. Inflow Rate V.S. Outflow Rate</u></h3>
+                                                    <b>Explanation:</b> Another useful plot is the inflow flux against the outflow flux. These should be equal until choking occurs. After choking, the outflow should reach a maximum value, while the inflow continues to exceed the outflow. <br>
+                                                    <b>Results:</b><br>
+                                                    <b>Observations:</b><br>
+                                                </div>
+                                                <!--Population V.S. Time-->
+                                                <div>
+                                                    <h3 style="display: flex; justify-content: start;"><u>A.4. Population V.S. Time</u></h3>
+                                                    <b>Explanation:</b> Another useful plot is the number of pedestrians present in the domain over time. This will help determine the rate at which density accumulates in the domain during choking. So at each time the total population of the crowd inside the domain will be plotted against time.<br>
+                                                    <b>Results:</b><br>
+                                                    <b>Observations:</b><br>
+                                                </div>
+                                                <!--Time of Choking V.S. Inflow FLux-->
+                                                <div>
+                                                    <h3 style="display: flex; justify-content: start;"><u>A.5. Time of Choking V.S. Inflow Flux</u></h3>
+                                                    <b>Explanation:</b> The time of choking can also be plotted against the inflow flux for all obstacle lengths. The results showing the accumulation of density over time, together with this plot, could help determine whether the choking time can be estimated. In that case, this plot would serve only as a validation tool rather than for further investigation.<br>
+                                                    <b>Results:</b><br>
+                                                    <b>Observations:</b><br>
+                                                </div>
+                                                <!--Flow Rate at Station A and B V.S. Time-->
+                                                <div>
+                                                    <h3 style="display: flex; justify-content: start;"><u>A.6. Flow Rate at Station A and B V.S. Time</u></h3>
+                                                    <b>Explanation:</b> The flow rates at Station A and Station B are also captured and plotted against time. This is where the oscillations are studied. Using the flow-rate data, we can plot the FFT and power spectral density (PSD) to further investigate the frequency and amplitude of the oscillations and how they are related to the obstacle length and inflow flux.<br>
+                                                    <b>Results:</b><br>
+                                                    <b>Observations:</b><br>
+                                                </div>
+                                                <!--FFT and Time Averaged-->
+                                                <div>
+                                                    <h3 style="display: flex; justify-content: start;"><u>A.7. FFT and Time-Averaged Flow Rates</u></h3>
+                                                    <b>Explanation:</b> These results are plotted to analyse the dominant frequencies in the crowd flow. This will help us understand the range of frequencies present in a given outflow signal. I have also plotted the time-averaged data to determine the average flow rates for all the cases.<br>
+                                                    <b>Results:</b><br>
+                                                    <b>Observations:</b><br>
+                                                </div>
+                                                <!--Phase Space-->
+                                                <div>
+                                                    <h3 style="display: flex; justify-content: start;"><u>A.8. Phase Space Representation of Flow Rates at Stations A and B</u></h3>
+                                                    <b>Explanation:</b> Another plot that could be generated is the phase-space representation of the flow rates on both sides of the obstacle. This is a new figure that may provide additional insights into the flow behaviour.<br>
+                                                    <b>Results:</b><br>
+                                                    <b>Observations:</b><br>
+                                                </div>
                                             </p>
                                             <p>
                                                 Code that has been used to plot the above: <a href="">Link to Download</a><br><br>

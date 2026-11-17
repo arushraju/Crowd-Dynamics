@@ -9315,6 +9315,8 @@ alpha = max(x_velocity(:)) * 1.0; % $gt--- To this
                                                 </center>
                                                 
                                                 Using the data, I have plotted the results given below.<br>
+                                                
+                                                <hr>
                                                 <!-- Density and Shock Contour -->
                                                 <div>
                                                     <h3 style="display: flex; justify-content: start;"><u>A.1. Density and Shock Contour (Animation)</u></h3>
@@ -9322,7 +9324,7 @@ alpha = max(x_velocity(:)) * 1.0; % $gt--- To this
                                                     <center><img src="./Meeting_22/Density_Gradient_Expression.png" style="width: 80%; max-width: 500px; border: 1px solid black;"></center>
                                                     <br>
                                                     <b>Results:</b><br>
-                                                    <div style="width: 100%; display: flex; flex-direction: row;">
+                                                    <div style="width: 100%; display: flex; flex-direction: row; overflow-x: scroll;">
                                                         <div style="flex: 1;">
                                                             <figure>
                                                                 <table border="1">
@@ -9376,18 +9378,53 @@ alpha = max(x_velocity(:)) * 1.0; % $gt--- To this
                                                     </div>
                                                     <b>Observations:</b>
                                                 </div>
+
+                                                <hr>
                                                 <!--Inflow FLux V.S. Density at the Entrance-->
                                                 <div>
                                                     <h3 style="display: flex; justify-content: start;"><u>A.2. Inflow Flux V.S. Density at the Entrance</u></h3>
                                                     <b>Explanation:</b> As suggested by the professor, I am plotting the density at the entrance (x = 0 m) against the inflow flux. For each time step, I will calculate the average density at x = 0, and then take the time average of these density values. This average density will then be plotted against the corresponding flux for each obstacle length. What we would expect is a parabolic curve. This result will help ensure that the density and flux are related to each other in the expected manner. The exact derivation of this relationship is given below.<br>
                                                     <b>Results:</b><br>
+
+                                                    <h4>L = 10.00 m</h4>
+                                                    <img src="./Meeting_23/Case_A/L_10/Density_vs_Flux_Lx_Ly_10.png" style="width: 49%; min-width: 200px;">
+                                                    <img src="./Meeting_23/Case_A/L_10/Density_vs_Flux_Lx_Ly_20.png" style="width: 49%; min-width: 200px;">
+                                                    <img src="./Meeting_23/Case_A/L_10/Density_vs_Flux_Lx_Ly_30.png" style="width: 49%; min-width: 200px;">
+                                                    <img src="./Meeting_23/Case_A/L_10/Density_vs_Flux_Lx_Ly_40.png" style="width: 49%; min-width: 200px;"><br>
+
+                                                    <h4>L = 20.00 m</h4>
+                                                    <img src="./Meeting_23/Case_A/L_20/Density_vs_Flux_Lx_Ly_10.png" style="width: 49%; min-width: 200px;">
+                                                    <img src="./Meeting_23/Case_A/L_20/Density_vs_Flux_Lx_Ly_20.png" style="width: 49%; min-width: 200px;">
+                                                    <img src="./Meeting_23/Case_A/L_20/Density_vs_Flux_Lx_Ly_30.png" style="width: 49%; min-width: 200px;">
+                                                    <img src="./Meeting_23/Case_A/L_20/Density_vs_Flux_Lx_Ly_40.png" style="width: 49%; min-width: 200px;"><br>
+
+                                                    <h4>L = 30.00 m</h4>
+                                                    <img src="./Meeting_23/Case_A/L_30/Density_vs_Flux_Lx_Ly_10.png" style="width: 49%; min-width: 200px;">
+                                                    <img src="./Meeting_23/Case_A/L_30/Density_vs_Flux_Lx_Ly_20.png" style="width: 49%; min-width: 200px;">
+                                                    <img src="./Meeting_23/Case_A/L_30/Density_vs_Flux_Lx_Ly_30.png" style="width: 49%; min-width: 200px;">
+                                                    <img src="./Meeting_23/Case_A/L_30/Density_vs_Flux_Lx_Ly_40.png" style="width: 49%; min-width: 200px;"><br>
+
+                                                    <h4>L = 40.00 m</h4>
+                                                    <img src="./Meeting_23/Case_A/L_40/Density_vs_Flux_Lx_Ly_10.png" style="width: 49%; min-width: 200px;">
+                                                    <img src="./Meeting_23/Case_A/L_40/Density_vs_Flux_Lx_Ly_20.png" style="width: 49%; min-width: 200px;">
+                                                    <img src="./Meeting_23/Case_A/L_40/Density_vs_Flux_Lx_Ly_30.png" style="width: 49%; min-width: 200px;">
+                                                    <img src="./Meeting_23/Case_A/L_40/Density_vs_Flux_Lx_Ly_40.png" style="width: 49%; min-width: 200px;"><br>
+
                                                     <b>Observations:</b><br>
                                                 </div>
+
+                                                <hr>
                                                 <!--Inflow Rate VS Outflow Rate-->
                                                 <div>
                                                     <h3 style="display: flex; justify-content: start;"><u>A.3. Inflow Rate V.S. Outflow Rate</u></h3>
                                                     <b>Explanation:</b> Another useful plot is the inflow flux against the outflow flux. These should be equal until choking occurs. After choking, the outflow should reach a maximum value, while the inflow continues to exceed the outflow. <br>
                                                     <b>Results:</b><br>
+
+                                                    <img src="./Meeting_23/Case_A/L_10/Inflow_vs_Outflow/Inflow_Outflow_Lx_Ly_10.png" style="width: 49%; min-width: 200px;">
+                                                    <img src="./Meeting_23/Case_A/L_20/Inflow_vs_Outflow/Inflow_Outflow_Lx_Ly_20.png" style="width: 49%; min-width: 200px;">
+                                                    <img src="./Meeting_23/Case_A/L_30/Inflow_vs_Outflow/Inflow_Outflow_Lx_Ly_30.png" style="width: 49%; min-width: 200px;">
+                                                    <img src="./Meeting_23/Case_A/L_40/Inflow_vs_Outflow/Inflow_Outflow_Lx_Ly_40.png" style="width: 49%; min-width: 200px;"><br>
+
                                                     <b>Observations:</b><br>
                                                 </div>
                                                 <!--Population V.S. Time-->
@@ -9395,40 +9432,143 @@ alpha = max(x_velocity(:)) * 1.0; % $gt--- To this
                                                     <h3 style="display: flex; justify-content: start;"><u>A.4. Population V.S. Time</u></h3>
                                                     <b>Explanation:</b> Another useful plot is the number of pedestrians present in the domain over time. This will help determine the rate at which density accumulates in the domain during choking. So at each time the total population of the crowd inside the domain will be plotted against time.<br>
                                                     <b>Results:</b><br>
+
+
+
                                                     <b>Observations:</b><br>
                                                 </div>
+
+                                                <hr>
                                                 <!--Time of Choking V.S. Inflow FLux-->
                                                 <div>
                                                     <h3 style="display: flex; justify-content: start;"><u>A.5. Time of Choking V.S. Inflow Flux</u></h3>
                                                     <b>Explanation:</b> The time of choking can also be plotted against the inflow flux for all obstacle lengths. The results showing the accumulation of density over time, together with this plot, could help determine whether the choking time can be estimated. In that case, this plot would serve only as a validation tool rather than for further investigation.<br>
                                                     <b>Results:</b><br>
+
+                                                    <center><img src="./Meeting_23/Case_A/Choking_Time_Comparison.png" style="width: 100%; max-width: 500px;"></center><br>
+                                                    
                                                     <b>Observations:</b><br>
                                                 </div>
+
+                                                <hr>
                                                 <!--Flow Rate at Station A and B V.S. Time-->
                                                 <div>
                                                     <h3 style="display: flex; justify-content: start;"><u>A.6. Flow Rate at Station A and B V.S. Time</u></h3>
                                                     <b>Explanation:</b> The flow rates at Station A and Station B are also captured and plotted against time. This is where the oscillations are studied. Using the flow-rate data, we can plot the FFT and power spectral density (PSD) to further investigate the frequency and amplitude of the oscillations and how they are related to the obstacle length and inflow flux.<br>
                                                     <b>Results:</b><br>
+
+                                                    <img src="Meeting_23/Case_A/L_10/Station_Flow_Rates/Station_Flow_Lx_Ly_10.png" style="width: 49%; min-width: 200px;">
+                                                    <img src="Meeting_23/Case_A/L_20/Station_Flow_Rates/Station_Flow_Lx_Ly_20.png" style="width: 49%; min-width: 200px;">
+                                                    <img src="Meeting_23/Case_A/L_30/Station_Flow_Rates/Station_Flow_Lx_Ly_30.png" style="width: 49%; min-width: 200px;">
+                                                    <img src="Meeting_23/Case_A/L_40/Station_Flow_Rates/Station_Flow_Lx_Ly_40.png" style="width: 49%; min-width: 200px;"><br>
+
                                                     <b>Observations:</b><br>
                                                 </div>
+
+                                                <hr>
                                                 <!--FFT and Time Averaged-->
                                                 <div>
                                                     <h3 style="display: flex; justify-content: start;"><u>A.7. FFT and Time-Averaged Flow Rates</u></h3>
                                                     <b>Explanation:</b> These results are plotted to analyse the dominant frequencies in the crowd flow. This will help us understand the range of frequencies present in a given outflow signal. I have also plotted the time-averaged data to determine the average flow rates for all the cases.<br>
                                                     <b>Results:</b><br>
+
+                                                    <div style="overflow-x: scroll;">
+                                                            <table border="1">
+                                                                <thead>
+                                                                    <th></th>
+                                                                    <th>F = 0.5</th>
+                                                                    <th>F = 1.0</th>
+                                                                    <th>F = 1.5</th>
+                                                                    <th>F = 2.0</th>
+                                                                    <th>F = 2.5</th>
+                                                                    <th>F = 3.0</th>
+                                                                    <th>F = 3.5</th>
+                                                                    <th>F = 4.0</th>
+                                                                    <th>F = 4.5</th>
+                                                                    <th>F = 5.0</th>
+                                                                </thead>
+                                                                <tbody>
+                                                                    <!--L = 10-->
+                                                                    <tr>
+                                                                        <td style="white-space: nowrap;"><b>Lx = Ly = 10</b></td>
+                                                                        <td><img src="./Meeting_23/Case_A/L_10/FFT/FFT_Lx_Ly_10_F_0.50.png" style="width: 200px;"></td>
+                                                                        <td><img src="./Meeting_23/Case_A/L_10/FFT/FFT_Lx_Ly_10_F_1.00.png" style="width: 200px;"></td>
+                                                                        <td><img src="./Meeting_23/Case_A/L_10/FFT/FFT_Lx_Ly_10_F_1.50.png" style="width: 200px;"></td>
+                                                                        <td><img src="./Meeting_23/Case_A/L_10/FFT/FFT_Lx_Ly_10_F_2.00.png" style="width: 200px;"></td>
+                                                                        <td><img src="./Meeting_23/Case_A/L_10/FFT/FFT_Lx_Ly_10_F_2.50.png" style="width: 200px;"></td>
+                                                                        <td><img src="./Meeting_23/Case_A/L_10/FFT/FFT_Lx_Ly_10_F_3.00.png" style="width: 200px;"></td>
+                                                                        <td><img src="./Meeting_23/Case_A/L_10/FFT/FFT_Lx_Ly_10_F_3.50.png" style="width: 200px;"></td>
+                                                                        <td><img src="./Meeting_23/Case_A/L_10/FFT/FFT_Lx_Ly_10_F_4.00.png" style="width: 200px;"></td>
+                                                                        <td><img src="./Meeting_23/Case_A/L_10/FFT/FFT_Lx_Ly_10_F_4.50.png" style="width: 200px;"></td>
+                                                                        <td><img src="./Meeting_23/Case_A/L_10/FFT/FFT_Lx_Ly_10_F_5.00.png" style="width: 200px;"></td>
+                                                                    </tr>
+                                                                    <!--L = 20-->
+                                                                    <tr>
+                                                                        <td style="white-space: nowrap;"><b>Lx = Ly = 10</b></td>
+                                                                        <td><img src="./Meeting_23/Case_A/L_20/FFT/FFT_Lx_Ly_20_F_0.50.png" style="width: 200px;"></td>
+                                                                        <td><img src="./Meeting_23/Case_A/L_20/FFT/FFT_Lx_Ly_20_F_1.00.png" style="width: 200px;"></td>
+                                                                        <td><img src="./Meeting_23/Case_A/L_20/FFT/FFT_Lx_Ly_20_F_1.50.png" style="width: 200px;"></td>
+                                                                        <td><img src="./Meeting_23/Case_A/L_20/FFT/FFT_Lx_Ly_20_F_2.00.png" style="width: 200px;"></td>
+                                                                        <td><img src="./Meeting_23/Case_A/L_20/FFT/FFT_Lx_Ly_20_F_2.50.png" style="width: 200px;"></td>
+                                                                        <td><img src="./Meeting_23/Case_A/L_20/FFT/FFT_Lx_Ly_20_F_3.00.png" style="width: 200px;"></td>
+                                                                        <td><img src="./Meeting_23/Case_A/L_20/FFT/FFT_Lx_Ly_20_F_3.50.png" style="width: 200px;"></td>
+                                                                        <td><img src="./Meeting_23/Case_A/L_20/FFT/FFT_Lx_Ly_20_F_4.00.png" style="width: 200px;"></td>
+                                                                        <td><img src="./Meeting_23/Case_A/L_20/FFT/FFT_Lx_Ly_20_F_4.50.png" style="width: 200px;"></td>
+                                                                        <td><img src="./Meeting_23/Case_A/L_20/FFT/FFT_Lx_Ly_20_F_5.00.png" style="width: 200px;"></td>
+                                                                    </tr>
+                                                                    <!--L = 30-->
+                                                                    <tr>
+                                                                        <td style="white-space: nowrap;"><b>Lx = Ly = 10</b></td>
+                                                                        <td><img src="./Meeting_23/Case_A/L_30/FFT/FFT_Lx_Ly_30_F_0.50.png" style="width: 200px;"></td>
+                                                                        <td><img src="./Meeting_23/Case_A/L_30/FFT/FFT_Lx_Ly_30_F_1.00.png" style="width: 200px;"></td>
+                                                                        <td><img src="./Meeting_23/Case_A/L_30/FFT/FFT_Lx_Ly_30_F_1.50.png" style="width: 200px;"></td>
+                                                                        <td><img src="./Meeting_23/Case_A/L_30/FFT/FFT_Lx_Ly_30_F_2.00.png" style="width: 200px;"></td>
+                                                                        <td><img src="./Meeting_23/Case_A/L_30/FFT/FFT_Lx_Ly_30_F_2.50.png" style="width: 200px;"></td>
+                                                                        <td><img src="./Meeting_23/Case_A/L_30/FFT/FFT_Lx_Ly_30_F_3.00.png" style="width: 200px;"></td>
+                                                                        <td><img src="./Meeting_23/Case_A/L_30/FFT/FFT_Lx_Ly_30_F_3.50.png" style="width: 200px;"></td>
+                                                                        <td><img src="./Meeting_23/Case_A/L_30/FFT/FFT_Lx_Ly_30_F_4.00.png" style="width: 200px;"></td>
+                                                                        <td><img src="./Meeting_23/Case_A/L_30/FFT/FFT_Lx_Ly_30_F_4.50.png" style="width: 200px;"></td>
+                                                                        <td><img src="./Meeting_23/Case_A/L_30/FFT/FFT_Lx_Ly_30_F_5.00.png" style="width: 200px;"></td>
+                                                                    </tr>
+                                                                    <!--L = 40-->
+                                                                    <tr>
+                                                                        <td style="white-space: nowrap;"><b>Lx = Ly = 10</b></td>
+                                                                        <td><img src="./Meeting_23/Case_A/L_40/FFT/FFT_Lx_Ly_40_F_0.50.png" style="width: 200px;"></td>
+                                                                        <td><img src="./Meeting_23/Case_A/L_40/FFT/FFT_Lx_Ly_40_F_1.00.png" style="width: 200px;"></td>
+                                                                        <td><img src="./Meeting_23/Case_A/L_40/FFT/FFT_Lx_Ly_40_F_1.50.png" style="width: 200px;"></td>
+                                                                        <td><img src="./Meeting_23/Case_A/L_40/FFT/FFT_Lx_Ly_40_F_2.00.png" style="width: 200px;"></td>
+                                                                        <td><img src="./Meeting_23/Case_A/L_40/FFT/FFT_Lx_Ly_40_F_2.50.png" style="width: 200px;"></td>
+                                                                        <td><img src="./Meeting_23/Case_A/L_40/FFT/FFT_Lx_Ly_40_F_3.00.png" style="width: 200px;"></td>
+                                                                        <td><img src="./Meeting_23/Case_A/L_40/FFT/FFT_Lx_Ly_40_F_3.50.png" style="width: 200px;"></td>
+                                                                        <td><img src="./Meeting_23/Case_A/L_40/FFT/FFT_Lx_Ly_40_F_4.00.png" style="width: 200px;"></td>
+                                                                        <td><img src="./Meeting_23/Case_A/L_40/FFT/FFT_Lx_Ly_40_F_4.50.png" style="width: 200px;"></td>
+                                                                        <td><img src="./Meeting_23/Case_A/L_40/FFT/FFT_Lx_Ly_40_F_5.00.png" style="width: 200px;"></td>
+                                                                    </tr>
+                                                                </tbody>
+                                                            </table>
+                                                        </div><br>
+
                                                     <b>Observations:</b><br>
                                                 </div>
+
+                                                <hr>
                                                 <!--Phase Space-->
                                                 <div>
                                                     <h3 style="display: flex; justify-content: start;"><u>A.8. Phase Space Representation of Flow Rates at Stations A and B</u></h3>
                                                     <b>Explanation:</b> Another plot that could be generated is the phase-space representation of the flow rates on both sides of the obstacle. This is a new figure that may provide additional insights into the flow behaviour.<br>
                                                     <b>Results:</b><br>
+
+                                                    <img src="./Meeting_23/Case_A/L_10/Phase_Space/Phase_Space_Lx_Ly_10.png" style="width: 49%; min-width: 200px;">
+                                                    <img src="./Meeting_23/Case_A/L_20/Phase_Space/Phase_Space_Lx_Ly_20.png" style="width: 49%; min-width: 200px;">
+                                                    <img src="./Meeting_23/Case_A/L_30/Phase_Space/Phase_Space_Lx_Ly_30.png" style="width: 49%; min-width: 200px;">
+                                                    <img src="./Meeting_23/Case_A/L_40/Phase_Space/Phase_Space_Lx_Ly_40.png" style="width: 49%; min-width: 200px;"><br>
+
                                                     <b>Observations:</b><br>
                                                 </div>
                                             </p>
+                                            <hr>
                                             <p>
-                                                Code that has been used to plot the above: <a href="https://github.com/arushraju/Crowd-Dynamics/blob/main/Meeting_23/Case_A/Result_A.m">Link to Download</a><br><br>
-                                                Given below are the actual results.
+                                                Code that has been used to plot the above: <a href="https://github.com/arushraju/Crowd-Dynamics/blob/main/Meeting_23/Case_A/Result_A.m">Link to Download</a>
                                             </p>
                                         </section>
                                     </details>

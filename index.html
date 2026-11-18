@@ -10004,6 +10004,66 @@ alpha = max(x_velocity(:)) * 1.0; % $gt--- To this
                                         </section>
                                     </details>
                                 </div>
+
+                                <!--Benchmark-->
+                                <h4>Testing the Solver against the Benchmark</h4>
+                                <div style="background-color: rgb(255, 246, 184);">
+                                    <!--Attempt 1-->
+                                    <details>
+                                        <summary>Attempt 1</summary>
+                                        <section style="background-color: rgb(255, 246, 184);" class="intro-card">
+                                            <div>
+                                                <p>
+                                                    Given below are the list of the problems with the solver that I have fixed.
+                                                </p>
+                                                <ol>
+                                                    <li>
+                                                        <b>Correcting the alpha_x and alpha_y:</b>
+                                                    </li>
+                                                    <li>
+                                                        <b>Correcting Inflow condition on Y-flux</b>
+                                                    </li>
+                                                    <li>
+                                                        <b>Correcting RK3, by re-computing potential and velocity</b>
+                                                    </li>
+                                                    <li>
+                                                        <b>Correcting obstacle gradient for Fast Sweep</b>
+                                                    </li>
+                                                </ol>
+                                                <p>
+                                                    With these chnages I was able to get to result that were some what close to the actual result. I have added the results below:<br>
+                                                </p>
+                                            </div>
+                                        </section>
+                                    </details>
+
+                                    <!--Attempt 2-->
+                                    <details>
+                                        <summary>Attempt 2</summary>
+                                        <section style="background-color: rgb(255, 246, 184);" class="intro-card">
+                                            <div>
+                                                <p>Now I have done two things in the code.</p>
+                                                <ol>
+                                                    <li>
+                                                        <b>Changing Potential Outflow condition:</b>
+                                                    </li>
+                                                    <li>
+                                                        <b>Increased Fast-Sweeep iteration safety limit:</b>
+                                                    </li>
+                                                    <li>
+                                                        <b>Changing the Flux Outflow Condition:</b>
+                                                    </li>
+                                                    <li>
+                                                        <b>Changed the plotting coordinates</b>
+                                                    </li>
+                                                </ol>
+                                                <p>
+                                                    Given below are the results:
+                                                </p>
+                                            </div>
+                                        </section>
+                                    </details>
+                                </div>
                             </div>
                         </section>
                     </details>

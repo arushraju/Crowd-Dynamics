@@ -9266,8 +9266,8 @@ alpha = max(x_velocity(:)) * 1.0; % $gt--- To this
     <span style="color: rgb(0, 68, 255);">if</span><span style="color: white;">(i == 4)</span>
         <span style="color: rgb(50, 255, 47);">% This is the X-flux that has to be specified at the entrance</span>
         <span style="color: white;">fx_negative_half = </span><span style="color: rgb(0, 208, 255);">inflow_flux</span><span style="color: white;">;</span>
-        <span style="color: rgb(50, 255, 47);">% This is the Y-flux, which is not needed at the entrance and is therefore commented out</span>
-        <span style="color: rgb(50, 255, 47);">% fy_negative_half = 0;</span>
+        <span style="color: rgb(50, 255, 47);">% THe Y-flux given below, is not needed at the entrance and is therefore commented out</span>
+        <span style="color: rgb(255, 47, 47);">% fy_negative_half = 0;</span>
 
     <span style="color: rgb(0, 68, 255);">end</span>
                                                     </code></pre>
@@ -10042,24 +10042,98 @@ alpha = max(x_velocity(:)) * 1.0; % $gt--- To this
                                         <summary>Attempt 2</summary>
                                         <section style="background-color: rgb(255, 246, 184);" class="intro-card">
                                             <div>
-                                                <p>Now I have done two things in the code.</p>
+                                                <p>I still dont see much of the expected improvement. Now I have made four changes to the code.</p>
                                                 <ol>
                                                     <li>
-                                                        <b>Changing Potential Outflow condition:</b>
+                                                        <b>Changing the Flux Outflow Condition:</b> I have extrapolated the entire flux at the outflow. Earlier, I wasn't doing this. The code snippet for this is given below:<br>
+
+                                                        <!-- Code -->
+                                                        <div style="overflow-x: scroll; background-color: black; font-family: 'Courier New', Courier, monospace;">
+                                                            <pre><code>
+    <span style="color: blue;">for </span><span style="color: white;">j = at_Exit</span>
+        <span style="color: rgb(13, 255, 0);">% Extrapolating the X flux in makeRHS function for WENO</span>
+        <span style="color: rgb(0, 195, 255);">flux_x</span><span style="color: white;">(j,</span><span style="color: rgb(0, 195, 255);">Nx</span><span style="color: white;">-2) = </span><span style="color: rgb(0, 195, 255);">flux_x</span><span style="color: white;">(j,</span><span style="color: rgb(0, 195, 255);">Nx</span><span style="color: white;">-3);</span>
+        <span style="color: rgb(0, 195, 255);">flux_x</span><span style="color: white;">(j,</span><span style="color: rgb(0, 195, 255);">Nx</span><span style="color: white;">-1) = </span><span style="color: rgb(0, 195, 255);">flux_x</span><span style="color: white;">(j,</span><span style="color: rgb(0, 195, 255);">Nx</span><span style="color: white;">-2);</span>
+        <span style="color: rgb(0, 195, 255);">flux_x</span><span style="color: white;">(j,</span><span style="color: rgb(0, 195, 255);">Nx</span><span style="color: white;">) = </span><span style="color: rgb(0, 195, 255);">flux_x</span><span style="color: white;">(j,</span><span style="color: rgb(0, 195, 255);">Nx</span><span style="color: white;">-1);</span>
+
+        <span style="color: rgb(13, 255, 0);">% Extrapolating the Y flux in makeRHS function for WENO</span>
+        <span style="color: rgb(0, 195, 255);">flux_y</span><span style="color: white;">(j,</span><span style="color: rgb(0, 195, 255);">Nx</span><span style="color: white;">-2) = </span><span style="color: rgb(0, 195, 255);">flux_y</span><span style="color: white;">(j,</span><span style="color: rgb(0, 195, 255);">Nx</span><span style="color: white;">-3);</span>
+        <span style="color: rgb(0, 195, 255);">flux_y</span><span style="color: white;">(j,</span><span style="color: rgb(0, 195, 255);">Nx</span><span style="color: white;">-1) = </span><span style="color: rgb(0, 195, 255);">flux_y</span><span style="color: white;">(j,</span><span style="color: rgb(0, 195, 255);">Nx</span><span style="color: white;">-2);</span>
+        <span style="color: rgb(0, 195, 255);">flux_y</span><span style="color: white;">(j,</span><span style="color: rgb(0, 195, 255);">Nx</span><span style="color: white;">) = </span><span style="color: rgb(0, 195, 255);">flux_y</span><span style="color: white;">(j,</span><span style="color: rgb(0, 195, 255);">Nx</span><span style="color: white;">-1);</span>
+    <span style="color: blue;">end</span>
+                                                            </code></pre>
+                                                        </div>
                                                     </li>
+
                                                     <li>
-                                                        <b>Increased Fast-Sweeep iteration safety limit:</b>
+                                                        <b>Increased Fast-Sweeping Iteration Safety Limit:</b> To ensure the convergence of Fast Sweeping, I have also increased the safety limit for the maximum number of sweeps. However, the sweeping process might terminate earlier if the iteration error drops below the prescribed tolerance specified in the paper. This will increase the computational time.
+                                                        <!-- Code -->
+                                                        <div style="overflow-x: scroll; background-color: black;">
+                                                            <pre><code>
+    <span style="color: rgb(0, 187, 255);">loop_safety</span><span style="color: white;"> &lt; 2000;</span>
+                                                            </code></pre>
+                                                        </div>
                                                     </li>
+
                                                     <li>
-                                                        <b>Changing the Flux Outflow Condition:</b>
+                                                        <b>Changing the Potential Outflow Condition:</b> The paper states that the potential at the exit is set to zero. However, the exits are located between Nx-3 and Nx-2, which are the last computational grid point and the first ghost point at the right boundary, respectively. The WENO Fast-Sweeping scheme does not allow me to impose a condition at the point Nx-2.5. For this reason, I have extrapolated the negative of the interior potential values to ensure that the direction of the velocity is out of the domain. I have not set the potential to zero at the last computational grid point because imposing the condition at an accessible point would not be physically consistent with its actual location. The point where the condition should actually be imposed is not accessible. Therefore, I have implemented the outflow condition in the following way:<br>
+
+                                                        <!-- Code -->
+                                                        <div style="background-color: black; overflow-x: scroll;">
+                                                            <pre><code>
+    <span style="color: rgb(0, 255, 0);">% This is the Exit Boundary at the right</span>
+    <span style="color: blue;">for</span><span style="color: white;"> j = 1 : </span><span style="color: aqua;">Ny</span>
+        <span style="color: blue;">if</span><span style="color: white;">((j &gt;= 9 && j &lt;= 23) || (j &gt; 34 && j &lt; 48))</span>
+            <span style="color: white;">phi(j,<span style="color: aqua;">Nx</span>-3) = cost(j,<span style="color: cyan;">Nx</span>-3) * h/2;</span>
+        <span style="color: blue;">end</span>
+    <span style="color: blue;">end</span>
+
+    <span style="color: rgb(0, 255, 0);">..................</span>
+
+    <span style="color: rgb(0, 255, 0);">% Later after the sweeps, Right Boundary Condition</span>
+    <span style="color: blue;">for</span><span style="color: white;"> j = 1 : </span><span style="color: aqua;">Ny</span>
+        <span style="color: blue;">if</span><span style="color: white;">((j &gt;= 9 && j &lt;= 23) || (j &gt;= 34 && j &lt;= 48))</span>
+            <span style="color: white;">phi(j,<span style="color: cyan;">Nx</span>-2) = - phi(j,<span style="color: cyan;">Nx</span>-3);</span>
+            <span style="color: white;">phi(j,<span style="color: cyan;">Nx</span>-1) = - phi(j,<span style="color: cyan;">Nx</span>-4);</span>
+            <span style="color: white;">phi(j,<span style="color: cyan;">Nx</span>) = - phi(j,<span style="color: cyan;">Nx</span>-5);</span>
+        <span style="color: blue;">else</span>
+            <span style="color: white;">phi(j,<span style="color: cyan;">Nx</span>-2) = phi(j,<span style="color: cyan;">Nx</span>-3);</span>
+            <span style="color: white;">phi(j,<span style="color: cyan;">Nx</span>-1) = phi(j,<span style="color: cyan;">Nx</span>-2);</span>
+            <span style="color: white;">phi(j,<span style="color: cyan;">Nx</span>) = phi(j,<span style="color: cyan;">Nx</span>-1);</span>
+        <span style="color: blue;">end</span>
+    <span style="color: blue;">end</span>
+                                                            </code></pre>
+                                                        </div>
                                                     </li>
+
                                                     <li>
-                                                        <b>Changed the plotting coordinates</b>
+                                                        <b>Changed the Plotting Coordinates:</b> Since the grid is staggered, the points on the physical grid are calculated using the values at adjacent grid points. For example, to calculate the density at Nx-2.5, I have taken the average of the densities at Nx-3 and Nx-2. The plots are now generated using these physical grid coordinates.
                                                     </li>
                                                 </ol>
-                                                <p>
-                                                    Given below are the results:
-                                                </p>
+
+                                                <p>Given below are the results:</p>
+                                            </div>
+                                        </section>
+                                    </details>
+                                    <!--Attempt 3-->
+                                    <details>
+                                        <summary>Attempt 3</summary>
+                                        <section style="background-color: rgb(255, 246, 184);" class="intro-card">
+                                            <div>
+                                                <p>I have noticed that the problem now lies at the outflow. I see some high-density spikes at the outflow. After digging into the code and the paper, I found a few more corrections.</p>
+                                                <ol>
+                                                    <li>
+                                                        This is the line that I underestimated: <i>"The values of density at the ghost points inside the wall are set to zero"</i> and <i>"The values of density at the ghost points are obtained by extrapolation from inside the computational domain."</i> Earlier, I was setting the density inside the obstacle to zero. However, at all the boundaries of the domain, I was extrapolating the density to the ghost points. It turns out that I must set the density to zero at the ghost points inside the wall and extrapolate it only at the outflow.<br>
+                                                        <center style="border: 1px soild black;"><img src="./Meeting_23/Attempt_3/Attempt_3_Fix.png" style="max-width: 500px; width: 100%;"></center>
+                                                    </li>
+
+                                                    <li>
+                                                        There is another line that I missed: <i>"For those grid points whose distance to the exit boundary is less than or equal to 2h, we fix their solution values as the initial guess during the iterations."</i> I have been updating the two columns of potential at (Nx-3 and Nx-4). So, now I will do the same with the first-order Fast Sweeping method. However, in WENO, I will fix the Nx-3 and Nx-4 columns at whatever values they already have. The good thing is that, in this case, WENO will not need the ghost points, since the last points it will encounter are Nx-3 and Nx-4. It won't use Nx-2, Nx-1, or Nx to calculate Nx-5. However, for other purposes, such as the first-order Fast Sweeping scheme, I will still keep the odd extrapolation of the potential. At the obstacle walls and domain boundaries, I am applying one-sided finite-difference stencils.<br>
+                                                        <center style="border: 1px solid black;"><img src="./Meeting_23/Attempt_3/Attempt_3_Fix_2.png" style="max-width: 500px; width: 100%;"></center>
+                                                    </li>
+
+                                                    <li>Yes, but at the inflow, both the potential and density are extrapolated. Also since extrapolating the flux as well was my own intuition, i will omit it this time, and stick to the paper.</li>
+                                                </ol>
                                             </div>
                                         </section>
                                     </details>

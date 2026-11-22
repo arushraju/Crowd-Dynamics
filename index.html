@@ -10265,8 +10265,135 @@ alpha = max(x_velocity(:)) * 1.0; % $gt--- To this
 
                                                     <li>Yes, but at the inflow, both the potential and density are extrapolated. Also since extrapolating the flux as well was my own intuition, i will omit it this time, and stick to the paper.</li>
                                                 </ol>
+                                                <p>
+                                                    I found that the results were still disappointing. They are given below<br>
+                                                </p>
                                             </div>
                                         </section>
+                                    </details>
+
+                                    <!--Attempt 4-->
+                                    <details>
+                                        <summary>Attempt 4</summary>
+                                        <div>
+                                            <p>I was finding it difficult to know what to do now. So I found this paper ( <a href="./Papers/High_order_computational_scheme_for_a_dynamic_continuum.pdf" target="_blank">High order computational scheme for a dynamic continuum model for bi-directional pedestrian flows</a> ), which is written by researcher, three of which are also the author of the benchmark paper I am trying to replicate. They have been using a slightly different scheme in this paper, but they are more explicit about the boundary condition in this paper. I am going to list down the chnages I am goign to make in this code below.</p>
+                                        </div>
+                                        <ol>
+                                            <li>
+                                                The paper says that Density, Flux and Potential has to have the values assigned at the ghost point. And the following table is where I have listed all the conditions from the paper.<br>
+                                                <div style="width: 100%; height: 400px; max-height: 800px; overflow: scroll;"> 
+                                                    <table border="1">
+                                                        <tbody>
+                                                            <tr>
+                                                                <td colspan="3" style="text-align: center;">
+                                                                    <b>Inlet</b>
+                                                                </td>
+                                                            </tr>
+                                                            <tr>
+                                                                <td><b>Density</b></td>
+                                                                <td>
+                                                                    I was linearly extrapolating the density values at the ghost points.
+                                                                </td>
+                                                                <td>
+                                                                    The paper suggests using <b>third-order extrapolation</b> for the density values.
+                                                                </td>
+                                                            </tr>
+                                                            <tr>
+                                                                <td><b>Flux</b></td>
+                                                                <td>
+                                                                    I was not extrapolating the flux at the inlet, since it does not require extrapolation.
+                                                                </td>
+                                                                <td>
+                                                                    The paper does not explicitly discuss flux extrapolation at the inlet. It only specifies that the flux must be prescribed at the boundary.
+                                                                </td>
+                                                            </tr>
+                                                            <tr>
+                                                                <td><b>Potential</b></td>
+                                                                <td>
+                                                                    I was linearly extrapolating the potential at the inlet.
+                                                                </td>
+                                                                <td>
+                                                                    The paper suggests using <b>third-order extrapolation</b> for the potential. However, the benchmark description specifies assigning a value of 10<sup>12</sup> to the ghost points. This is where both the paper disagree with each other.
+                                                                </td>
+                                                            </tr>
+                                                            <tr>
+                                                                <td colspan="3" style="text-align: center;">
+                                                                    <b>Outlet</b>
+                                                                </td>
+                                                            </tr>
+                                                            <tr>
+                                                                <td><b>Density</b></td>
+                                                                <td>
+                                                                    I was linearly extrapolating the density at the outlet as well.
+                                                                </td>
+                                                                <td>
+                                                                    The paper suggests using <b>third-order extrapolation</b> for the density.
+                                                                </td>
+                                                            </tr>
+                                                            <tr>
+                                                                <td><b>Flux</b></td>
+                                                                <td>
+                                                                    I was not calculating flux at the outflow.
+                                                                </td>
+                                                                <td>
+                                                                    The paper suggests using <b>third-order extrapolation</b> for the flux.
+                                                                </td>
+                                                            </tr>
+                                                            <tr>
+                                                                <td><b>Potential</b></td>
+                                                                <td>
+                                                                    I was linearly extrapolating the potential at the outlet as well.
+                                                                </td>
+                                                                <td>
+                                                                    The paper suggest to extrapolate it but with third order extrapolation.
+                                                                </td>
+                                                            </tr>
+                                                            <tr>
+                                                                <td colspan="3" style="text-align: center;">
+                                                                    <b>Walls</b>
+                                                                </td>
+                                                            </tr>
+                                                            <tr>
+                                                                <td><b>Density</b></td>
+                                                                <td>
+                                                                    I was making it equal to zero.
+                                                                </td>
+                                                                <td>
+                                                                    The paper says that density has to be equal to zero at the walls, and this is same as what I am doing.
+                                                                </td>
+                                                            </tr>
+                                                            <tr>
+                                                                <td><b>Flux</b></td>
+                                                                <td>
+                                                                    I was making it equal to zero.
+                                                                </td>
+                                                                <td>
+                                                                    The paper says the same.
+                                                                </td>
+                                                            </tr>
+                                                            <tr>
+                                                                <td><b>Potential</b></td>
+                                                                <td>
+                                                                    I was making it equal to 10<sup>12</sup>.
+                                                                </td>
+                                                                <td>
+                                                                    The paper says the same.
+                                                                </td>
+                                                            </tr>
+                                                        </tbody>
+                                                    </table>
+                                                </div>
+                                                
+                                            </li>
+                                            <li>
+                                                <b>Convergence of WENO Fats Sweep:</b><br>
+                                                Another problem I was facing is that even after increasing the limit of the <code>loop_safety &lt; 2000</code>, I was still unable to converge the potential function. So the paper propsed a fix for this. It say, <i>"For the third order fast sweeping method, the nonlinear weights in (27) and (28) may cause non convergence for (31) in some time steps for solving the system (12) of our model. For such cases, the iteration does converge if linear weights are used instead, however this would bring oscillatory results without the advantage of choosing smooth stencils from the application of nonlinear weights, especially around the boundary where discontinuities exist. We have therefore adopted the following strategy. First, we use the nonlinear weights to iterate. After the iteration error stagnates for 50 consecutive steps at the same error level, for example at 10<sup>−8</sup>, we switch to fixed values for the weights taken as the average values of the nonlinear weights in those 50 iteration steps. These fixed weights are then used in (27) and (28) instead of the nonlinear weights (29) and (30) afterwards, which leads to very fast convergence according to (31)."</i>
+                                            </li>
+                                            <li>
+                                                <b>CFL</b><br>
+                                                The CFL number is not mentioned in the original paper, but this paper states it, and for the third order WENo it sets the CFL equal to 0.1 whereas I was setting it to 0.5. I can change this as well.
+                                            </li>
+                                        </ol>
                                     </details>
                                 </div>
                             </div>

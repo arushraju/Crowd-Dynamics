@@ -10243,9 +10243,14 @@ alpha = max(x_velocity(:)) * 1.0; % $gt--- To this
                                                         </figure>
                                                     </div>
                                                 </div>
+
+                                                <p>
+                                                    The following link could be used to download the animation of densities, potential and velocities for this attempt: <a href="https://github.com/arushraju/Crowd-Dynamics/releases/download/v1.1_Benchmark/Attempt_2.zip">Link to Download (101 MB)</a>
+                                                </p>
                                             </div>
                                         </section>
                                     </details>
+
                                     <!--Attempt 3-->
                                     <details>
                                         <summary>Attempt 3</summary>
@@ -10406,7 +10411,9 @@ alpha = max(x_velocity(:)) * 1.0; % $gt--- To this
                                                             </tr>
                                                         </tbody>
                                                     </table>
-
+                                                </p>
+                                                <p>
+                                                    The following link could be used to download the animation of densities, potential and velocities for this attempt: <a href="https://github.com/arushraju/Crowd-Dynamics/releases/download/v1.1_Benchmark/Attempt_3.zip">Link to Download (61.4 MB)</a>
                                                 </p>
                                             </div>
                                         </section>
@@ -10534,6 +10541,57 @@ alpha = max(x_velocity(:)) * 1.0; % $gt--- To this
                                                 The CFL number is not mentioned in the original paper, but this paper states it, and for the third order WENo it sets the CFL equal to 0.1 whereas I was setting it to 0.5. I can change this as well.
                                             </li>
                                         </ol>
+                                        <p>I have provided the results below.</p>
+                                        <p>
+                                            <h4>Density Comparison at 120s</h4>
+                                            <img src="./Meeting_23/Attempt_4/Density_at_33_at_120.png" width="49%">
+                                            <img src="./Meeting_23/Attempt_4/Density_at_36_at_120.png" width="49%">
+                                            <hr>
+
+                                            <table border="1">
+                                                <thead>
+                                                    <th>Paper's Result</th>
+                                                    <th>Solver's Result</th>
+                                                </thead>
+                                                <tbody>
+                                                    <tr>
+                                                        <td><img src="./Meeting_23/Attempt_2/Solver_Result/Density_Surface_at_30_Paper.png" width="100%"></td>
+                                                        <td><img src="./Meeting_23/Attempt_4/Solver_Result/Density_Surface_at_30.png" width="100%"></td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td><img src="./Meeting_23/Attempt_2/Solver_Result/Density_Surface_at_60_Paper.png" width="100%"></td>
+                                                        <td><img src="./Meeting_23/Attempt_4/Solver_Result/Density_Surface_at_60.png" width="100%"></td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td><img src="./Meeting_23/Attempt_2/Solver_Result/Density_Surface_at_120_Paper.png" width="100%"></td>
+                                                        <td><img src="./Meeting_23/Attempt_4/Solver_Result/Density_Surface_at_120.png" width="100%"></td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td><img src="./Meeting_23/Attempt_2/Solver_Result/Velocity_Surface_at_30_Paper.png" width="100%"></td>
+                                                        <td><img src="./Meeting_23/Attempt_4/Solver_Result/Velocity_Surface_at_30.png" width="100%"></td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td><img src="./Meeting_23/Attempt_2/Solver_Result/Velocity_Surface_at_60_Paper.png" width="100%"></td>
+                                                        <td><img src="./Meeting_23/Attempt_4/Solver_Result/Velocity_Surface_at_60.png" width="100%"></td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td><img src="./Meeting_23/Attempt_2/Solver_Result/Velocity_Surface_at_90_Paper.png" width="100%"></td>
+                                                        <td><img src="./Meeting_23/Attempt_4/Solver_Result/Velocity_Surface_at_90.png" width="100%"></td>
+                                                    </tr>
+                                                </tbody>
+                                            </table>
+
+                                            <h4>Potential at 120s</h4>
+                                            <img src="./Meeting_23/Attempt_2/Potential_at_120_Paper.png" width="49%">
+                                            <img src="./Meeting_23/Attempt_4/Potential_at_120.png" width="49%">
+
+                                            <h4>Flow Vector at 120s</h4>
+                                            <img src="./Meeting_23/Attempt_2/Flow_Vector_at_120_Paper.png" width="49%">
+                                            <img src="./Meeting_23/Attempt_4/Flow_Vector_at_120.png" width="49%">
+                                        </p>
+                                        <p>
+                                            I find these results to be quite satisfactory except for at second density spike. THe results are provided here: <a href="https://github.com/arushraju/Crowd-Dynamics/releases/download/v1.1_Benchmark/Attempt_4.zip">Link to Download (61.8 MB)</a>
+                                        </p>
                                     </details>
                                 </div>
                             </div>
